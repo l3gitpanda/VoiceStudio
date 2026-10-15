@@ -78,6 +78,8 @@ export function UpdateSettings() {
   const activityCount = useAppActivityCount();
   const [state, setState] = useState(initial);
   const [action, setAction] = useState(false);
+  // Release history comes from GitHub, so it loads only after "Check now".
+  const [releasesRequested, setReleasesRequested] = useState(false);
   const [expandedRelease, setExpandedRelease] = useState<string | null | undefined>(undefined);
   const watchServerWork = state.status === 'available' || state.status === 'downloaded';
   const modelInstalls = useQuery({
@@ -108,7 +110,7 @@ export function UpdateSettings() {
   const releaseHistory = useQuery({
     queryKey: ['desktop-release-history'],
     queryFn: () => updates!.listReleases(),
-    enabled: canListReleases,
+    enabled: canListReleases && releasesRequested,
     staleTime: 15 * 60_000,
   });
   const releaseRows = (releaseHistory.data || [])
@@ -269,7 +271,11 @@ export function UpdateSettings() {
                 size="sm"
                 variant="outline"
                 disabled={action}
-                onClick={() => updates && void run(() => updates.check())}
+                onClick={() => {
+                  if (!updates) return;
+                  setReleasesRequested(true);
+                  void run(() => updates.check());
+                }}
               >
                 <RefreshCwIcon />
                 {t(state.status === 'error' ? 'update.retry' : 'updates.check_now')}
@@ -391,7 +397,7 @@ export function UpdateSettings() {
         </SettingsSection>
       )}
 
-      {canListReleases && (
+      {canListReleases && releasesRequested && (
         <SettingsSection icon={Clock3Icon} title={t('updates.releases')}>
           {releaseHistory.isPending ? (
             <p className="px-4 py-4 text-sm text-muted-foreground">{t('updates.loading')}</p>

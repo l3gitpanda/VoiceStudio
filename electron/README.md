@@ -160,10 +160,9 @@ playback persist locally. Settings remain accessible without a ready backend.
 The sidebar footer places engine status and model above a separate Settings and
 Theme control row, with a labeled Settings link on the left and Theme on the right.
 
-The workspace footer shows Integrations, Become a Sponsor, and a right-aligned X.
-They open the integration directory, partner inquiry form, and dedicated
-VoiceStudio Pro page respectively. The sponsor hover/focus card shows dated
-GitHub reach data. The Pro page compares Free and Pro, opens website pricing,
+The workspace has no footer or sponsor bar: the integration directory opens from
+the workspace menu and the dedicated VoiceStudio Pro page from the Get Pro
+shortcut. The Pro page compares Free and Pro, opens website pricing,
 and leaves licence activation to the separate Pro distribution. Checkout remains
 gated until the paid tools and terms are ready.
 

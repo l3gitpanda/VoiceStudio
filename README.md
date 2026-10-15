@@ -32,7 +32,7 @@
 
 Start with **VoiceStudio** (default, powered by k2-fsa/OmniVoice), or choose another engine. [Features & engine catalog](docs/feature-catalog.md).
 
-Local workflows run on your hardware. Remote services are optional; usage analytics requires consent.
+Local workflows run on your hardware. Remote services are optional, and VoiceStudio sends no usage analytics or telemetry.
 
 <details>
 <summary><strong>Explore the workspaces</strong> · Clone, dub, design & models</summary>
@@ -136,14 +136,6 @@ Add `-- --install` for the networked managed-runtime installation check.
 | Development | [Contributing](.github/CONTRIBUTING.md) · [Electron](electron/README.md) · [Changelog](CHANGELOG.md) |
 
 Agent skills: `npx skills add debpalash/VoiceStudio` — choose **voicestudio** for audio workflows or **voicestudio-maintainer** for repository maintenance.
-
-## Sponsors
-
-<a href="https://forms.gle/2PYCvd39hbwijzX37"><img src="docs/media/sponsor-slot.svg" alt="Your brand — apply for a featured VoiceStudio sponsor slot" width="640" /></a>
-
-**Become a featured partner.** [Apply for a paid placement](https://forms.gle/2PYCvd39hbwijzX37) · [Email us](mailto:partner@voicestudio.sh)
-
-Support development: [Ko-fi](https://ko-fi.com/debpalash) · [PayPal](https://paypal.me/palashCoder) · [Sponsorship details](SPONSORS.md)
 
 ## License & responsible use
 

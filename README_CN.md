@@ -32,7 +32,7 @@
 
 从 **VoiceStudio** 开始（默认引擎，基于 k2-fsa/OmniVoice），也可以选择其他引擎。详见[功能与引擎目录](docs/feature-catalog.md)。
 
-本地工作流在你的硬件上运行。远程服务为可选功能；使用情况分析须经同意才会启用。
+本地工作流在你的硬件上运行。远程服务为可选功能；VoiceStudio 不发送任何使用情况分析或遥测数据。
 
 <details>
 <summary><strong>浏览各个工作区</strong> · 克隆、配音、声音设计与模型</summary>
@@ -123,14 +123,6 @@ bun run dev
 | 参与开发 | [贡献指南](.github/CONTRIBUTING.md) · [Electron](electron/README.md) · [更新日志](CHANGELOG.md) |
 
 智能体技能：`npx skills add debpalash/VoiceStudio` — 音频工作流选 **voicestudio**，仓库维护选 **voicestudio-maintainer**。
-
-## 赞助商
-
-<a href="https://forms.gle/2PYCvd39hbwijzX37"><img src="docs/media/sponsor-slot.svg" alt="你的品牌 —— 申请 VoiceStudio 推荐赞助展示位" width="640" /></a>
-
-**成为推荐合作伙伴。**[申请付费展示位](https://forms.gle/2PYCvd39hbwijzX37) · [发送邮件](mailto:partner@voicestudio.sh)
-
-支持开发：[Ko-fi](https://ko-fi.com/debpalash) · [PayPal](https://paypal.me/palashCoder) · [赞助详情](SPONSORS.md)
 
 ## 许可与负责任使用
 

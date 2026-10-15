@@ -9,6 +9,18 @@ _backend_dir = os.path.dirname(os.path.abspath(__file__))
 if _backend_dir not in sys.path:
     sys.path.insert(0, _backend_dir)
 
+# ── Third-party library telemetry: always off ───────────────────────────────
+# huggingface_hub/transformers attach usage telemetry to Hub requests, and
+# gradio (a dependency) reports to its own servers. Forced, not defaulted:
+# this app sends no telemetry. Child engine processes inherit these. Set
+# before any import that could load huggingface_hub (it reads env at import).
+for _telemetry_var, _off in (
+    ("HF_HUB_DISABLE_TELEMETRY", "1"),
+    ("DO_NOT_TRACK", "1"),
+    ("GRADIO_ANALYTICS_ENABLED", "False"),
+):
+    os.environ[_telemetry_var] = _off
+
 # #2135: arm fatal-signal tracebacks before anything heavy is imported, so a
 # native crash inside torch/CUDA leaves a named frame in backend_err.log
 # instead of a silently vanished process. See core/crash_diagnostics.py.
@@ -1192,11 +1204,8 @@ async def lifespan(app: FastAPI):
         run_sentinel.write_sentinel()
     except Exception:
         logger.exception("Run-sentinel startup failed (non-fatal).")
-    # Opt-in lifecycle analytics (core/analytics.py): install/update/crash
-    # events. A no-op without the user's explicit consent AND a build token.
-    # The run-sentinel record above is the ONE authoritative crash source —
-    # the desktop shell's markers cover the same deaths, so the frontend
-    # never emits a crash event (no double-count).
+    # Analytics is removed (core/analytics.py sends nothing); this only clears
+    # consent, ids and the uninstall-ping file left by older builds.
     try:
         from core import analytics
         analytics.record_startup_lifecycle(_crash_record)

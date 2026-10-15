@@ -156,7 +156,7 @@
 }
 .support-opportunities {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 18px;
 }
 .support-tile {
@@ -167,13 +167,6 @@
   border: 1px solid var(--support-line);
   border-radius: 22px;
   background: var(--support-surface);
-}
-.support-tile-icon {
-  width: 27px;
-  height: 27px;
-  stroke-width: 1.5;
-  margin-bottom: 17px;
-  color: var(--muted-foreground);
 }
 .support-tile h2 {
   font-size: 21px;
@@ -186,26 +179,6 @@
   font-size: 13px;
   line-height: 1.65;
   margin-top: 10px;
-}
-.support-logo-slot {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 20px 0;
-  padding: 15px;
-  border: 1px dashed color-mix(in srgb, var(--foreground) 20%, transparent);
-  border-radius: 12px;
-  color: var(--muted-foreground);
-  font-size: 13px;
-}
-.support-logo-slot svg {
-  width: 23px;
-  height: 23px;
-  stroke-width: 1.25;
-}
-.support-logo-plus {
-  margin-left: auto;
-  font-size: 20px;
 }
 .support-license-mark {
   display: flex;
@@ -229,24 +202,6 @@
   align-items: center;
   gap: 0 18px;
   margin-top: auto;
-}
-.support-sponsor-group {
-  padding-block: 12px;
-}
-.support-sponsor-group h3 {
-  margin-bottom: 8px;
-  font-size: 12px;
-  color: var(--muted-foreground);
-}
-.support-sponsor-group > div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.support-sponsor-group img {
-  max-width: 80px;
-  max-height: 26px;
-  object-fit: contain;
 }
 .support-contact {
   margin-top: 28px;
@@ -337,8 +292,7 @@
   }
 }
 @container (max-width: 660px) {
-  .support-giving,
-  .support-opportunities {
+  .support-giving {
     grid-template-columns: 1fr;
   }
   .support-checkout {

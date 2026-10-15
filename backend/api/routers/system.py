@@ -281,14 +281,12 @@ def _fast_download_status() -> dict:
 
 
 def _has_hf_token() -> bool:
-    # Phase 1 AUTH-01..06 cascade. Delegates to the 3-source resolver
-    # (App → Env → HF-CLI) instead of reading env/HF-CLI directly. This
-    # closes #35: a user who only ran `huggingface-cli login` (no env
-    # var, no app-store) is now reported as having a token, and so is a
-    # user who saved one in Settings.
+    # Phase 1 AUTH-01..06 cascade: any of the 3 sources (App → Env → HF-CLI)
+    # counts (#35). Presence only — this backs polled status endpoints, so it
+    # must never call huggingface.co in the background.
     try:
         from services import token_resolver
-        return token_resolver.resolve() is not None
+        return token_resolver.has_local_token()
     except Exception:
         # Resolver must never break /system/info — fall back to False.
         return False
@@ -1619,10 +1617,8 @@ async def tailscale_disable():
 # the app has ALREADY written to their own database. It collects nothing new,
 # stores nothing new, and transmits nothing anywhere: the only consumer is the
 # user's own UI over loopback. Read-only, content-free (counts and totals,
-# never the text of a take). Product analytics for the PROJECT is a separate,
-# consent-gated path (core/analytics.py: opt-in PostHog behind the first-run
-# prompt, allowlisted content-free metadata only) — this endpoint stays local
-# regardless of that consent.
+# never the text of a take). Product analytics has been removed entirely
+# (core/analytics.py is an inert stub).
 @router.get("/stats/usage")
 def stats_usage():
     from services.local_stats import usage_summary

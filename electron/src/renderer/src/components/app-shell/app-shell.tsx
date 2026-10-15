@@ -1,4 +1,3 @@
-import { SponsorFooter } from './sponsor-footer';
 import { WorkspaceSidebar } from './workspace-sidebar';
 import { CommandPalette } from '@/components/command-palette';
 import { Outlet, useRouterState } from '@tanstack/react-router';
@@ -54,7 +53,6 @@ export function AppShell() {
               <div className="min-h-0 flex-1 overflow-hidden">
                 <Outlet />
               </div>
-              <SponsorFooter />
               <RepairAgentDock />
             </main>
           </BackendGate>

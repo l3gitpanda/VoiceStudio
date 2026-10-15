@@ -59,7 +59,8 @@ reviews:
         VoiceStudio is local-first: no required cloud calls, accounts or API
         keys. Flag any new outbound network call that is not on the sanctioned
         list in CLAUDE.md (Local-first guarantee) and .github/CONTRIBUTING.md
-        (Quality gates); analytics stays behind the first-run consent prompt.
+        (Quality gates); there is no product analytics or telemetry, and
+        nothing may call a remote host on a timer or without a user action.
         Flag any code that persists or logs values matching
         *TOKEN*/*KEY*/*SECRET* or absolute user home paths (/Users/<name>/,
         C:\\Users\\<name>\\).
@@ -174,7 +175,7 @@ reviews:
           Verify the PR adds no required cloud calls, accounts or API keys,
           and no outbound call outside the sanctioned list in CLAUDE.md
           (Local-first guarantee) and .github/CONTRIBUTING.md (Quality gates).
-          Product analytics must stay behind the first-run consent prompt. The
+          Flag any analytics, telemetry or background call to a remote host. The
           app must remain fully functional offline with every prompt
           declined.
       - name: "Backward compatibility"
