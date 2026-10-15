@@ -81,7 +81,7 @@ Remaining verification: fully uncached packaged installation through first gener
 
 Deliberate shutdown remains available during deferred native and ML imports. Electron can therefore retire the backend run sentinel before Windows performs its bounded process-tree termination, so closing during “Preparing GPU libraries” does not become a false crash warning on the next launch. A packaged Windows acceptance quits inside that gated startup phase and verifies the sentinel is gone.
 
-The backend's default desktop origins include `app://voicestudio` alongside the Tauri origins. HTTP CORS and WebSocket checks share this list. An explicit `OMNIVOICE_ALLOWED_ORIGINS` overrides the defaults; deployments using it must include the Electron origin to allow native live dictation. Non-loopback WebSocket connections still require remote authorization.
+The backend's default desktop origins include `app://voicestudio` alongside the Tauri origins. HTTP CORS and WebSocket checks share this list. An explicit `OMNIVOICE_ALLOWED_ORIGINS` overrides the defaults; deployments using it must include the Electron origin to allow the app's WebSockets, native live dictation included. Non-loopback WebSocket connections are then authorized per route; see [WebSockets](api-auth.md#websockets).
 
 Clean recovery serializes cleanup against install, region and location actions. Filesystem failures return to setup with current logs and access guidance. Closing or restarting the app during cleanup prevents that stale action from starting a new installation.
 

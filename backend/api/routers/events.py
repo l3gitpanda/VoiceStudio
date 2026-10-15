@@ -14,15 +14,16 @@ from __future__ import annotations
 import asyncio
 import logging
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
 
+from api.ws_guards import require_ws_consumer
 from core import event_bus
 
 router = APIRouter()
 logger = logging.getLogger("omnivoice.events")
 
 
-@router.websocket("/ws/events")
+@router.websocket("/ws/events", dependencies=[Depends(require_ws_consumer)])
 async def ws_events(ws: WebSocket):
     """Fan-out event stream for sidebar reactivity.
 

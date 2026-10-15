@@ -25,8 +25,10 @@ import os
 import time
 from typing import Optional
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
+
+from api.ws_guards import require_ws_consumer
 
 router = APIRouter()
 logger = logging.getLogger("omnivoice.tts_stream")
@@ -271,7 +273,7 @@ async def synthesize_stream(
             yield wav, sr
 
 
-@router.websocket("/ws/tts")
+@router.websocket("/ws/tts", dependencies=[Depends(require_ws_consumer)])
 async def ws_tts(websocket: WebSocket):
     """Stream TTS audio chunks over WebSocket.
 

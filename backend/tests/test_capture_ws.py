@@ -39,18 +39,15 @@ class TestConstants:
 
 
 class TestLoopbackGuard:
-    """Source-level guard against regressing the WS loopback contract.
+    """Guard against regressing the dictation WebSocket's handshake contract.
 
-    Same shape as tests/test_bind_host.py: these don't run the endpoint
-    (which needs the full app + a WebSocket client). They read the source
-    and assert the guard is present. If a future refactor removes the inline
-    check, this test fails with a pointer to the security rationale.
-
-    Why a source-level guard: the /ws/transcribe socket streams the user's
-    live microphone audio. Any local process opening this WS without an
-    origin check could exfiltrate dictation in real time. HTTP routers use
-    Depends(require_loopback) at router level; WebSocket dependency
-    injection is brittle across FastAPI versions, so the guard is inlined.
+    Why: the /ws/transcribe socket streams the user's live microphone audio.
+    Any process that could open it without a check could exfiltrate dictation
+    in real time. The check is the ``require_ws_dictation`` route dependency
+    (api.ws_guards), which FastAPI runs before the handler, so a refused peer
+    never reaches ``accept()``. These tests need no app: they read the route
+    declarations and call the guard directly. tests/test_ws_route_guards.py
+    covers every WebSocket route end to end.
     """
 
     def _src(self):
@@ -60,28 +57,55 @@ class TestLoopbackGuard:
             / "api" / "routers" / "capture_ws.py"
         ).read_text(encoding="utf-8")
 
-    def test_ws_transcribe_references_loopback_check(self):
-        assert "is_local_host" in self._src(), (
-            "capture_ws.py no longer references is_local_host — the WS "
-            "loopback guard has been removed. Reinstate it before accept()."
+    def test_both_dictation_routes_declare_the_guard(self):
+        assert self._src().count("dependencies=[Depends(require_ws_dictation)]") == 2, (
+            "capture_ws.py must declare require_ws_dictation on both "
+            "@router.websocket routes (/ws/transcribe and the platform stream). "
+            "Without it any device that reaches the backend can stream the "
+            "user's microphone."
         )
 
-    def test_ws_transcribe_closes_non_loopback_with_1008(self):
-        assert "websocket.close(code=1008" in self._src(), (
-            "capture_ws.py must close non-loopback connections with code "
-            "1008 (Policy Violation) before calling websocket.accept(). "
-            "Otherwise any local process can stream the user's microphone."
-        )
+    @staticmethod
+    def _websocket(host, headers=()):
+        from types import SimpleNamespace
 
-    def test_guard_runs_before_accept(self):
-        src = self._src()
-        # The close() call must appear before the first accept() in the
-        # ws_transcribe handler, otherwise an attacker gets a window where
-        # the WS is open and can send audio frames.
-        close_idx = src.find("websocket.close(code=1008")
-        accept_idx = src.find("await websocket.accept()")
-        assert 0 <= close_idx < accept_idx, (
-            "websocket.close(code=1008) must appear before "
-            "websocket.accept() — the guard runs *before* the handshake "
-            "completes so non-loopback origins never see an open socket."
-        )
+        from starlette.websockets import WebSocket
+
+        scope = {
+            "type": "websocket",
+            "path": "/ws/transcribe",
+            "query_string": b"",
+            "headers": [(k.encode(), v.encode()) for k, v in headers],
+            "client": (host, 1),
+            "app": SimpleNamespace(state=SimpleNamespace(network_share=None)),
+        }
+        return WebSocket(scope, receive=None, send=None)
+
+    def _guard(self, websocket):
+        import asyncio
+
+        from api.ws_guards import require_ws_dictation
+
+        asyncio.run(require_ws_dictation(websocket))
+
+    def test_non_loopback_peer_is_closed_with_1008(self, monkeypatch):
+        import pytest
+        from fastapi import WebSocketException
+
+        monkeypatch.delenv("OMNIVOICE_API_KEY", raising=False)
+        monkeypatch.delenv("OMNIVOICE_TRUSTED_NETWORKS", raising=False)
+        with pytest.raises(WebSocketException) as refused:
+            self._guard(self._websocket("10.0.0.5"))
+        assert refused.value.code == 1008
+        assert refused.value.reason == "loopback origin required"
+
+    def test_cross_site_browser_is_closed_with_1008(self):
+        import pytest
+        from fastapi import WebSocketException
+
+        with pytest.raises(WebSocketException) as refused:
+            self._guard(self._websocket("127.0.0.1", [("origin", "https://evil.example")]))
+        assert refused.value.code == 1008
+
+    def test_loopback_native_client_passes(self):
+        self._guard(self._websocket("127.0.0.1"))
