@@ -1415,7 +1415,9 @@
     "gpu_report_engine_no_gpu": "CPU：没有可用的 GPU",
     "gpu_report_engine_needs_accelerator": "需要此电脑没有的 GPU（{{needs}}）",
     "realtime_vc": "实时变声（实验性）",
-    "realtime_vc_note": "添加实时变声工作区。默认关闭。需要单独安装引擎，强烈建议使用 GPU。"
+    "realtime_vc_note": "添加实时变声工作区。默认关闭。需要单独安装引擎，强烈建议使用 GPU。",
+    "virtual_mic": "虚拟麦克风",
+    "virtual_mic_note": "实时变声和“播放到麦克风”发送音频的输出设备，通常是虚拟声卡线。在 Discord 或游戏中，把这条线的另一端选为麦克风。"
   },
   "gallery": {
     "title": "VoiceStudio 音色库",
@@ -3486,6 +3488,20 @@
     "error_too_fast": "音频到达速度快于实时。",
     "error_engine_failed": "变声器意外停止。",
     "error_connection_lost": "与变声器的连接已断开。",
-    "error_mic_failed": "无法启动麦克风。"
+    "error_mic_failed": "无法启动麦克风。",
+    "type_title": "打字说话",
+    "type_body": "输入一条消息，它会用你选择的声音直接说进虚拟麦克风。",
+    "type_placeholder": "输入要说的话…",
+    "type_speak": "说出",
+    "type_speaking": "正在说…",
+    "type_needs_voice": "请先在上方选择你已验证的声音或设计的声音。",
+    "type_no_device": "未选择虚拟麦克风，因此会在扬声器上播放。",
+    "type_failed": "无法说出这条消息。"
+  },
+  "micOutput": {
+    "play": "播放到麦克风",
+    "stop": "停止",
+    "play_hint": "把这段音频播放到虚拟麦克风，让 Discord 或游戏把它当作你的麦克风声音。",
+    "failed": "无法播放到虚拟麦克风。"
   }
 }

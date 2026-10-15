@@ -1417,7 +1417,9 @@
     "gpu_report_engine_no_gpu": "CPU: no hay GPU disponible",
     "gpu_report_engine_needs_accelerator": "Necesita una GPU ({{needs}}) que este equipo no tiene",
     "realtime_vc": "Voz en vivo (experimental)",
-    "realtime_vc_note": "Añade el espacio de trabajo del cambiador de voz en tiempo real. Desactivado por defecto. Necesita instalar su propio motor y se recomienda mucho una GPU."
+    "realtime_vc_note": "Añade el espacio de trabajo del cambiador de voz en tiempo real. Desactivado por defecto. Necesita instalar su propio motor y se recomienda mucho una GPU.",
+    "virtual_mic": "Micrófono virtual",
+    "virtual_mic_note": "El dispositivo de salida, normalmente un cable de audio virtual, al que la voz en vivo y «Reproducir en el micrófono» envían el audio. En Discord o en un juego, elige el otro extremo del cable como micrófono."
   },
   "gallery": {
     "title": "VoiceStudio Galería",
@@ -3488,6 +3490,20 @@
     "error_too_fast": "El audio llegaba más rápido que en tiempo real.",
     "error_engine_failed": "El cambiador de voz se detuvo de forma inesperada.",
     "error_connection_lost": "Se perdió la conexión con el cambiador de voz.",
-    "error_mic_failed": "No se pudo iniciar el micrófono."
+    "error_mic_failed": "No se pudo iniciar el micrófono.",
+    "type_title": "Escribe para hablar",
+    "type_body": "Escribe un mensaje y se dirá con la voz elegida directamente en el micrófono virtual.",
+    "type_placeholder": "Escribe lo que quieres decir…",
+    "type_speak": "Decir",
+    "type_speaking": "Hablando…",
+    "type_needs_voice": "Primero elige arriba tu voz verificada o diseñada.",
+    "type_no_device": "No hay micrófono virtual elegido, así que suena por tus altavoces.",
+    "type_failed": "No se pudo decir el mensaje."
+  },
+  "micOutput": {
+    "play": "Reproducir en el micrófono",
+    "stop": "Detener",
+    "play_hint": "Reproduce este audio en tu micrófono virtual para que Discord o un juego lo oiga como tu micrófono.",
+    "failed": "No se pudo reproducir en el micrófono virtual."
   }
 }

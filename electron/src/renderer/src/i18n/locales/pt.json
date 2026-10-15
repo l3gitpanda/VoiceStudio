@@ -1417,7 +1417,9 @@
     "gpu_report_engine_no_gpu": "CPU: nenhuma GPU disponível",
     "gpu_report_engine_needs_accelerator": "Precisa de uma GPU ({{needs}}) que esta máquina não tem",
     "realtime_vc": "Voz ao vivo (experimental)",
-    "realtime_vc_note": "Adiciona o espaço de trabalho do modificador de voz em tempo real. Desativado por padrão. Exige a instalação do próprio motor, e uma GPU é fortemente recomendada."
+    "realtime_vc_note": "Adiciona o espaço de trabalho do modificador de voz em tempo real. Desativado por padrão. Exige a instalação do próprio motor, e uma GPU é fortemente recomendada.",
+    "virtual_mic": "Microfone virtual",
+    "virtual_mic_note": "O dispositivo de saída, normalmente um cabo de áudio virtual, para onde a voz ao vivo e “Tocar no microfone” enviam o áudio. No Discord ou no jogo, escolha a outra ponta do cabo como microfone."
   },
   "gallery": {
     "title": "VoiceStudio Galeria",
@@ -3488,6 +3490,20 @@
     "error_too_fast": "O áudio chegou mais rápido que em tempo real.",
     "error_engine_failed": "O modificador de voz parou inesperadamente.",
     "error_connection_lost": "A conexão com o modificador de voz foi perdida.",
-    "error_mic_failed": "Não foi possível iniciar o microfone."
+    "error_mic_failed": "Não foi possível iniciar o microfone.",
+    "type_title": "Digite para falar",
+    "type_body": "Digite uma mensagem e ela será falada com a voz escolhida diretamente no microfone virtual.",
+    "type_placeholder": "Digite o que dizer…",
+    "type_speak": "Falar",
+    "type_speaking": "Falando…",
+    "type_needs_voice": "Primeiro escolha acima sua voz verificada ou criada.",
+    "type_no_device": "Nenhum microfone virtual escolhido, então o áudio toca nos seus alto-falantes.",
+    "type_failed": "Não foi possível falar a mensagem."
+  },
+  "micOutput": {
+    "play": "Tocar no microfone",
+    "stop": "Parar",
+    "play_hint": "Toca este áudio no seu microfone virtual para que o Discord ou um jogo o ouça como seu microfone.",
+    "failed": "Não foi possível tocar no microfone virtual."
   }
 }

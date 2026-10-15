@@ -160,6 +160,8 @@ const extraSettings = [
       'settings.compute_device_title',
       'settings.perf_torch_compile',
       'settings.generate_budget_title',
+      'settings.realtime_vc',
+      'settings.virtual_mic',
     ],
   },
   {

@@ -1415,7 +1415,9 @@
     "gpu_report_engine_no_gpu": "CPU: ingen GPU tillgänglig",
     "gpu_report_engine_needs_accelerator": "Kräver en GPU ({{needs}}) som den här datorn inte har",
     "realtime_vc": "Live-röst (experimentell)",
-    "realtime_vc_note": "Lägger till arbetsytan för röstförvrängaren i realtid. Av som standard. Den kräver en egen motorinstallation och en GPU rekommenderas starkt."
+    "realtime_vc_note": "Lägger till arbetsytan för röstförvrängaren i realtid. Av som standard. Den kräver en egen motorinstallation och en GPU rekommenderas starkt.",
+    "virtual_mic": "Virtuell mikrofon",
+    "virtual_mic_note": "Utgångsenheten, oftast en virtuell ljudkabel, som Live-röst och ”Spela i mikrofonen” skickar ljud till. Välj kabelns andra ände som mikrofon i Discord eller spelet."
   },
   "gallery": {
     "title": "VoiceStudio Galleri",
@@ -3486,6 +3488,20 @@
     "error_too_fast": "Ljudet kom snabbare än i realtid.",
     "error_engine_failed": "Röstförvrängaren stoppades oväntat.",
     "error_connection_lost": "Anslutningen till röstförvrängaren bröts.",
-    "error_mic_failed": "Det gick inte att starta mikrofonen."
+    "error_mic_failed": "Det gick inte att starta mikrofonen.",
+    "type_title": "Skriv för att prata",
+    "type_body": "Skriv ett meddelande så läses det upp med den valda rösten direkt i den virtuella mikrofonen.",
+    "type_placeholder": "Skriv vad som ska sägas…",
+    "type_speak": "Läs upp",
+    "type_speaking": "Läser upp…",
+    "type_needs_voice": "Välj först din verifierade eller designade röst ovan.",
+    "type_no_device": "Ingen virtuell mikrofon vald, så ljudet spelas i dina högtalare.",
+    "type_failed": "Det gick inte att läsa upp meddelandet."
+  },
+  "micOutput": {
+    "play": "Spela i mikrofonen",
+    "stop": "Stoppa",
+    "play_hint": "Spelar upp ljudet i din virtuella mikrofon så att Discord eller ett spel hör det som din mikrofon.",
+    "failed": "Det gick inte att spela i den virtuella mikrofonen."
   }
 }

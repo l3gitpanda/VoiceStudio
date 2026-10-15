@@ -1417,7 +1417,9 @@
     "gpu_report_engine_no_gpu": "CPU: nessuna GPU disponibile",
     "gpu_report_engine_needs_accelerator": "Richiede una GPU ({{needs}}) che questo computer non ha",
     "realtime_vc": "Voce dal vivo (sperimentale)",
-    "realtime_vc_note": "Aggiunge l’area di lavoro del modificatore di voce in tempo reale. Disattivato per impostazione predefinita. Richiede l’installazione di un motore dedicato ed è fortemente consigliata una GPU."
+    "realtime_vc_note": "Aggiunge l’area di lavoro del modificatore di voce in tempo reale. Disattivato per impostazione predefinita. Richiede l’installazione di un motore dedicato ed è fortemente consigliata una GPU.",
+    "virtual_mic": "Microfono virtuale",
+    "virtual_mic_note": "Il dispositivo di uscita, di solito un cavo audio virtuale, a cui Voce dal vivo e “Riproduci nel microfono” inviano l’audio. In Discord o nel gioco, scegli l’altra estremità del cavo come microfono."
   },
   "gallery": {
     "title": "VoiceStudio Galleria",
@@ -3488,6 +3490,20 @@
     "error_too_fast": "L’audio arrivava più veloce del tempo reale.",
     "error_engine_failed": "Il modificatore di voce si è fermato in modo imprevisto.",
     "error_connection_lost": "Connessione al modificatore di voce persa.",
-    "error_mic_failed": "Impossibile avviare il microfono."
+    "error_mic_failed": "Impossibile avviare il microfono.",
+    "type_title": "Scrivi per parlare",
+    "type_body": "Scrivi un messaggio e verrà pronunciato con la voce scelta direttamente nel microfono virtuale.",
+    "type_placeholder": "Scrivi cosa dire…",
+    "type_speak": "Pronuncia",
+    "type_speaking": "In riproduzione…",
+    "type_needs_voice": "Prima scegli qui sopra la tua voce verificata o creata.",
+    "type_no_device": "Nessun microfono virtuale scelto, quindi l’audio esce dagli altoparlanti.",
+    "type_failed": "Impossibile pronunciare il messaggio."
+  },
+  "micOutput": {
+    "play": "Riproduci nel microfono",
+    "stop": "Ferma",
+    "play_hint": "Riproduce questo audio nel tuo microfono virtuale, così Discord o un gioco lo sente come il tuo microfono.",
+    "failed": "Impossibile riprodurre nel microfono virtuale."
   }
 }

@@ -1415,7 +1415,9 @@
     "gpu_report_engine_no_gpu": "CPU: keine GPU verfügbar",
     "gpu_report_engine_needs_accelerator": "Benötigt eine GPU ({{needs}}), die dieser Rechner nicht hat",
     "realtime_vc": "Live-Stimme (experimentell)",
-    "realtime_vc_note": "Fügt den Arbeitsbereich für den Echtzeit-Stimmenwandler hinzu. Standardmäßig aus. Er braucht eine eigene Engine-Installation, eine GPU wird dringend empfohlen."
+    "realtime_vc_note": "Fügt den Arbeitsbereich für den Echtzeit-Stimmenwandler hinzu. Standardmäßig aus. Er braucht eine eigene Engine-Installation, eine GPU wird dringend empfohlen.",
+    "virtual_mic": "Virtuelles Mikrofon",
+    "virtual_mic_note": "Das Ausgabegerät, meist ein virtuelles Audiokabel, an das Live-Stimme und „Ins Mikrofon abspielen“ den Ton senden. Wähle in Discord oder im Spiel das andere Ende des Kabels als Mikrofon."
   },
   "gallery": {
     "title": "VoiceStudio Galerie",
@@ -3486,6 +3488,20 @@
     "error_too_fast": "Audio kam schneller als in Echtzeit an.",
     "error_engine_failed": "Der Stimmenwandler wurde unerwartet beendet.",
     "error_connection_lost": "Die Verbindung zum Stimmenwandler ist abgebrochen.",
-    "error_mic_failed": "Das Mikrofon konnte nicht gestartet werden."
+    "error_mic_failed": "Das Mikrofon konnte nicht gestartet werden.",
+    "type_title": "Tippen und sprechen",
+    "type_body": "Tippe eine Nachricht, und sie wird in deiner gewählten Stimme direkt ins virtuelle Mikrofon gesprochen.",
+    "type_placeholder": "Tippe, was gesagt werden soll…",
+    "type_speak": "Sprechen",
+    "type_speaking": "Spricht…",
+    "type_needs_voice": "Wähle oben zuerst deine verifizierte oder entworfene Stimme.",
+    "type_no_device": "Kein virtuelles Mikrofon gewählt, daher läuft der Ton über deine Lautsprecher.",
+    "type_failed": "Die Nachricht konnte nicht gesprochen werden."
+  },
+  "micOutput": {
+    "play": "Ins Mikrofon abspielen",
+    "stop": "Stoppen",
+    "play_hint": "Spielt dieses Audio in dein virtuelles Mikrofon, damit Discord oder ein Spiel es als dein Mikrofon hört.",
+    "failed": "Abspielen ins virtuelle Mikrofon fehlgeschlagen."
   }
 }

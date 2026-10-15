@@ -19,7 +19,7 @@ import {
 
 const DEFAULT = '__default__';
 
-function DeviceSelect({
+export function DeviceSelect({
   label,
   devices,
   value,

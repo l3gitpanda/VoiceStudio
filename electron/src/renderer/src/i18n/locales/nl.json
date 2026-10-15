@@ -1415,7 +1415,9 @@
     "gpu_report_engine_no_gpu": "CPU: geen GPU beschikbaar",
     "gpu_report_engine_needs_accelerator": "Heeft een GPU ({{needs}}) nodig die deze computer niet heeft",
     "realtime_vc": "Live stem (experimenteel)",
-    "realtime_vc_note": "Voegt de werkruimte voor de realtime stemvervormer toe. Standaard uit. Er is een eigen engine-installatie voor nodig en een GPU wordt sterk aangeraden."
+    "realtime_vc_note": "Voegt de werkruimte voor de realtime stemvervormer toe. Standaard uit. Er is een eigen engine-installatie voor nodig en een GPU wordt sterk aangeraden.",
+    "virtual_mic": "Virtuele microfoon",
+    "virtual_mic_note": "Het uitvoerapparaat, meestal een virtuele audiokabel, waar Live stem en ‘Afspelen in microfoon’ het geluid naartoe sturen. Kies in Discord of je game het andere uiteinde van de kabel als microfoon."
   },
   "gallery": {
     "title": "VoiceStudio Galerij",
@@ -3486,6 +3488,20 @@
     "error_too_fast": "Audio kwam sneller binnen dan realtime.",
     "error_engine_failed": "De stemvervormer is onverwacht gestopt.",
     "error_connection_lost": "De verbinding met de stemvervormer is verbroken.",
-    "error_mic_failed": "De microfoon kon niet worden gestart."
+    "error_mic_failed": "De microfoon kon niet worden gestart.",
+    "type_title": "Typ om te praten",
+    "type_body": "Typ een bericht en het wordt in je gekozen stem rechtstreeks in de virtuele microfoon uitgesproken.",
+    "type_placeholder": "Typ wat er gezegd moet worden…",
+    "type_speak": "Uitspreken",
+    "type_speaking": "Bezig met spreken…",
+    "type_needs_voice": "Kies eerst hierboven je geverifieerde of ontworpen stem.",
+    "type_no_device": "Geen virtuele microfoon gekozen, dus dit speelt af via je luidsprekers.",
+    "type_failed": "Het bericht kon niet worden uitgesproken."
+  },
+  "micOutput": {
+    "play": "Afspelen in microfoon",
+    "stop": "Stoppen",
+    "play_hint": "Speelt deze audio af in je virtuele microfoon, zodat Discord of een game het als je microfoon hoort.",
+    "failed": "Afspelen in de virtuele microfoon is mislukt."
   }
 }

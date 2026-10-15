@@ -10,6 +10,7 @@ import { Switch } from '@/components/ui/switch';
 import { PipelineFailure } from '@/components/pipeline-failure';
 import { AgentFixButton } from '@/components/agent-fix-button';
 import { ProfileAvatar } from '@/components/profile-avatar';
+import { PlayToMicButton } from '@/components/play-to-mic-button';
 import { WaveformPlayer } from '@/components/waveform-player';
 import { useEngines } from '@/hooks/use-engines';
 import { useProfiles } from '@/hooks/use-profiles';
@@ -280,6 +281,7 @@ export function ConvertVoice() {
         <section className="space-y-3 border-t pt-4" aria-label={t('convert.result_kicker')}>
           <h3 className="text-sm font-medium">{t('convert.result_kicker')}</h3>
           <WaveformPlayer src={apiPath(result.audio_url)} source="convert-result" height={40} />
+          <PlayToMicButton url={apiPath(result.audio_url)} />
           <p className="text-sm">
             <span className="text-muted-foreground">{t('convert.transcript')}: </span>
             {result.text}

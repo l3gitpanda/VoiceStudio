@@ -1415,7 +1415,9 @@
     "gpu_report_engine_no_gpu": "CPU：GPU がありません",
     "gpu_report_engine_needs_accelerator": "このマシンにない GPU（{{needs}}）が必要です",
     "realtime_vc": "ライブボイス（試験運用）",
-    "realtime_vc_note": "リアルタイムボイスチェンジャーのワークスペースを追加します。既定ではオフです。専用エンジンのインストールが必要で、GPU を強くおすすめします。"
+    "realtime_vc_note": "リアルタイムボイスチェンジャーのワークスペースを追加します。既定ではオフです。専用エンジンのインストールが必要で、GPU を強くおすすめします。",
+    "virtual_mic": "仮想マイク",
+    "virtual_mic_note": "ライブボイスと「マイクに再生」が音声を送る出力デバイスです（通常は仮想オーディオケーブル）。Discord やゲームでは、ケーブルのもう一方の端をマイクに選びます。"
   },
   "gallery": {
     "title": "VoiceStudio ギャラリー",
@@ -3486,6 +3488,20 @@
     "error_too_fast": "音声がリアルタイムより速く届きました。",
     "error_engine_failed": "ボイスチェンジャーが予期せず停止しました。",
     "error_connection_lost": "ボイスチェンジャーとの接続が切れました。",
-    "error_mic_failed": "マイクを開始できませんでした。"
+    "error_mic_failed": "マイクを開始できませんでした。",
+    "type_title": "入力して話す",
+    "type_body": "メッセージを入力すると、選んだ声で仮想マイクに直接読み上げます。",
+    "type_placeholder": "話す内容を入力…",
+    "type_speak": "読み上げる",
+    "type_speaking": "読み上げ中…",
+    "type_needs_voice": "先に上で本人確認済みの声かデザインした声を選んでください。",
+    "type_no_device": "仮想マイクが選ばれていないため、スピーカーで再生します。",
+    "type_failed": "メッセージを読み上げられませんでした。"
+  },
+  "micOutput": {
+    "play": "マイクに再生",
+    "stop": "停止",
+    "play_hint": "この音声を仮想マイクに再生し、Discord やゲームにあなたのマイクとして聞かせます。",
+    "failed": "仮想マイクに再生できませんでした。"
   }
 }

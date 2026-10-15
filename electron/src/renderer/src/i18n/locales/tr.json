@@ -1415,7 +1415,9 @@
     "gpu_report_engine_no_gpu": "CPU: kullanılabilir GPU yok",
     "gpu_report_engine_needs_accelerator": "Bu bilgisayarda olmayan bir GPU ({{needs}}) gerekir",
     "realtime_vc": "Canlı Ses (deneysel)",
-    "realtime_vc_note": "Gerçek zamanlı ses değiştirici çalışma alanını ekler. Varsayılan olarak kapalıdır. Kendi motor kurulumunu gerektirir ve bir GPU şiddetle önerilir."
+    "realtime_vc_note": "Gerçek zamanlı ses değiştirici çalışma alanını ekler. Varsayılan olarak kapalıdır. Kendi motor kurulumunu gerektirir ve bir GPU şiddetle önerilir.",
+    "virtual_mic": "Sanal mikrofon",
+    "virtual_mic_note": "Canlı Ses'in ve “Mikrofona çal”ın sesi gönderdiği çıkış aygıtı; genellikle sanal bir ses kablosudur. Discord'da veya oyunda kablonun diğer ucunu mikrofon olarak seçin."
   },
   "gallery": {
     "title": "VoiceStudio Galeri",
@@ -3486,6 +3488,20 @@
     "error_too_fast": "Ses gerçek zamandan daha hızlı geldi.",
     "error_engine_failed": "Ses değiştirici beklenmedik şekilde durdu.",
     "error_connection_lost": "Ses değiştiriciyle bağlantı koptu.",
-    "error_mic_failed": "Mikrofon başlatılamadı."
+    "error_mic_failed": "Mikrofon başlatılamadı.",
+    "type_title": "Yazarak konuş",
+    "type_body": "Bir mesaj yazın; seçtiğiniz sesle doğrudan sanal mikrofona okunur.",
+    "type_placeholder": "Söylenecekleri yazın…",
+    "type_speak": "Söyle",
+    "type_speaking": "Konuşuyor…",
+    "type_needs_voice": "Önce yukarıdan doğrulanmış veya tasarlanmış sesinizi seçin.",
+    "type_no_device": "Sanal mikrofon seçilmedi, bu yüzden ses hoparlörlerinizden çalar.",
+    "type_failed": "Mesaj söylenemedi."
+  },
+  "micOutput": {
+    "play": "Mikrofona çal",
+    "stop": "Durdur",
+    "play_hint": "Bu sesi sanal mikrofonunuza çalar; böylece Discord veya bir oyun onu mikrofonunuz olarak duyar.",
+    "failed": "Sanal mikrofona çalınamadı."
   }
 }

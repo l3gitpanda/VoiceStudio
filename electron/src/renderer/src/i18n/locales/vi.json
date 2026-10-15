@@ -1415,7 +1415,9 @@
     "gpu_report_engine_no_gpu": "CPU: không có GPU",
     "gpu_report_engine_needs_accelerator": "Cần GPU ({{needs}}) mà máy này không có",
     "realtime_vc": "Giọng nói trực tiếp (thử nghiệm)",
-    "realtime_vc_note": "Thêm không gian làm việc của bộ đổi giọng theo thời gian thực. Mặc định tắt. Cần cài đặt engine riêng và rất nên có GPU."
+    "realtime_vc_note": "Thêm không gian làm việc của bộ đổi giọng theo thời gian thực. Mặc định tắt. Cần cài đặt engine riêng và rất nên có GPU.",
+    "virtual_mic": "Micro ảo",
+    "virtual_mic_note": "Thiết bị đầu ra, thường là một cáp âm thanh ảo, nơi Giọng nói trực tiếp và “Phát vào micro” gửi âm thanh tới. Trong Discord hoặc trò chơi, hãy chọn đầu còn lại của cáp làm micro."
   },
   "gallery": {
     "title": "VoiceStudio Thư viện ảnh",
@@ -3486,6 +3488,20 @@
     "error_too_fast": "Âm thanh đến nhanh hơn thời gian thực.",
     "error_engine_failed": "Bộ đổi giọng đã dừng bất ngờ.",
     "error_connection_lost": "Mất kết nối với bộ đổi giọng.",
-    "error_mic_failed": "Không thể khởi động micro."
+    "error_mic_failed": "Không thể khởi động micro.",
+    "type_title": "Gõ để nói",
+    "type_body": "Gõ một tin nhắn và nó sẽ được đọc bằng giọng bạn chọn thẳng vào micro ảo.",
+    "type_placeholder": "Gõ nội dung cần nói…",
+    "type_speak": "Đọc",
+    "type_speaking": "Đang đọc…",
+    "type_needs_voice": "Hãy chọn giọng đã xác minh hoặc giọng thiết kế của bạn ở trên trước.",
+    "type_no_device": "Chưa chọn micro ảo nên âm thanh phát ra loa của bạn.",
+    "type_failed": "Không thể đọc tin nhắn."
+  },
+  "micOutput": {
+    "play": "Phát vào micro",
+    "stop": "Dừng",
+    "play_hint": "Phát âm thanh này vào micro ảo để Discord hoặc trò chơi nghe như micro của bạn.",
+    "failed": "Không thể phát vào micro ảo."
   }
 }

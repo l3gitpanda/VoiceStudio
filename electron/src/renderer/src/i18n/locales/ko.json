@@ -1415,7 +1415,9 @@
     "gpu_report_engine_no_gpu": "CPU: 사용 가능한 GPU 없음",
     "gpu_report_engine_needs_accelerator": "이 컴퓨터에 없는 GPU({{needs}})가 필요함",
     "realtime_vc": "라이브 보이스 (실험적)",
-    "realtime_vc_note": "실시간 음성 변조기 작업 공간을 추가합니다. 기본값은 꺼짐입니다. 별도 엔진 설치가 필요하며 GPU 사용을 강력히 권장합니다."
+    "realtime_vc_note": "실시간 음성 변조기 작업 공간을 추가합니다. 기본값은 꺼짐입니다. 별도 엔진 설치가 필요하며 GPU 사용을 강력히 권장합니다.",
+    "virtual_mic": "가상 마이크",
+    "virtual_mic_note": "라이브 보이스와 ‘마이크로 재생’이 소리를 보내는 출력 장치이며 보통 가상 오디오 케이블입니다. Discord나 게임에서는 케이블의 반대쪽 끝을 마이크로 선택하세요."
   },
   "gallery": {
     "title": "VoiceStudio 갤러리",
@@ -3486,6 +3488,20 @@
     "error_too_fast": "오디오가 실시간보다 빠르게 들어왔습니다.",
     "error_engine_failed": "음성 변조기가 예기치 않게 중지되었습니다.",
     "error_connection_lost": "음성 변조기와의 연결이 끊어졌습니다.",
-    "error_mic_failed": "마이크를 시작할 수 없습니다."
+    "error_mic_failed": "마이크를 시작할 수 없습니다.",
+    "type_title": "입력해서 말하기",
+    "type_body": "메시지를 입력하면 선택한 목소리로 가상 마이크에 바로 읽어 줍니다.",
+    "type_placeholder": "말할 내용을 입력하세요…",
+    "type_speak": "말하기",
+    "type_speaking": "말하는 중…",
+    "type_needs_voice": "먼저 위에서 인증된 목소리나 디자인한 목소리를 선택하세요.",
+    "type_no_device": "가상 마이크를 선택하지 않아 스피커로 재생됩니다.",
+    "type_failed": "메시지를 말할 수 없습니다."
+  },
+  "micOutput": {
+    "play": "마이크로 재생",
+    "stop": "중지",
+    "play_hint": "이 오디오를 가상 마이크로 재생해 Discord나 게임이 내 마이크 소리로 듣게 합니다.",
+    "failed": "가상 마이크로 재생할 수 없습니다."
   }
 }

@@ -1,6 +1,7 @@
 import { AudioLinesIcon, XIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
+import { PlayToMicButton } from '@/components/play-to-mic-button';
 import { SaveAudioButton } from '@/components/save-audio-button';
 import { WaveformPlayer } from '@/components/waveform-player';
 import { audioUrl } from '@/lib/api/client';
@@ -30,6 +31,7 @@ export function OutputPanel() {
             {t('clone.output_title')}
           </SectionLabel>
           <div className="flex items-center gap-1">
+            <PlayToMicButton url={result.audioPath ? audioUrl(result.audioPath) : undefined} />
             <SaveAudioButton
               url={result.audioPath ? audioUrl(result.audioPath) : undefined}
               suggestedName={`voicestudio-${result.id ?? stamp}.wav`}

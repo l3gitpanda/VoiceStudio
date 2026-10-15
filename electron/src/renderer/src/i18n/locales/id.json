@@ -1415,7 +1415,9 @@
     "gpu_report_engine_no_gpu": "CPU: tidak ada GPU",
     "gpu_report_engine_needs_accelerator": "Memerlukan GPU ({{needs}}) yang tidak dimiliki komputer ini",
     "realtime_vc": "Suara Langsung (eksperimental)",
-    "realtime_vc_note": "Menambahkan ruang kerja pengubah suara waktu nyata. Nonaktif secara default. Perlu memasang mesinnya sendiri, dan GPU sangat disarankan."
+    "realtime_vc_note": "Menambahkan ruang kerja pengubah suara waktu nyata. Nonaktif secara default. Perlu memasang mesinnya sendiri, dan GPU sangat disarankan.",
+    "virtual_mic": "Mikrofon virtual",
+    "virtual_mic_note": "Perangkat keluaran, biasanya kabel audio virtual, tempat Suara Langsung dan “Putar ke mikrofon” mengirim audio. Di Discord atau game, pilih ujung kabel yang lain sebagai mikrofon."
   },
   "gallery": {
     "title": "VoiceStudio Galeri",
@@ -3486,6 +3488,20 @@
     "error_too_fast": "Audio datang lebih cepat dari waktu nyata.",
     "error_engine_failed": "Pengubah suara berhenti secara tak terduga.",
     "error_connection_lost": "Koneksi ke pengubah suara terputus.",
-    "error_mic_failed": "Tidak dapat memulai mikrofon."
+    "error_mic_failed": "Tidak dapat memulai mikrofon.",
+    "type_title": "Ketik untuk bicara",
+    "type_body": "Ketik pesan dan pesan itu diucapkan dengan suara pilihan Anda langsung ke mikrofon virtual.",
+    "type_placeholder": "Ketik yang ingin diucapkan…",
+    "type_speak": "Ucapkan",
+    "type_speaking": "Sedang berbicara…",
+    "type_needs_voice": "Pilih dulu suara terverifikasi atau rancangan Anda di atas.",
+    "type_no_device": "Belum ada mikrofon virtual yang dipilih, jadi audio diputar di speaker Anda.",
+    "type_failed": "Tidak dapat mengucapkan pesan."
+  },
+  "micOutput": {
+    "play": "Putar ke mikrofon",
+    "stop": "Berhenti",
+    "play_hint": "Memutar audio ini ke mikrofon virtual Anda, sehingga Discord atau game mendengarnya sebagai mikrofon Anda.",
+    "failed": "Tidak dapat memutar ke mikrofon virtual."
   }
 }

@@ -11,6 +11,7 @@ import {
 import { useProfiles } from '@/hooks/use-profiles';
 import { Button } from '@/components/ui/button';
 import { ProfileAvatar } from '@/components/profile-avatar';
+import { PlayToMicButton } from '@/components/play-to-mic-button';
 import { SaveAudioButton } from '@/components/save-audio-button';
 import { WaveformPlayer } from '@/components/waveform-player';
 import { audioUrl } from '@/lib/api/client';
@@ -177,6 +178,7 @@ export function TakeDetails({ item }: { item: HistoryItem }) {
             suggestedName={`voicestudio-${item.id}.wav`}
           />
         )}
+        {item.audio_path && <PlayToMicButton url={audioUrl(item.audio_path)} />}
         <Button variant="outline" disabled={isGenerating} onClick={() => void reuse()}>
           {t('clone.history_reuse')}
         </Button>

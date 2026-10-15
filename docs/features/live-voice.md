@@ -3,7 +3,8 @@
 Speak into your microphone and hear yourself, live, in one of your saved
 voices. The converted audio plays on any output device you pick, so a virtual
 audio cable can feed it into Discord, VRChat, a game or a stream as if it were
-a microphone.
+a microphone. Generated clips and typed messages can go
+[into the same microphone](#use-your-voices-as-a-microphone).
 
 Live Voice is **opt-in and off by default** on every platform. It is an
 experimental workspace of this fork, built on [Seed-VC](../engines/seed-vc.md).
@@ -49,6 +50,28 @@ choose it as Live Voice's **output device**, then choose its other end as the
 | Windows | [VB-Audio Virtual Cable](https://vb-audio.com/Cable/) | `CABLE Input` | `CABLE Output` |
 | macOS | [BlackHole](https://github.com/ExistentialAudio/BlackHole) | `BlackHole 2ch` | `BlackHole 2ch` |
 | Linux | [PipeWire null sink](https://docs.pipewire.org/page_module_null_sink.html) — `pactl load-module module-null-sink sink_name=voicestudio` | `voicestudio` | `Monitor of voicestudio` |
+
+## Use your voices as a microphone
+
+The virtual cable is not only for the live voice changer. Choose it once in
+**Settings → Performance → Virtual microphone** (the same device as Live
+Voice's output) and two more ways to talk through it appear:
+
+- **Play into mic** — a button next to Save on generated audio in Clone and
+  Design, in a take's details, and on a Tools → Convert result. It plays that
+  clip into the virtual microphone, so Discord or a game hears it as your mic.
+  Click it again to stop. The button stays hidden until a virtual microphone
+  is chosen.
+- **Type to talk** — on the Live Voice page. Type a message and press Enter;
+  it is spoken in the selected target voice straight into the virtual
+  microphone, sentence by sentence through the active TTS engine (the Seed-VC
+  engine does not need to be installed). **Monitor** also plays it on your
+  default device.
+
+Type to talk offers the same voices as Live Voice (your verified voice or a
+designed one); Play into mic plays audio you already generated. Both come from
+the normal generation path, so they follow **Settings → Privacy → invisible
+watermark** like any other generated audio.
 
 ## Consent
 
@@ -163,6 +186,7 @@ and its converted copy.
 | Symptom | Fix |
 |---|---|
 | No Live Voice in the sidebar | Turn it on in Settings → Performance. |
+| No **Play into mic** button | Choose a virtual microphone in Settings → Performance → Virtual microphone. |
 | Device names are blank | Click **Show device names** once (grants microphone access). |
 | “Needs verification” on your voice | Verify it in Voices → profile → Verify it's you. |
 | Choppy audio, “cannot keep up” | Pick **Fastest** or **CPU**; close other GPU work. |

@@ -1417,7 +1417,9 @@
     "gpu_report_engine_no_gpu": "CPU : aucun GPU disponible",
     "gpu_report_engine_needs_accelerator": "Nécessite un GPU ({{needs}}) que cette machine n'a pas",
     "realtime_vc": "Voix en direct (expérimental)",
-    "realtime_vc_note": "Ajoute l’espace de travail du transformateur de voix en temps réel. Désactivé par défaut. Il nécessite l’installation de son propre moteur, et un GPU est vivement recommandé."
+    "realtime_vc_note": "Ajoute l’espace de travail du transformateur de voix en temps réel. Désactivé par défaut. Il nécessite l’installation de son propre moteur, et un GPU est vivement recommandé.",
+    "virtual_mic": "Micro virtuel",
+    "virtual_mic_note": "Le périphérique de sortie, généralement un câble audio virtuel, vers lequel la voix en direct et « Lire dans le micro » envoient le son. Dans Discord ou un jeu, choisissez l’autre extrémité du câble comme microphone."
   },
   "gallery": {
     "title": "VoiceStudio Galerie",
@@ -3488,6 +3490,20 @@
     "error_too_fast": "L’audio arrivait plus vite que le temps réel.",
     "error_engine_failed": "Le transformateur de voix s’est arrêté de façon inattendue.",
     "error_connection_lost": "Connexion au transformateur de voix perdue.",
-    "error_mic_failed": "Impossible de démarrer le microphone."
+    "error_mic_failed": "Impossible de démarrer le microphone.",
+    "type_title": "Écrire pour parler",
+    "type_body": "Écrivez un message : il est prononcé avec la voix choisie, directement dans le micro virtuel.",
+    "type_placeholder": "Écrivez ce qu’il faut dire…",
+    "type_speak": "Prononcer",
+    "type_speaking": "Lecture…",
+    "type_needs_voice": "Choisissez d’abord votre voix vérifiée ou créée ci-dessus.",
+    "type_no_device": "Aucun micro virtuel choisi : le son passe par vos haut-parleurs.",
+    "type_failed": "Impossible de prononcer le message."
+  },
+  "micOutput": {
+    "play": "Lire dans le micro",
+    "stop": "Arrêter",
+    "play_hint": "Lit cet audio dans votre micro virtuel, pour que Discord ou un jeu l’entende comme votre micro.",
+    "failed": "Impossible de lire dans le micro virtuel."
   }
 }

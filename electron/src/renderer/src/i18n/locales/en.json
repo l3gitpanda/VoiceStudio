@@ -1537,7 +1537,9 @@
     "gpu_report_engine_no_gpu": "CPU: no GPU available",
     "gpu_report_engine_needs_accelerator": "Needs a GPU ({{needs}}) this machine does not have",
     "realtime_vc": "Live Voice (experimental)",
-    "realtime_vc_note": "Adds the real-time voice changer workspace. Off by default. It needs its own engine install, and a GPU is strongly recommended."
+    "realtime_vc_note": "Adds the real-time voice changer workspace. Off by default. It needs its own engine install, and a GPU is strongly recommended.",
+    "virtual_mic": "Virtual microphone",
+    "virtual_mic_note": "The output device, usually a virtual audio cable, that Live Voice and Play into mic send audio to. In Discord or a game, pick the cable’s other end as the microphone."
   },
   "gallery": {
     "title": "VoiceStudio Gallery",
@@ -3486,6 +3488,20 @@
     "error_too_fast": "Audio arrived faster than real time.",
     "error_engine_failed": "The voice changer stopped unexpectedly.",
     "error_connection_lost": "Lost the connection to the voice changer.",
-    "error_mic_failed": "Could not start the microphone."
+    "error_mic_failed": "Could not start the microphone.",
+    "type_title": "Type to talk",
+    "type_body": "Type a message and it is spoken in your selected voice straight into the virtual microphone.",
+    "type_placeholder": "Type what to say…",
+    "type_speak": "Speak",
+    "type_speaking": "Speaking…",
+    "type_needs_voice": "Choose your verified or designed voice above first.",
+    "type_no_device": "No virtual microphone chosen, so this plays on your speakers.",
+    "type_failed": "Could not speak the message."
+  },
+  "micOutput": {
+    "play": "Play into mic",
+    "stop": "Stop",
+    "play_hint": "Plays this audio into your virtual microphone, so Discord or a game hears it as your mic.",
+    "failed": "Could not play into the virtual microphone."
   }
 }

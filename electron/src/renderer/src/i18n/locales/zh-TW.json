@@ -1415,7 +1415,9 @@
     "gpu_report_engine_no_gpu": "CPU：沒有可用的 GPU",
     "gpu_report_engine_needs_accelerator": "需要這台電腦沒有的 GPU（{{needs}}）",
     "realtime_vc": "即時變聲（實驗性）",
-    "realtime_vc_note": "新增即時變聲工作區。預設關閉。需要另外安裝引擎，強烈建議使用 GPU。"
+    "realtime_vc_note": "新增即時變聲工作區。預設關閉。需要另外安裝引擎，強烈建議使用 GPU。",
+    "virtual_mic": "虛擬麥克風",
+    "virtual_mic_note": "即時變聲和「播放到麥克風」傳送音訊的輸出裝置，通常是虛擬音訊線。在 Discord 或遊戲中，將這條線的另一端選為麥克風。"
   },
   "gallery": {
     "title": "VoiceStudio 畫廊",
@@ -3486,6 +3488,20 @@
     "error_too_fast": "音訊抵達速度快於即時。",
     "error_engine_failed": "變聲器意外停止。",
     "error_connection_lost": "與變聲器的連線已中斷。",
-    "error_mic_failed": "無法啟動麥克風。"
+    "error_mic_failed": "無法啟動麥克風。",
+    "type_title": "打字說話",
+    "type_body": "輸入一則訊息，它會用你選擇的聲音直接說進虛擬麥克風。",
+    "type_placeholder": "輸入要說的話…",
+    "type_speak": "說出",
+    "type_speaking": "正在說…",
+    "type_needs_voice": "請先在上方選擇你已驗證的聲音或設計的聲音。",
+    "type_no_device": "未選擇虛擬麥克風，因此會在喇叭上播放。",
+    "type_failed": "無法說出這則訊息。"
+  },
+  "micOutput": {
+    "play": "播放到麥克風",
+    "stop": "停止",
+    "play_hint": "將這段音訊播放到虛擬麥克風，讓 Discord 或遊戲把它當作你的麥克風聲音。",
+    "failed": "無法播放到虛擬麥克風。"
   }
 }

@@ -1419,7 +1419,9 @@
     "gpu_report_engine_no_gpu": "CPU: brak dostępnego GPU",
     "gpu_report_engine_needs_accelerator": "Wymaga GPU ({{needs}}), którego ten komputer nie ma",
     "realtime_vc": "Głos na żywo (eksperymentalne)",
-    "realtime_vc_note": "Dodaje obszar roboczy zmieniacza głosu w czasie rzeczywistym. Domyślnie wyłączone. Wymaga instalacji osobnego silnika, a GPU jest zdecydowanie zalecane."
+    "realtime_vc_note": "Dodaje obszar roboczy zmieniacza głosu w czasie rzeczywistym. Domyślnie wyłączone. Wymaga instalacji osobnego silnika, a GPU jest zdecydowanie zalecane.",
+    "virtual_mic": "Wirtualny mikrofon",
+    "virtual_mic_note": "Urządzenie wyjściowe, zwykle wirtualny kabel audio, do którego Głos na żywo i „Odtwórz do mikrofonu” wysyłają dźwięk. W Discordzie lub grze wybierz drugi koniec kabla jako mikrofon."
   },
   "gallery": {
     "title": "VoiceStudio Galeria",
@@ -3490,6 +3492,20 @@
     "error_too_fast": "Dźwięk docierał szybciej niż w czasie rzeczywistym.",
     "error_engine_failed": "Zmieniacz głosu nieoczekiwanie się zatrzymał.",
     "error_connection_lost": "Utracono połączenie ze zmieniaczem głosu.",
-    "error_mic_failed": "Nie udało się uruchomić mikrofonu."
+    "error_mic_failed": "Nie udało się uruchomić mikrofonu.",
+    "type_title": "Pisz, by mówić",
+    "type_body": "Wpisz wiadomość, a zostanie wypowiedziana wybranym głosem prosto do wirtualnego mikrofonu.",
+    "type_placeholder": "Wpisz, co powiedzieć…",
+    "type_speak": "Wypowiedz",
+    "type_speaking": "Mówienie…",
+    "type_needs_voice": "Najpierw wybierz powyżej swój zweryfikowany lub zaprojektowany głos.",
+    "type_no_device": "Nie wybrano wirtualnego mikrofonu, więc dźwięk gra na głośnikach.",
+    "type_failed": "Nie udało się wypowiedzieć wiadomości."
+  },
+  "micOutput": {
+    "play": "Odtwórz do mikrofonu",
+    "stop": "Zatrzymaj",
+    "play_hint": "Odtwarza to nagranie do wirtualnego mikrofonu, aby Discord lub gra słyszały je jako Twój mikrofon.",
+    "failed": "Nie udało się odtworzyć do wirtualnego mikrofonu."
   }
 }

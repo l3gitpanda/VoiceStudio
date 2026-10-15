@@ -11,6 +11,7 @@ import { LatencyReadout } from './latency-readout';
 import { LiveVoiceSetup } from './live-voice-setup';
 import { QualityControls } from './quality-controls';
 import { maySpeakAs, TargetVoicePicker } from './target-voice-picker';
+import { TypeToTalk } from './type-to-talk';
 import { useLiveVoiceSession, useLiveVoiceStatus } from './use-live-voice';
 import { VirtualCableHelp } from './virtual-cable-help';
 
@@ -20,7 +21,9 @@ export function LiveVoicePage() {
   const profiles = useProfiles();
   const settings = useLiveVoiceSettings();
   const session = useLiveVoiceSession();
-  const ready = status.data?.enabled === true && status.data.available === true;
+  const enabled = status.data?.enabled === true;
+  // Seed-VC installed: the voice changer itself. Type to talk needs only `enabled`.
+  const ready = enabled && status.data?.available === true;
   const active = session.stage !== 'idle';
   const { refetch } = status;
   // A session that just ended still reads "busy" until the next poll.
@@ -28,7 +31,8 @@ export function LiveVoicePage() {
     if (!active) void refetch();
   }, [active, refetch]);
   const voice = (profiles.data ?? []).find((p) => p.id === settings.profileId);
-  const canStart = ready && !active && !!voice && maySpeakAs(voice) && !status.data?.busy;
+  const eligible = !!voice && maySpeakAs(voice);
+  const canStart = ready && !active && eligible && !status.data?.busy;
   const stageLabel =
     session.stage === 'connecting'
       ? t('liveVoice.connecting')
@@ -50,7 +54,7 @@ export function LiveVoicePage() {
             failed={status.isError && !status.data}
             retry={() => void status.refetch()}
           />
-          {ready && (
+          {enabled && (
             <>
               <DevicePickers
                 inputDeviceId={settings.inputDeviceId}
@@ -67,6 +71,10 @@ export function LiveVoicePage() {
                 disabled={active}
                 onChange={(profileId) => setLiveVoiceSettings({ profileId })}
               />
+            </>
+          )}
+          {ready && (
+            <>
               <QualityControls
                 value={settings.preset}
                 disabled={active}
@@ -123,6 +131,15 @@ export function LiveVoicePage() {
               {session.ready && session.stage === 'running' && (
                 <LatencyReadout ready={session.ready} stats={session.stats} playback={session.playback} />
               )}
+            </>
+          )}
+          {enabled && (
+            <>
+              <TypeToTalk
+                profileId={eligible ? settings.profileId : ''}
+                deviceId={settings.outputDeviceId}
+                monitor={settings.monitor}
+              />
               <VirtualCableHelp />
             </>
           )}
