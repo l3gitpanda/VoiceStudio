@@ -110,16 +110,13 @@ it('offers the engine install when it is on but not installed', async () => {
   expect(await screen.findByText('liveVoice.install_unsupported')).toBeInTheDocument();
 });
 
-it('only lets verified or designed voices be chosen', async () => {
+it('lets any saved voice be chosen, verified or not', async () => {
   mount();
   const start = await screen.findByRole('button', { name: /liveVoice.start/ });
   expect(start).toBeDisabled();
   expect(screen.getByRole('button', { name: /My Voice/ })).toBeEnabled();
   expect(screen.getByRole('button', { name: /Captain/ })).toBeEnabled();
-  expect(screen.queryByRole('button', { name: /Gallery Voice/ })).not.toBeInTheDocument();
-  expect(screen.getByText('liveVoice.needs_consent')).toBeInTheDocument();
-  expect(screen.getByText('liveVoice.verify_hint')).toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button', { name: /Captain/ }));
+  fireEvent.click(screen.getByRole('button', { name: /Gallery Voice/ }));
   expect(start).toBeEnabled();
 });
 

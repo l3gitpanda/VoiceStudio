@@ -52,7 +52,7 @@ START_TIMEOUT_S = 30.0
 STATS_INTERVAL_S = 1.0
 
 _CLOSE = {
-    "vc_disabled": 1008, "voice_consent_required": 1008, "too_fast": 1008,
+    "vc_disabled": 1008, "too_fast": 1008,
     "bad_request": 1008, "voice_not_found": 1008, "voice_reference_missing": 1008,
     "vc_not_installed": 1008, "frame_too_large": 1009, "vc_busy": 1013,
     "engine_failed": 1011,

@@ -10,7 +10,7 @@ import { DevicePickers } from './device-pickers';
 import { LatencyReadout } from './latency-readout';
 import { LiveVoiceSetup } from './live-voice-setup';
 import { QualityControls } from './quality-controls';
-import { maySpeakAs, TargetVoicePicker } from './target-voice-picker';
+import { TargetVoicePicker } from './target-voice-picker';
 import { TypeToTalk } from './type-to-talk';
 import { useLiveVoiceSession, useLiveVoiceStatus } from './use-live-voice';
 import { VirtualCableHelp } from './virtual-cable-help';
@@ -31,7 +31,7 @@ export function LiveVoicePage() {
     if (!active) void refetch();
   }, [active, refetch]);
   const voice = (profiles.data ?? []).find((p) => p.id === settings.profileId);
-  const eligible = !!voice && maySpeakAs(voice);
+  const eligible = !!voice;
   const canStart = ready && !active && eligible && !status.data?.busy;
   const stageLabel =
     session.stage === 'connecting'

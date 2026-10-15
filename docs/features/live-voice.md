@@ -28,7 +28,7 @@ experimental workspace of this fork, built on [Seed-VC](../engines/seed-vc.md).
 |---|---|
 | Microphone | The input device. Browser voice processing (echo cancellation, noise suppression, auto gain) is turned off — raw voice converts best. |
 | Output device | Where the converted voice plays — pick your virtual cable here. Uses the standard `setSinkId` API on every OS. |
-| Target voice | Your own **verified** voice or a **designed** voice (see Consent). |
+| Target voice | Any saved voice: a clone or a designed voice. |
 | Quality | **Automatic** (balanced on a GPU, CPU settings without one), **Fastest**, **Balanced**, **Best quality**, **CPU**. |
 | Bypass | Plays your own voice instead and pauses conversion. |
 | Monitor | Also plays the converted voice on your default speakers or headphones (only when a separate output device is chosen). Use headphones — speakers feed back into the mic. |
@@ -68,19 +68,16 @@ Voice's output) and two more ways to talk through it appear:
   engine does not need to be installed). **Monitor** also plays it on your
   default device.
 
-Type to talk offers the same voices as Live Voice (your verified voice or a
-designed one); Play into mic plays audio you already generated. Both come from
+Type to talk offers the same voices as Live Voice; Play into mic plays audio
+you already generated. Both come from
 the normal generation path, so they follow **Settings → Privacy → invisible
 watermark** like any other generated audio.
 
-## Consent
+## Voices
 
-Live Voice speaks *as* someone in real time, so it uses the same rule as
-outbound phone calls (`backend/core/voice_consent.py`): only your own voice,
-verified with the spoken consent statement (**Voices → profile → Verify it's
-you**), or a designed voice that belongs to no real person. Gallery, community
-and archetype voices are refused until verified. The backend enforces this;
-the UI only mirrors it.
+Live Voice can use any saved voice, with no verification step, like the app's
+other local synthesis. Only use voices you have permission to use. Outbound
+phone calls keep their own rule (your verified voice or a designed one).
 
 **Live Voice output is not watermarked** (a decision for this fork). Every
 other output path still follows **Settings → Privacy → invisible watermark**.
@@ -150,7 +147,7 @@ Loopback, or a remote client with the API key / a path-bound `ws_ticket`
 | ← | binary: converted mono int16 PCM |
 | ← | `{"type":"stats", ...}` about once a second |
 | → | `{"type":"reset"}` · `{"type":"stop"}` |
-| ← | `{"type":"error","code","detail"}`, then close: 1008 policy (disabled, consent, auth, too fast), 1009 oversized frame, 1011 engine failure, 1013 busy |
+| ← | `{"type":"error","code","detail"}`, then close: 1008 policy (disabled, unknown voice, auth, too fast), 1009 oversized frame, 1011 engine failure, 1013 busy |
 
 `GET /vc/status` reports whether Live Voice is on, installed and free, with the
 parameter defaults and limits. `GET`/`PUT /api/settings/realtime-vc` is the
@@ -192,7 +189,6 @@ and its converted copy.
 | No Live Voice in the sidebar | Turn it on in Settings → Live Voice. |
 | No **Play into mic** button | Choose a virtual microphone in Settings → Live Voice → Virtual microphone. |
 | Device names are blank | Click **Show device names** once (grants microphone access). |
-| “Needs verification” on your voice | Verify it in Voices → profile → Verify it's you. |
 | Choppy audio, “cannot keep up” | Pick **Fastest** or **CPU**; close other GPU work. |
 | Echo or howling | Monitor plays on speakers — use headphones or turn Monitor off. |
 | Delay grows over a long session | It should not: the playback buffer trims any backlog past two blocks. If it does, report it with the latency panel's numbers. |

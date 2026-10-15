@@ -17,7 +17,7 @@ metadata and the backend fallback mirror it.
 
 ### Added
 
-- Live Voice (opt-in, off by default): speak into your mic and hear one of your verified or designed voices live on any output device, so a virtual cable can feed Discord, VRChat or games; runs Seed-VC in its own one-click environment — thanks @l3gitpanda!
+- Live Voice (opt-in, off by default): speak into your mic and hear one of your saved voices live on any output device, so a virtual cable can feed Discord, VRChat or games; runs Seed-VC in its own one-click environment — thanks @l3gitpanda!
 - Virtual microphone: Play into mic sends generated clips to a virtual cable, and Type to talk speaks typed messages in your voice, so Discord or a game hears them as your mic — thanks @l3gitpanda!
 - Live Voice and the virtual microphone have their own Settings → Live Voice tab — thanks @l3gitpanda!
 
@@ -37,7 +37,7 @@ metadata and the backend fallback mirror it.
 
 ### Docs
 
-- New Live Voice guide (virtual cable setup per OS, virtual microphone, consent rule, latency figures) and Seed-VC engine page
+- New Live Voice guide (virtual cable setup per OS, virtual microphone, latency figures) and Seed-VC engine page
 
 ### Fixed
 

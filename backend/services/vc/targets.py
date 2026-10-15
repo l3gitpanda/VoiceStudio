@@ -1,10 +1,9 @@
 """Saved voice profile → the reference clip a converter imitates.
 
 Uses the same profile resolution as /generate and /convert (a locked take
-wins, design profiles use their rendered sample) and the same consent rule as
-outbound calls (:func:`core.voice_consent.may_speak_as`): the live voice
-changer speaks as someone in real time, so only the user's verified own voice
-or a designed voice qualifies.
+wins, design profiles use their rendered sample). Any saved voice can be used,
+as with every other local synthesis path in the app; outbound phone calls keep
+their own rule (:func:`core.voice_consent.may_speak_as`).
 """
 from __future__ import annotations
 
@@ -29,23 +28,17 @@ def _cache_key(path: str) -> str:
 def resolve_target(profile_id: object) -> tuple[VCReference, str]:
     """Return the reference for ``profile_id`` and the profile's name.
 
-    Raises :class:`VCError` with ``bad_request``, ``voice_not_found``,
-    ``voice_consent_required`` or ``voice_reference_missing``.
+    Raises :class:`VCError` with ``bad_request``, ``voice_not_found`` or
+    ``voice_reference_missing``.
     """
     if not isinstance(profile_id, str) or not PROFILE_ID_RE.match(profile_id):
         raise VCError("bad_request", "Choose a saved voice.")
     from core.db import db_conn
-    from core.voice_consent import may_speak_as
 
     with db_conn() as conn:
         row = conn.execute(_PROFILE_SQL, (profile_id,)).fetchone()
     if row is None:
         raise VCError("voice_not_found", "That voice profile does not exist.")
-    if not may_speak_as(row):
-        raise VCError(
-            "voice_consent_required",
-            "Live Voice can only use your own verified voice or a designed voice.",
-        )
     from api.routers.generation import _resolve_profile_conditioning
 
     path = _resolve_profile_conditioning(row).get("ref_audio_path")

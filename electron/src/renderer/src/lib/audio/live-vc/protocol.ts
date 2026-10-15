@@ -66,7 +66,6 @@ export type QualityPreset = keyof typeof QUALITY_PRESETS;
 export const ERROR_CODES = [
   'vc_disabled',
   'vc_not_installed',
-  'voice_consent_required',
   'voice_not_found',
   'voice_reference_missing',
   'vc_busy',

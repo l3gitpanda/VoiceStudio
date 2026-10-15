@@ -199,9 +199,9 @@ describe('LiveVoiceEngine', () => {
 
   it('reports a typed server error and tears everything down', async () => {
     const { socket, callbacks, contexts, track, stopCapture } = await started();
-    socket.message(JSON.stringify({ type: 'error', code: 'voice_consent_required', detail: 'x' }));
+    socket.message(JSON.stringify({ type: 'error', code: 'voice_not_found', detail: 'x' }));
     await flush();
-    expect(callbacks.onError).toHaveBeenCalledWith('voice_consent_required', 'x');
+    expect(callbacks.onError).toHaveBeenCalledWith('voice_not_found', 'x');
     expect(track.stop).toHaveBeenCalled();
     expect(stopCapture).toHaveBeenCalled();
     expect(contexts[0].close).toHaveBeenCalled();

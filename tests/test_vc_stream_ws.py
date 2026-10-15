@@ -169,11 +169,13 @@ def test_unknown_voice(client, fake_engine):
         assert _error(ws) == ("voice_not_found", 1008)
 
 
-def test_unverified_clone_needs_consent(client, fake_engine):
+def test_any_saved_voice_can_be_used(client, fake_engine):
+    """No verification step: an unverified clone converts like any other."""
     pid = _profile(kind="clone", verified=0)
     with client.websocket_connect("/ws/vc") as ws:
-        ws.send_text(json.dumps({"type": "start", "profile_id": pid}))
-        assert _error(ws) == ("voice_consent_required", 1008)
+        ready = _start(ws, pid)
+        ws.send_text(json.dumps({"type": "stop"}))
+    assert ready["voice"]["id"] == pid
 
 
 def test_profile_without_reference_audio(client, fake_engine):

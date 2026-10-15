@@ -25,7 +25,7 @@ it('needs an eligible voice and warns when no virtual mic is chosen', () => {
   render(<TypeToTalk profileId="" deviceId="" monitor={false} createSpeaker={() => ({ speak: vi.fn(), stop: vi.fn() })} />);
   fireEvent.change(screen.getByRole('textbox'), { target: { value: 'hi' } });
   expect(screen.getByRole('button', { name: /liveVoice.type_speak/ })).toBeDisabled();
-  expect(screen.getByText('liveVoice.type_needs_voice')).toBeInTheDocument();
+  expect(screen.getByText('cloneFlow.choose_voice')).toBeInTheDocument();
   expect(screen.getByText('liveVoice.type_no_device')).toBeInTheDocument();
 });
 

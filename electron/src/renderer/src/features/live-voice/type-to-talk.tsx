@@ -84,7 +84,7 @@ export function TypeToTalk({
           </span>
         )}
       </div>
-      {!profileId && <p className="text-xs text-muted-foreground">{t('liveVoice.type_needs_voice')}</p>}
+      {!profileId && <p className="text-xs text-muted-foreground">{t('cloneFlow.choose_voice')}</p>}
       {!deviceId && <p className="text-xs text-muted-foreground">{t('liveVoice.type_no_device')}</p>}
       {error && (
         <p role="alert" className="text-sm text-destructive">
