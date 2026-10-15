@@ -1,6 +1,8 @@
 name: Electron packaging rehearsal
 
 # Explicitly artifact-only: no tag, schedule, release, or publishing permission.
+# Run it from Actions > Electron packaging rehearsal > Run workflow; the unsigned
+# installers for each platform are attached to the run page as artifacts.
 on:
   workflow_dispatch:
 
