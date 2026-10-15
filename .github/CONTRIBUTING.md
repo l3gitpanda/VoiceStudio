@@ -373,15 +373,20 @@ hard rules from the first prompt.
     (`backend/api/routers/community.py`); the voice-preview gallery's signed
     downloads from `omnivoice-gallery` GitHub Releases, only after it is turned
     on in Settings (`backend/services/gallery.py`).
-  - **Packaged-app update checks** against GitHub Releases; downloads wait for
-    the user (`electron/src/main/updater.ts`).
+  - **Packaged-app update checks** against GitHub Releases, only when the user
+    clicks **Check now** in Settings → Updates (which also loads the release
+    list); downloads wait for the user (`electron/src/main/updater.ts`).
   - **yt-dlp updates** from PyPI, only when the user clicks update
     (`backend/services/media_tools.py`).
   - Bug reports as prefilled GitHub Issue URLs opened in the user's browser.
-  - PostHog analytics only after a yes at the first-run consent prompt
-    (`backend/core/analytics.py`, allowlisted content-free metadata).
-  - The GitHub star count (no credentials or referrer, refreshed every 20
-    minutes while shown).
+
+  There is no product analytics or telemetry of any kind: no analytics SDK,
+  token or host, and third-party library telemetry (`HF_HUB_DISABLE_TELEMETRY`,
+  `DO_NOT_TRACK`, `GRADIO_ANALYTICS_ENABLED`) is forced off in
+  `backend/main.py`. Nothing runs on a timer against a remote host: the GitHub
+  star badge shows a bundled count, and polled status endpoints check for a
+  Hugging Face token locally without calling whoami.
+  `tests/test_telemetry_removed.py` guards this.
 
   Adding to this list needs owner approval. Never log or persist secrets or
   absolute home paths.

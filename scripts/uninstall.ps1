@@ -184,40 +184,6 @@ if (-not $Yes) {
   exit 0
 }
 
-# ── Opt-in uninstall ping (before anything is deleted) ──────────────────────
-# If — and only if — the user opted in to anonymous analytics, send a single
-# best-effort `app_uninstalled` event before the data (and the consent record
-# it lives in) goes away. The backend writes analytics_info.json next to
-# prefs.json ONLY while analytics is enabled (explicit consent + a build that
-# ships a token) and deletes it on opt-out, so the file's presence is itself
-# consent-gated; the prefs.json check is belt and braces. Content-free: the
-# event carries the app version, the OS name, and the random per-install id —
-# nothing else. Never blocks or fails the uninstall (2s timeout, silent
-# failure). Not opted in => nothing is sent and nothing is printed.
-try {
-  $infoPath  = Join-Path $dataDir 'analytics_info.json'
-  $prefsPath = Join-Path $dataDir 'prefs.json'
-  if ((Test-Path -LiteralPath $infoPath) -and (Test-Path -LiteralPath $prefsPath)) {
-    $prefs = Get-Content -LiteralPath $prefsPath -Raw | ConvertFrom-Json
-    if ($prefs.analytics_enabled -eq $true) {
-      $info = Get-Content -LiteralPath $infoPath -Raw | ConvertFrom-Json
-      if ($info.token -and $info.host -and $info.distinct_id) {
-        Write-Host 'Sending anonymous uninstall ping (you opted in to analytics).'
-        $body = @{
-          api_key     = $info.token
-          event       = 'app_uninstalled'
-          distinct_id = $info.distinct_id
-          properties  = @{ app_version = "$($info.app_version)"; platform = "$($info.platform)" }
-        } | ConvertTo-Json
-        Invoke-RestMethod -Method Post -Uri "$($info.host)/capture/" `
-          -ContentType 'application/json' -Body $body -TimeoutSec 2 | Out-Null
-      }
-    }
-  }
-} catch {
-  # Best-effort by design: a dead network must never block the uninstall.
-}
-
 $deleted = 0
 foreach ($t in $appTargets) {
   if ($t -like 'MSI product:*' -or $t -like 'App: *') { continue }

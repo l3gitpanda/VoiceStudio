@@ -11,13 +11,19 @@ metadata and the backend fallback mirror it.
 **Highlights**
 
 - The open-source app no longer contains a licence-key client
+- VoiceStudio sends no analytics or telemetry and makes no background calls to remote hosts
 
 ### Changed
 
+- Update checks run only when you click Check now in Settings → Updates, which also loads the release list
+- The GitHub star badge shows a bundled count instead of asking GitHub
+- Status checks find a saved Hugging Face token locally instead of validating it online every few minutes
 - The expanded sidebar shows the installed app version beneath VoiceStudio and clearly marks development builds (#2894)
 
 ### Removed
 
+- PostHog product analytics, its consent prompt, project token and uninstall ping; settings from older builds are cleared on startup
+- Hugging Face and Gradio library telemetry is always switched off
 - The unused licence-key client and its Lemon Squeezy network call are gone from the open-source app (#2812)
 
 ### Fixed

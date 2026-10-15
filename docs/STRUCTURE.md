@@ -38,7 +38,7 @@ VoiceStudio/
 │   ├── api/routers/             42 routers, auto-included; thin HTTP/WS surface
 │   │   └── setup/               first-run wizard, model download
 │   ├── core/                    config, db, job queue, event bus, auth/CSRF, path security,
-│   │                            opt-in analytics, version, diagnostics
+│   │                            version, diagnostics
 │   ├── services/                100 modules of business logic — TTS, dubbing pipeline,
 │   │                            audio DSP, GPU gateway, engine routing, model lifecycle
 │   ├── engines/                 per-engine adapters: indextts, supertonic3, confucius4,

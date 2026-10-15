@@ -32,7 +32,7 @@
 
 从 **VoiceStudio** 开始（默认引擎，基于 k2-fsa/OmniVoice），也可以选择其他引擎。详见[功能与引擎目录](docs/feature-catalog.md)。
 
-本地工作流在你的硬件上运行。远程服务为可选功能；使用情况分析须经同意才会启用。
+本地工作流在你的硬件上运行。远程服务为可选功能；VoiceStudio 不发送任何使用情况分析或遥测数据。
 
 <details>
 <summary><strong>浏览各个工作区</strong> · 克隆、配音、声音设计与模型</summary>

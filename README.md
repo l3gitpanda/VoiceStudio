@@ -32,7 +32,7 @@
 
 Start with **VoiceStudio** (default, powered by k2-fsa/OmniVoice), or choose another engine. [Features & engine catalog](docs/feature-catalog.md).
 
-Local workflows run on your hardware. Remote services are optional; usage analytics requires consent.
+Local workflows run on your hardware. Remote services are optional, and VoiceStudio sends no usage analytics or telemetry.
 
 <details>
 <summary><strong>Explore the workspaces</strong> · Clone, dub, design & models</summary>

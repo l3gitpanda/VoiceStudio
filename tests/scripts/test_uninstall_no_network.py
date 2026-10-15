@@ -1,17 +1,13 @@
-"""The uninstall scripts' opt-in `app_uninstalled` ping — the contract, pinned.
+"""The uninstall scripts never touch the network — not even for consented users.
 
-- Sent ONLY when the user opted in: consent is read from the SAME prefs store
-  the app writes (`prefs.json: analytics_enabled`), AND the backend-written
-  `analytics_info.json` must exist (the backend only writes it while analytics
-  is enabled and removes it on opt-out — its presence is itself consent-gated).
-- Content-free: app version, OS name, random per-install id. Nothing else.
-- Best-effort: 2s timeout, silent failure, never blocks the uninstall.
-- Honest: exactly one console line when it sends; silence when not opted in.
-- Never on dry-run: the ping lives behind the --yes / -Yes gate.
+Older builds sent one `app_uninstalled` analytics ping from these scripts when
+the user had opted in. Analytics is removed, so the ping is gone: a run with
+the old consent record and `analytics_info.json` still on disk must send
+nothing and still delete the data.
 
 The bash script is exercised for real (fake $HOME + a curl shim that records
 its argv); PowerShell isn't runnable on every dev/CI platform, so uninstall.ps1
-is pinned by static contract checks against the same requirements.
+is pinned by static checks.
 """
 from __future__ import annotations
 
@@ -85,80 +81,33 @@ def test_bash_syntax_is_valid():
     subprocess.run(["bash", "-n", SH], check=True)
 
 
-def test_consented_delete_sends_one_honest_ping(tmp_path):
+def test_legacy_consent_sends_nothing_and_still_deletes(tmp_path):
     proc, curl = _run(tmp_path, "--yes")
     assert proc.returncode == 0, proc.stderr
-    assert "Sending anonymous uninstall ping (you opted in to analytics)." in proc.stdout
-    # One capture call, to the host from analytics_info.json, with the ping.
-    assert "https://eu.i.posthog.com/capture/" in curl
-    assert curl.count("app_uninstalled") == 1
-    assert "phc_test_token" in curl
-    assert "11111111-2222-3333-4444-555555555555" in curl
-    assert '"app_version":"0.3.23"' in curl.replace(" ", "")
-    # Best-effort timeout is on the call.
-    assert re.search(r"^-m\n2$", curl, re.M)
-
-
-def test_not_consented_sends_nothing_and_prints_nothing(tmp_path):
-    proc, curl = _run(tmp_path, "--yes", consented=False)
-    assert proc.returncode == 0, proc.stderr
     assert curl == ""
-    assert "uninstall ping" not in proc.stdout.lower()
+    assert "ping" not in proc.stdout.lower()
+    assert not (tmp_path / "data").exists()
 
 
-def test_missing_info_file_sends_nothing_even_if_prefs_claim_consent(tmp_path):
-    """analytics_info.json only exists while the backend had consent AND a
-    token — a hand-edited prefs.json alone must not produce a ping (there is
-    no destination to send to)."""
-    proc, curl = _run(tmp_path, "--yes", consented=True, with_info=False)
-    assert proc.returncode == 0, proc.stderr
-    assert curl == ""
-    assert "uninstall ping" not in proc.stdout.lower()
-
-
-def test_dry_run_never_pings_even_when_consented(tmp_path):
+def test_dry_run_sends_nothing(tmp_path):
     proc, curl = _run(tmp_path)  # no --yes
     assert proc.returncode == 0, proc.stderr
     assert "DRY RUN" in proc.stdout
     assert curl == ""
-    assert "uninstall ping" not in proc.stdout.lower()
 
 
-def test_data_is_still_deleted_after_the_ping(tmp_path):
-    _run(tmp_path, "--yes")
-    assert not (tmp_path / "data").exists()
-
-
-# ── uninstall.ps1: static contract checks (PowerShell isn't runnable here) ──
-
-
-def _ps1_source() -> str:
-    with open(PS1, encoding="utf-8") as f:
-        return f.read()
-
-
-def test_ps1_ping_is_consent_gated_and_best_effort():
-    src = _ps1_source()
-    # Consent gate: prefs.json's analytics_enabled AND the backend-written info file.
-    assert "analytics_info.json" in src
-    assert "prefs.json" in src
-    assert re.search(r"analytics_enabled\s+-eq\s+\$true", src)
-    # Best-effort: 2s timeout inside a try/catch.
-    assert "-TimeoutSec 2" in src
-    assert "try {" in src and "} catch {" in src
-    # Honest single line, matching the bash script's wording.
-    assert "Sending anonymous uninstall ping (you opted in to analytics)." in src
-    # The ping only runs on an actual delete (-Yes) — after the dry-run exit.
-    assert src.index("exit 0") < src.index("app_uninstalled")
-
-
-def test_ps1_and_sh_carry_no_baked_token():
-    """The scripts are generic: the token comes from the backend-written info
-    file, never from a literal in the repo (the secret scanner would agree)."""
-    for path in (SH, PS1):
-        with open(path, encoding="utf-8") as f:
-            src = f.read()
-        assert not re.search(r"phc_[A-Za-z0-9]{16,}", src), path
+@pytest.mark.parametrize("path", [SH, PS1])
+def test_scripts_carry_no_network_call_or_analytics(path):
+    # Comments may mention the `curl … | sh` installer; only code counts.
+    src = "\n".join(
+        line for line in open(path, encoding="utf-8-sig").read().splitlines()
+        if not line.lstrip().startswith("#")
+    )
+    for needle in (
+        r"\bcurl\b", r"\bwget\b", r"Invoke-RestMethod", r"Invoke-WebRequest",
+        r"posthog", r"app_uninstalled", r"analytics_info", r"phc_",
+    ):
+        assert not re.search(needle, src, re.I), (path, needle)
 
 
 def test_shellcheck_clean_if_available():

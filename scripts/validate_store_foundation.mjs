@@ -46,7 +46,9 @@ assert.equal(privacy.schemaVersion, 1);
 assert.equal(privacy.policyUrl, metadata.urls.privacyPolicy);
 assert.equal(privacy.defaultBehavior.analyticsEnabled, false);
 assert.equal(privacy.defaultBehavior.audioUploaded, false);
-assert(privacy.transmittedData.some((entry) => entry.destination === "PostHog US"));
+// No analytics or telemetry: every disclosed transmission needs an explicit user action.
+assert(!privacy.transmittedData.some((entry) => /posthog|analytics|telemetry/i.test(JSON.stringify(entry))));
+assert(privacy.transmittedData.every((entry) => /^explicit /.test(entry.condition)));
 
 assert.equal(compliance.schemaVersion, 1);
 const allowedStatuses = new Set(compliance.statuses);

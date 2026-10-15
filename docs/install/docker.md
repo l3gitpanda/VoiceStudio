@@ -5,12 +5,9 @@ The docker image bundles the backend; the UI is served over HTTP and you open
 it in a normal browser. It is built from the same maintained renderer as the
 Electron desktop app; controls that require native desktop access are hidden.
 
-Inference runs inside the container. Nothing is sent off the machine without
-your explicit yes: product analytics are opt-in (PostHog, content-free usage
-metadata only) behind the same first-run consent prompt as the desktop app,
-and declining or skipping it keeps them off. Set
-`-e OMNIVOICE_ANALYTICS_DISABLED=1` to switch analytics off entirely. Model
-weights download from Hugging Face when you install a model.
+Inference runs inside the container. VoiceStudio sends no usage analytics or
+telemetry, and nothing is sent off the machine without your explicit action.
+Model weights download from Hugging Face when you install a model.
 
 **Official images:** [`ghcr.io/debpalash/voicestudio`](https://github.com/debpalash/VoiceStudio/pkgs/container/voicestudio)
 and [`palashdeb/omnivoice-studio` on Docker Hub](https://hub.docker.com/r/palashdeb/omnivoice-studio) — same images, same tags.

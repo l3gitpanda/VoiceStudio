@@ -178,6 +178,15 @@ def resolve(skip: frozenset[Source] = frozenset()) -> Optional[ResolvedToken]:
     return None
 
 
+def has_local_token() -> bool:
+    """Whether any source holds a token, read locally with no whoami call.
+
+    For status surfaces the UI polls (/system/info, /system/notifications):
+    they must not contact huggingface.co in the background. Validation stays
+    on explicit actions (Settings "Test now", downloads, saving a token)."""
+    return any(_READERS[source]() for source in _PRIORITY)
+
+
 def _all_validation_skipped() -> bool:
     """Hook left here as a no-op for now. Originally intended to allow
     network-disabled environments to bypass whoami; left in for future
