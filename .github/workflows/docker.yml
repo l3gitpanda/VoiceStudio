@@ -32,6 +32,10 @@
 # (Docker Hub push gated on the DOCKERHUB_USERNAME/DOCKERHUB_TOKEN secrets;
 # if unset the build still pushes to GHCR.)
 #
+# Only debpalash's repository publishes (PUBLISH below). A fork cannot write to
+# those registries, so it builds both images to check deploy/Dockerfile and
+# pushes nothing: no registry login, no push, no tag backfill.
+#
 # On main pushes the Docker Hub repository overview is also synced from
 # deploy/dockerhub-overview.md (source of truth for the hub.docker.com page).
 #
@@ -74,6 +78,8 @@ env:
   # Compatibility alias: keep existing deployments on the same tag stream.
   LEGACY_IMAGE_NAME: debpalash/omnivoice-studio
   DOCKERHUB_IMAGE: palashdeb/omnivoice-studio
+  # Build-only everywhere else (see the header).
+  PUBLISH: ${{ github.repository_owner == 'debpalash' }}
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
@@ -128,17 +134,18 @@ jobs:
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
 
       - name: Log in to GHCR
+        if: env.PUBLISH == 'true'
         uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Docker Hub login — only when the secret is present, so forks / runs
-      # without the credential still publish to GHCR.
+      # Docker Hub login — only when publishing and the secret is present, so
+      # runs without the credential still publish to GHCR.
       - name: Check Docker Hub credentials
         id: dockerhub
-        run: echo "enabled=${{ secrets.DOCKERHUB_TOKEN != '' }}" >> "$GITHUB_OUTPUT"
+        run: echo "enabled=${{ env.PUBLISH == 'true' && secrets.DOCKERHUB_TOKEN != '' }}" >> "$GITHUB_OUTPUT"
 
       - name: Log in to Docker Hub
         if: steps.dockerhub.outputs.enabled == 'true'
@@ -183,7 +190,7 @@ jobs:
         with:
           context: .
           file: deploy/Dockerfile
-          push: true
+          push: ${{ env.PUBLISH == 'true' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
@@ -193,7 +200,7 @@ jobs:
       # coordinate. The explicit ref is validated against package.json before
       # the freshly built sha tag is promoted in both registries.
       - name: Backfill canonical GHCR release tags
-        if: inputs.backfill_release
+        if: inputs.backfill_release && env.PUBLISH == 'true'
         shell: bash
         env:
           DOCKERHUB_ENABLED: ${{ steps.dockerhub.outputs.enabled }}
@@ -294,17 +301,18 @@ jobs:
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
 
       - name: Log in to GHCR
+        if: env.PUBLISH == 'true'
         uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Same Docker Hub gating as the CUDA job: push there only when the
-      # secret exists, so forks still publish to GHCR.
+      # Same Docker Hub gating as the CUDA job: push there only when
+      # publishing and the secret exists.
       - name: Check Docker Hub credentials
         id: dockerhub
-        run: echo "enabled=${{ secrets.DOCKERHUB_TOKEN != '' }}" >> "$GITHUB_OUTPUT"
+        run: echo "enabled=${{ env.PUBLISH == 'true' && secrets.DOCKERHUB_TOKEN != '' }}" >> "$GITHUB_OUTPUT"
 
       - name: Log in to Docker Hub
         if: steps.dockerhub.outputs.enabled == 'true'
@@ -347,13 +355,13 @@ jobs:
           build-args: |
             BASE_IMAGE=rocm/pytorch:rocm7.2.4_ubuntu24.04_py3.12_pytorch_release_2.8.0
             GPU_FLAVOR=rocm
-          push: true
+          push: ${{ env.PUBLISH == 'true' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
 
       - name: Backfill canonical GHCR release tags (ROCm)
-        if: inputs.backfill_release
+        if: inputs.backfill_release && env.PUBLISH == 'true'
         shell: bash
         env:
           DOCKERHUB_ENABLED: ${{ steps.dockerhub.outputs.enabled }}

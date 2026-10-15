@@ -19,7 +19,10 @@ def test_the_ghcr_paths_are_explicit_and_keep_the_legacy_alias():
     env = _env()
     assert env["IMAGE_NAME"] == "debpalash/voicestudio"
     assert env["LEGACY_IMAGE_NAME"] == "debpalash/omnivoice-studio"
-    assert "github.repository" not in str(env)
+    # The coordinates never follow the repository (a fork or rename must not
+    # move the tag stream). PUBLISH may read the owner: it only gates pushing.
+    coordinates = [env["REGISTRY"], env["IMAGE_NAME"], env["LEGACY_IMAGE_NAME"], env["DOCKERHUB_IMAGE"]]
+    assert not any("github." in value for value in coordinates)
 
 
 def test_release_backfills_require_an_actual_git_tag():

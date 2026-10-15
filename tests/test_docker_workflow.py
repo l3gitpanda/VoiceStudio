@@ -85,3 +85,24 @@ def test_token_published_releases_still_publish_images():
     on = _load(_DOCKER)["on"]
     inputs = set((on.get("workflow_dispatch") or {}).get("inputs") or {})
     assert {"backfill_release", "release_ref", "promote_stable"} <= keys <= inputs, (keys, inputs)
+
+
+def test_only_the_upstream_repository_publishes():
+    """A fork cannot write to debpalash's registries, so every main push on a
+    fork built both images and then failed with `permission_denied`. Forks
+    build to check deploy/Dockerfile and publish nothing."""
+    data = _load(_DOCKER)
+    assert data["env"]["PUBLISH"] == "${{ github.repository_owner == 'debpalash' }}"
+    gated = "env.PUBLISH == 'true'"
+    for job in _JOBS:
+        steps = data["jobs"][job]["steps"]
+        builds = [s for s in steps if s.get("uses", "").startswith("docker/build-push-action@")]
+        assert len(builds) == 1 and builds[0]["with"]["push"] == "${{ env.PUBLISH == 'true' }}", job
+        dockerhub = next(s for s in steps if s.get("id") == "dockerhub")
+        assert gated in dockerhub["run"], f"{job}: Docker Hub must stay off unless publishing"
+        for step in steps:
+            if step.get("uses", "").startswith("docker/login-action@"):
+                condition = step.get("if", "")
+                assert gated in condition or "steps.dockerhub.outputs.enabled" in condition, (job, step["name"])
+            if "imagetools create" in step.get("run", ""):
+                assert gated in step.get("if", ""), (job, step["name"])

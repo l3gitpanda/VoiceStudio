@@ -47,6 +47,10 @@ metadata and the backend fallback mirror it.
 - Snap launches explain missing sandbox permissions instead of crashing before startup (#2889)
 - Snap packages expand the Electron desktop runtime so they launch after installation (#2858)
 
+### CI
+
+- On forks the Docker workflow builds both images without pushing them, instead of failing on a push it has no permission for — thanks @l3gitpanda!
+
 ## [0.5.7] — 2026-10-13
 
 **VoiceStudio now runs on PCs without a GPU and recovers instead of giving up.** Voice cloning uses the speech-to-text model you installed from Model Catalogue, GPU-less computers get the small CPU PyTorch build, and slow or busy backends are no longer reported as failed.
