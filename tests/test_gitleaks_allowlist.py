@@ -6,13 +6,13 @@ import tomllib
 
 
 ROOT = Path(__file__).resolve().parents[1]
-_POSTHOG_TOKEN = re.search(
-    r"phc_[A-Za-z0-9]{20,}",
-    (ROOT / "backend/core/analytics.py").read_text(encoding="utf-8"),
-)
-assert _POSTHOG_TOKEN is not None
+# SHA-256 of each retired PostHog project token that history still holds.
+# Analytics is removed, so no token lives in the source tree any more.
+_RETIRED_TOKEN_SHA256 = {
+    "cf19c9566b83f7375f591f5fbf776b9c344025805d12c16bd21333f70a708f72",
+    "20b808bcff907f1afac896c5b835a04415a4b914c4314477314397f0f3f6fc38",
+}
 EXPECTED_EXACT_REGEXES = {
-    f"^{_POSTHOG_TOKEN.group(0)}$",
     "^528e871c2a26c4f0f7773b9754e2e1acae20899d$",
     "^hf_abcdefghijklmnopqrstuvwxyz01234567890abcd$",
     "^hf_abcdefghijklmnopqrstuvwxyz0123456789ABCDEF$",
@@ -28,7 +28,12 @@ def test_gitleaks_allowlist_contains_only_reviewed_exact_values():
     allowlist = config["allowlist"]
 
     assert set(allowlist) == {"description", "regexes"}
-    assert set(allowlist["regexes"]) == EXPECTED_EXACT_REGEXES
+    posthog = {r for r in allowlist["regexes"] if r.startswith("^phc_")}
+    assert len(posthog) == 1
+    token = next(iter(posthog))[1:-1]
+    assert re.fullmatch(r"phc_[A-Za-z0-9]{20,}", token)
+    assert hashlib.sha256(token.encode()).hexdigest() in _RETIRED_TOKEN_SHA256
+    assert set(allowlist["regexes"]) - posthog == EXPECTED_EXACT_REGEXES
     assert all(
         regex.startswith("^") and regex.endswith("$")
         for regex in allowlist["regexes"]
@@ -48,9 +53,6 @@ def test_dub_storage_key_allowlist_does_not_hide_similar_credentials():
         assert not any(re.fullmatch(regex, value) for regex in regexes)
 
 
-# SHA-256 of each retired PostHog project token that history still holds (the
-# value itself may only appear in the two canonical analytics files).
-_RETIRED_TOKEN_SHA256 = {"cf19c9566b83f7375f591f5fbf776b9c344025805d12c16bd21333f70a708f72"}
 _FINGERPRINT = re.compile(r"^([0-9a-f]{40}):([^:]+):([a-z0-9-]+):([0-9]+)$")
 
 

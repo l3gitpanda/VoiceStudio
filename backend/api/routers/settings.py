@@ -1473,14 +1473,12 @@ def get_db_backup_state():
     }
 
 
-# ── Opt-in product analytics (hardened; default OFF) ───────────────────────
-# Local-first means silence is not consent: analytics runs only when the user
-# explicitly turns it on AND the build ships a destination token. See
-# core/analytics.py for the three rules (opt-in, no exception autocapture,
-# allowlisted metadata only).
+# ── Product analytics (removed) ─────────────────────────────────────────────
+# This build contains no analytics client. The routes stay so older UI code
+# reads "unavailable" and hides the consent prompt and the Privacy toggle.
 
 class _AnalyticsBody(BaseModel):
-    enabled: bool = Field(..., description="User's explicit choice. Default is OFF.")
+    enabled: bool = Field(..., description="Ignored: analytics cannot be enabled.")
 
 
 @router.get("/analytics")
@@ -1490,13 +1488,7 @@ def get_analytics():
     return {
         "enabled": analytics.enabled(),
         "opted_in": analytics.user_opted_in(),
-        # True for source builds too since #1193 (in-repo default token; env/baked
-        # overrides). False only for a destination-less build, where the UI can
-        # say so instead of offering a toggle that does nothing.
         "available": analytics.token_configured(),
-        # Whether the user has ever been explicitly asked (first-run consent step
-        # or the one-time banner). The UI uses this to ask exactly once — it never
-        # enables anything by itself.
         "prompted": analytics.user_prompted(),
     }
 

@@ -1,9 +1,9 @@
 # Desktop updates
 
-VoiceStudio's desktop app offers **stable releases only**. It checks for an
-update about 10 seconds after launch and every six hours while it stays open;
-**Settings → Updates** also has a manual check. The app never downloads an
-update until you ask, and an available update is only offered, never forced.
+VoiceStudio's desktop app offers **stable releases only**. It never checks for
+updates on its own: click **Check now** in **Settings → Updates** to check and
+to load the release list. The app never downloads an update until you ask, and
+an available update is only offered, never forced.
 
 | Build | Where it comes from | Who it's for |
 |-------|--------------------|--------------|

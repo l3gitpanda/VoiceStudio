@@ -36,7 +36,7 @@ from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from api.dependencies import require_local
-from api.ws_guards import admit_local_or_authorized
+from api.ws_guards import require_ws_dictation
 from services.vc import gate, registry
 from services.vc import session as vc_session
 from services.vc.base import CPU_PARAMS, LIMITS, VCError, VCStreamParams
@@ -231,10 +231,10 @@ def _prepare(backend, params: VCStreamParams, reference, quality_chosen: bool):
     return target
 
 
-@router.websocket(WS_PATH)
+# The dictation rule, not the consumer one: Live Voice streams the user's
+# microphone and speaks as them, so a share-PIN guest is not enough.
+@router.websocket(WS_PATH, dependencies=[Depends(require_ws_dictation)])
 async def ws_vc(websocket: WebSocket):
-    if not await admit_local_or_authorized(websocket):
-        return
     await websocket.accept()
     owner = object()
     claimed = False

@@ -77,12 +77,8 @@ powershell -ExecutionPolicy Bypass -File scripts\uninstall.ps1
 powershell -ExecutionPolicy Bypass -File scripts\uninstall.ps1 -Yes
 ```
 
-**If you opted in to anonymous analytics** (and only then), the delete run
-sends one last content-free `app_uninstalled` ping before removing your data —
-app version, OS name, and the random per-install id, nothing else — and says
-so on the console. Best-effort with a 2-second timeout: a dead network never
-blocks the uninstall. If you never opted in (the default), nothing is sent and
-nothing is printed; the dry-run never sends anything either way.
+The scripts never use the network: neither the dry-run nor the delete run
+sends anything.
 
 It covers the current desktop app and anything a final Tauri-era install
 (`com.debpalash.omnivoice-studio`) left behind. Add `--app` (macOS/Linux) or

@@ -9,6 +9,18 @@ _backend_dir = os.path.dirname(os.path.abspath(__file__))
 if _backend_dir not in sys.path:
     sys.path.insert(0, _backend_dir)
 
+# ── Third-party library telemetry: always off ───────────────────────────────
+# huggingface_hub/transformers attach usage telemetry to Hub requests, and
+# gradio (a dependency) reports to its own servers. Forced, not defaulted:
+# this app sends no telemetry. Child engine processes inherit these. Set
+# before any import that could load huggingface_hub (it reads env at import).
+for _telemetry_var, _off in (
+    ("HF_HUB_DISABLE_TELEMETRY", "1"),
+    ("DO_NOT_TRACK", "1"),
+    ("GRADIO_ANALYTICS_ENABLED", "False"),
+):
+    os.environ[_telemetry_var] = _off
+
 # #2135: arm fatal-signal tracebacks before anything heavy is imported, so a
 # native crash inside torch/CUDA leaves a named frame in backend_err.log
 # instead of a silently vanished process. See core/crash_diagnostics.py.
@@ -1193,11 +1205,8 @@ async def lifespan(app: FastAPI):
         run_sentinel.write_sentinel()
     except Exception:
         logger.exception("Run-sentinel startup failed (non-fatal).")
-    # Opt-in lifecycle analytics (core/analytics.py): install/update/crash
-    # events. A no-op without the user's explicit consent AND a build token.
-    # The run-sentinel record above is the ONE authoritative crash source —
-    # the desktop shell's markers cover the same deaths, so the frontend
-    # never emits a crash event (no double-count).
+    # Analytics is removed (core/analytics.py sends nothing); this only clears
+    # consent, ids and the uninstall-ping file left by older builds.
     try:
         from core import analytics
         analytics.record_startup_lifecycle(_crash_record)
@@ -1705,7 +1714,8 @@ class NetworkAccessMiddleware:
     """When a share PIN is set, require it for non-loopback clients on API
     routes. Inert when no PIN (default + docker deploys). Loopback (incl.
     Tailscale-proxied) always bypasses; the SPA shell is always served so the
-    PIN gate UI can load.
+    PIN gate UI can load. HTTP only: every WebSocket route enforces the same
+    policy on its handshake through ``api.ws_guards``.
 
     Pure ASGI (not BaseHTTPMiddleware) so it never buffers the response body.
     BaseHTTPMiddleware collects StreamingResponse/SSE bodies before forwarding,
@@ -1896,9 +1906,10 @@ app.add_middleware(NetworkAccessMiddleware)
 # OMNIVOICE_API_KEY is set. Distinct from the PIN gate above: the PIN guards
 # casual LAN-share guests for one session; the API key is the durable
 # credential for running this backend remotely (Tailscale / Docker GPU box).
-# Covers WebSockets too — the PIN gate never did, because every WS endpoint
-# carried its own loopback guard; remote mode is exactly the case where a
-# keyed non-loopback client must reach them.
+# Covers WebSockets too; remote mode is exactly the case where a keyed
+# non-loopback client must reach them. The PIN gate above does not, so each
+# WebSocket route also declares a handshake guard from api.ws_guards
+# (tests/test_ws_route_guards.py fails on a route without one).
 app.add_middleware(BearerKeyMiddleware)
 
 # Applies whatever the auth configuration: refuses state-changing requests and

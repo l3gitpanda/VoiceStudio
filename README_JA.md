@@ -32,7 +32,7 @@
 
 まずは **VoiceStudio**（デフォルト、k2-fsa/OmniVoice を使用）から始めるか、別のエンジンを選択してください。[機能とエンジンの一覧](docs/feature-catalog.md)。
 
-ローカルのワークフローはお使いのハードウェア上で動作します。リモートサービスは任意で、利用状況の分析には同意が必要です。
+ローカルのワークフローはお使いのハードウェア上で動作します。リモートサービスは任意で、VoiceStudio は利用状況の分析やテレメトリを一切送信しません。
 
 <details>
 <summary><strong>ワークスペースを見る</strong> · クローン、吹き替え、デザイン、モデル</summary>
@@ -127,14 +127,6 @@ bun run dev
 | 開発 | [コントリビューション](.github/CONTRIBUTING.md) · [Electron](electron/README.md) · [変更履歴](CHANGELOG.md) |
 
 エージェントスキル：`npx skills add debpalash/VoiceStudio` — 音声ワークフローには **voicestudio**、リポジトリのメンテナンスには **voicestudio-maintainer** を選択してください。
-
-## スポンサー
-
-<a href="https://forms.gle/2PYCvd39hbwijzX37"><img src="docs/media/sponsor-slot.svg" alt="あなたのブランドを — VoiceStudio の注目スポンサー枠に応募" width="640" /></a>
-
-**注目パートナーになりませんか。** [有料掲載に応募](https://forms.gle/2PYCvd39hbwijzX37) · [メールで問い合わせ](mailto:partner@voicestudio.sh)
-
-開発を支援する：[Ko-fi](https://ko-fi.com/debpalash) · [PayPal](https://paypal.me/palashCoder) · [スポンサーシップの詳細](SPONSORS.md)
 
 ## ライセンスと責任ある利用
 

@@ -15,10 +15,8 @@ cloning, and cinematic video dubbing — fully local, with no cloud API keys or 
 ![VoiceStudio — the open-source ElevenLabs alternative](https://raw.githubusercontent.com/debpalash/VoiceStudio/main/.github/assets/social-preview.png)
 
 VoiceStudio runs entirely on your own hardware (CUDA / ROCm / CPU
-auto-detect). Nothing leaves the machine without your explicit yes: product
-analytics are opt-in (PostHog, content-free usage metadata only) behind a
-first-run consent prompt — declining or skipping keeps them off, and
-`-e OMNIVOICE_ANALYTICS_DISABLED=1` disables them entirely. This image is the **headless
+auto-detect). It sends no usage analytics or telemetry, and nothing leaves
+the machine without your explicit action. This image is the **headless
 web-server build**: a FastAPI backend serving a pre-built React UI over HTTP, so
 you can run it on an AMD64 homelab box or GPU server and open
 the UI in a browser.

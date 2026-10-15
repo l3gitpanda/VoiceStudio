@@ -116,6 +116,9 @@ describe('UpdateSettings', () => {
       { version: '0.5.3-7', name: 'preview', date: '2026-09-13T00:00:00Z', prerelease: true, notes: '' },
     ]);
     renderSettings();
+    await screen.findByRole('button', { name: 'updates.check_now' });
+    expect(mocks.listReleases).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'updates.check_now' }));
     expect(await screen.findByText('v0.5.2')).toBeInTheDocument();
     expect(screen.queryByText('v0.5.3-7')).not.toBeInTheDocument();
     expect(mocks.listReleases).toHaveBeenCalledWith();
@@ -226,6 +229,7 @@ describe('UpdateSettings', () => {
     ]);
     renderSettings();
 
+    fireEvent.click(await screen.findByRole('button', { name: 'updates.check_now' }));
     fireEvent.click(await screen.findByText('v0.5.1'));
     expect(await screen.findByRole('heading', { name: 'Fixed' })).toBeInTheDocument();
     expect(screen.getByText('Safe notes', { selector: 'strong' })).toBeInTheDocument();

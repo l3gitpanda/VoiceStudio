@@ -8,7 +8,7 @@ points here. Complete the setup, not just a plan.
 
 - Install the **Electron** desktop app. Tauri is archived; never install or launch it.
 - Reuse existing data, settings and models. Ask before downloading a model: state its size and license.
-- Keep cloud services and analytics opt-in. Leave the first-run analytics consent prompt to the user; never answer it for them.
+- Keep cloud services opt-in. VoiceStudio has no analytics or telemetry and no consent prompt to answer.
 - Verify the actual compute device; do not assume GPU support.
 - Name any permission or manual step you cannot perform instead of skipping it.
 

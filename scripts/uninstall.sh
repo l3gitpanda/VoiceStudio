@@ -170,36 +170,6 @@ if [ "$APPLY" -ne 1 ]; then
   exit 0
 fi
 
-# ── Opt-in uninstall ping (before anything is deleted) ──────────────────────
-# If — and only if — the user opted in to anonymous analytics, send a single
-# best-effort `app_uninstalled` event before the data (and the consent record
-# it lives in) goes away. The backend writes analytics_info.json next to
-# prefs.json ONLY while analytics is enabled (explicit consent + a build that
-# ships a token) and deletes it on opt-out, so the file's presence is itself
-# consent-gated; the prefs.json check is belt and braces. Content-free: the
-# event carries the app version, the OS name, and the random per-install id —
-# nothing else. Never blocks or fails the uninstall (2s timeout, silent
-# failure). Not opted in ⇒ nothing is sent and nothing is printed.
-send_uninstall_ping() {
-  local info="$DATA_DIR/analytics_info.json" prefs="$DATA_DIR/prefs.json"
-  [ -f "$info" ] && [ -f "$prefs" ] || return 0
-  grep -q '"analytics_enabled"[[:space:]]*:[[:space:]]*true' "$prefs" 2>/dev/null || return 0
-  command -v curl >/dev/null 2>&1 || return 0
-  local token host distinct_id app_version platform
-  token=$(sed -n 's/.*"token"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$info" | head -n1)
-  host=$(sed -n 's/.*"host"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$info" | head -n1)
-  distinct_id=$(sed -n 's/.*"distinct_id"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$info" | head -n1)
-  app_version=$(sed -n 's/.*"app_version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$info" | head -n1)
-  platform=$(sed -n 's/.*"platform"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$info" | head -n1)
-  [ -n "$token" ] && [ -n "$host" ] && [ -n "$distinct_id" ] || return 0
-  echo "Sending anonymous uninstall ping (you opted in to analytics)."
-  curl -m 2 -s -o /dev/null -X POST "$host/capture/" \
-    -H 'Content-Type: application/json' \
-    -d "{\"api_key\":\"$token\",\"event\":\"app_uninstalled\",\"distinct_id\":\"$distinct_id\",\"properties\":{\"app_version\":\"$app_version\",\"platform\":\"$platform\"}}" \
-    || true
-}
-send_uninstall_ping
-
 # ── Delete ──────────────────────────────────────────────────────────────────
 deleted=0
 for t in "${app_targets[@]:-}"; do

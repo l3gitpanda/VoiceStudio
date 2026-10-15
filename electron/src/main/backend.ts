@@ -439,13 +439,6 @@ function childEnv(
     ...(app.isPackaged ? legacyStorageEnv(legacyTauriRoots()) : {}),
     ...process.env,
   };
-  const packagedToken =
-    typeof __POSTHOG_PROJECT_TOKEN__ === 'string' ? __POSTHOG_PROJECT_TOKEN__ : '';
-  const packagedHost = typeof __POSTHOG_HOST__ === 'string' ? __POSTHOG_HOST__ : '';
-  if (packagedToken && !env.POSTHOG_PROJECT_TOKEN) {
-    env.POSTHOG_PROJECT_TOKEN = packagedToken;
-  }
-  if (packagedHost && !env.POSTHOG_HOST) env.POSTHOG_HOST = packagedHost;
   delete env.PYTHONHOME;
   delete env.PYTHONPATH;
   env.PYTHONUNBUFFERED = '1';
