@@ -11,6 +11,11 @@ metadata and the backend fallback mirror it.
 **Highlights**
 
 - The open-source app no longer contains a licence-key client
+- Live Voice: an opt-in real-time voice changer that speaks in your saved voices
+
+### Added
+
+- Live Voice (opt-in, off by default): speak into your mic and hear one of your verified or designed voices live on any output device, so a virtual cable can feed Discord, VRChat or games; runs Seed-VC in its own one-click environment — thanks @l3gitpanda!
 
 ### Changed
 
@@ -19,6 +24,10 @@ metadata and the backend fallback mirror it.
 ### Removed
 
 - The unused licence-key client and its Lemon Squeezy network call are gone from the open-source app (#2812)
+
+### Docs
+
+- New Live Voice guide (virtual cable setup per OS, consent rule, latency figures) and Seed-VC engine page
 
 ### Fixed
 

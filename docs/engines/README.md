@@ -67,6 +67,12 @@ an upload or a saved voice, is rejected with `[clone_ref_too_long]`: trim both
 to the same passage, or leave the transcript out. The limits are the same when
 an engine runs in its own environment.
 
+## Voice conversion
+
+| Engine | Guide | Runs on | Used by | Enabled by |
+|---|---|---|---|---|
+| Seed-VC (`seed-uvit-tat-xlsr-tiny`) | [seed-vc](seed-vc.md) | CUDA · MPS · CPU (not Intel Mac) | [Live Voice](../features/live-voice.md) real-time voice changer | opt-in + one-click sidecar install (GPL-3.0) |
+
 ## Speech-to-text
 
 | Engine | Guide | Runs on | Best at | Enabled by |

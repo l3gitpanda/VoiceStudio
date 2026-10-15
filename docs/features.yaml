@@ -97,4 +97,6 @@ docs:
   - docs/install/docker.md
   - docs/install/troubleshooting.md
   - docs/features/dictation.md
+  - docs/features/live-voice.md
+  - docs/engines/seed-vc.md
   - docs/migration/real-time-voice-cloning.md

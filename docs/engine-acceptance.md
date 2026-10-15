@@ -23,6 +23,7 @@ Every engine in the tree owns at least one job. A job has exactly one holder.
 | Best transcription accuracy | `whisperx`, `faster-whisper` |
 | Fastest Apple-Silicon transcription | `parakeet-mlx`, `mlx-whisper` |
 | Crash isolation for transcription | `faster-whisper-isolated` |
+| Real-time voice conversion (opt-in Live Voice) | `seed-vc` (GPL-3.0; [guide](engines/seed-vc.md)) |
 
 A proposal must either **take a job from its current holder** (with numbers) or
 **claim a job nothing covers**. "It benchmarks well" is not a job.
