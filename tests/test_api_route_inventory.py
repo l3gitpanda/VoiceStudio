@@ -58,7 +58,7 @@ _CRITICAL = [
     "POST /transcribe", "GET /api/settings/hf-token/state",
     "POST /v1/audio/speech", "POST /v1/audio/transcriptions",
     "GET /.well-known/voicestudio-speech", "GET /v1/audio/capabilities",
-    "WS /ws/events", "WS /ws/tts", "WS /ws/transcribe",
+    "WS /ws/events", "WS /ws/tts", "WS /ws/transcribe", "WS /ws/vc",
     "WS /v1/audio/transcriptions/stream",
 ]
 

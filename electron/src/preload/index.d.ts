@@ -349,7 +349,7 @@ export interface VoiceStudioBridge {
     testRemote(input: { url: string; apiKey: string }): Promise<RemoteBackendProbe>;
     useRemote(input: { url: string; apiKey: string }): Promise<RemoteBackendProbe>;
     useLocal(): Promise<BackendConnection>;
-    websocketUrl(path: '/ws/transcribe' | '/ws/events' | '/ws/tts'): Promise<string>;
+    websocketUrl(path: '/ws/transcribe' | '/ws/events' | '/ws/tts' | '/ws/vc'): Promise<string>;
   };
   capture: {
     phase(

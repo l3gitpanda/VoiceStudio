@@ -252,6 +252,39 @@ def set_offload_after_generation(body: _OffloadAfterGenerationBody):
     return _offload_after_generation_state()
 
 
+# ── Live Voice opt-in (Settings → Performance) ─────────────────────────────
+
+
+class _RealtimeVcBody(BaseModel):
+    enabled: bool = Field(..., description="True to turn on the Live Voice real-time voice changer")
+
+
+def _realtime_vc_state() -> dict:
+    from services.vc import gate
+
+    return {"enabled": gate.realtime_vc_enabled(), "env_pinned": gate.env_pinned()}
+
+
+@router.get("/realtime-vc")
+def get_realtime_vc():
+    """Whether the opt-in Live Voice workspace is on (off by default)."""
+    return _realtime_vc_state()
+
+
+@router.put("/realtime-vc")
+def set_realtime_vc(body: _RealtimeVcBody):
+    """Persist the toggle. ``OMNIVOICE_REALTIME_VC`` still wins when set."""
+    from core import prefs
+    from services.vc import gate
+
+    try:
+        prefs.set_(gate.REALTIME_VC_PREF, bool(body.enabled))
+    except Exception:
+        logger.exception("set_realtime_vc failed")
+        raise HTTPException(status_code=500, detail="Failed to persist setting")
+    return _realtime_vc_state()
+
+
 # ── Compute-device override (Settings → Performance) ──────────────────────
 
 

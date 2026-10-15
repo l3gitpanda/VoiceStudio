@@ -37,7 +37,7 @@ _TOKEN_BODY_RE = re.compile(rf"^[A-Za-z0-9_-]{{{_ENCODED_TOKEN_LENGTH}}}$")
 # in electron/src/shared/api/authSession.ts — a route missing here mints a 422 and the
 # UI consumer fails silently (#1769 added /ws/tts for the live dub preview).
 _ALLOWED_WS_PATHS = frozenset(
-    {"/ws/events", "/ws/transcribe", "/ws/tts", "/v1/audio/transcriptions/stream"}
+    {"/ws/events", "/ws/transcribe", "/ws/tts", "/ws/vc", "/v1/audio/transcriptions/stream"}
 )
 _ADMIN_CAPABILITIES = frozenset({"consume", "admin"})
 _KEY_GENERATION_INFO = b"omnivoice-admin-key-generation-v1"

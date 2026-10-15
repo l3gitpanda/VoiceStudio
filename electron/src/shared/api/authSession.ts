@@ -499,7 +499,7 @@ export async function revokeAdminSession(
 // Mirrors the backend ticket allowlist (`_ALLOWED_WS_PATHS` in
 // backend/services/admin_sessions.py). A path listed here but not there mints
 // a 422, and the consumer fails silently — keep the two in lockstep.
-const ALLOWED_WS_PATHS = new Set(['/ws/events', '/ws/transcribe', '/ws/tts']);
+const ALLOWED_WS_PATHS = new Set(['/ws/events', '/ws/transcribe', '/ws/tts', '/ws/vc']);
 const LOGICAL_WS_ORIGIN = 'http://omnivoice.invalid';
 
 function websocketTarget(path: string, apiBase: string): { url: URL; logicalPath: string } {

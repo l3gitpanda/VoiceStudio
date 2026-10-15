@@ -3,7 +3,7 @@ import { getBackendStatusSnapshot, type BackendStatus } from '@/hooks/use-backen
 import { absoluteApiBase } from './client';
 import { authenticatedWsUrl } from '@shared/api/authSession';
 
-export type BackendWebSocketPath = '/ws/events' | '/ws/transcribe' | '/ws/tts';
+export type BackendWebSocketPath = '/ws/events' | '/ws/transcribe' | '/ws/tts' | '/ws/vc';
 
 /** Resolve through main for packaged/authenticated remote sessions and Vite in local development. */
 export async function backendWebSocketUrl(

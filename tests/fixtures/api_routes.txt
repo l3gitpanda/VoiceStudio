@@ -45,6 +45,7 @@ GET /api/settings/llm-skills
 GET /api/settings/perf/offload-after-generation
 GET /api/settings/perf/torch-compile-disabled
 GET /api/settings/performance-profile
+GET /api/settings/realtime-vc
 GET /api/settings/storage
 GET /api/settings/storage/models-dir
 GET /archetypes
@@ -174,6 +175,7 @@ GET /v1/audio/capabilities
 GET /v1/audio/voices
 GET /v1/models
 GET /v1/models/{model_id:path}
+GET /vc/status
 GET /watermark/status
 PATCH /gallery/voices/{voice_id}
 PATCH /projects/{project_id}
@@ -320,6 +322,7 @@ PUT /api/settings/llm-skills/{skill_id}
 PUT /api/settings/perf/offload-after-generation
 PUT /api/settings/perf/torch-compile-disabled
 PUT /api/settings/performance-profile
+PUT /api/settings/realtime-vc
 PUT /api/settings/storage/models-dir
 PUT /archetypes/previews
 PUT /calls/settings
@@ -334,3 +337,4 @@ WS /v1/audio/transcriptions/stream
 WS /ws/events
 WS /ws/transcribe
 WS /ws/tts
+WS /ws/vc

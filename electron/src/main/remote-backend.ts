@@ -232,7 +232,7 @@ export async function probeRemoteBackend(
 
 export async function remoteWebSocketUrl(
   rawUrl: string,
-  path: '/ws/transcribe' | '/ws/events' | '/ws/tts',
+  path: '/ws/transcribe' | '/ws/events' | '/ws/tts' | '/ws/vc',
   session: RemoteSession | null,
   { fetcher = fetch, now = Date.now, timeoutMs = 5000 }: ProbeOptions = {},
 ): Promise<string> {

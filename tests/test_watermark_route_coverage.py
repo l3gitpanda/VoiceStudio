@@ -39,6 +39,8 @@ _SYNTH_CALL = re.compile(
     r"|\b_run_backend_inference\("
     r"|\bgenerate_with_cached_ref\("   # cached-reference OmniVoice path
     r"|\bsynthesize_chapter\("         # longform chapter assembly
+    r"|\bbackend\.convert\("           # live voice changer (services.vc)
+    r"|\binfer_window\("               # voice-conversion adapter primitive
 )
 
 #: Modules that legitimately touch synthesis primitives WITHOUT marking.
@@ -54,6 +56,14 @@ _ALLOWED = {
     "services/audiobook.py":
         "pure chapter assembly (spans -> tensor); the audiobook router marks "
         "the assembled chapter at its single mark_synthetic call site",
+    "services/vc/session.py":
+        "Live Voice (/ws/vc): real-time voice-changer output is deliberately "
+        "NOT watermarked in this fork (owner decision 2026-10-15, documented "
+        "in docs/features/live-voice.md). Listed here so the exemption stays "
+        "explicit instead of the guard simply not seeing the producer",
+    "services/vc/base.py":
+        "the voice-conversion adapter seam (StreamingVCBackend.convert -> "
+        "infer_window) below services/vc/session.py; see that entry",
 }
 
 #: Producers that must each keep a mark_synthetic call. (sonitranslate.py is

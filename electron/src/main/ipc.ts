@@ -373,7 +373,7 @@ export function registerIpc(
   });
   ipcMain.handle(CHANNELS.backendWebsocketUrl, async (event, raw: unknown) => {
     assertTrustedTopLevelFrame(event);
-    if (raw !== '/ws/transcribe' && raw !== '/ws/events' && raw !== '/ws/tts')
+    if (raw !== '/ws/transcribe' && raw !== '/ws/events' && raw !== '/ws/tts' && raw !== '/ws/vc')
       throw new Error('Unsupported backend WebSocket path');
     return supervisor.websocketUrl(raw);
   });

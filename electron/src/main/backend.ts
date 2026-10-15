@@ -1108,7 +1108,7 @@ export class BackendSupervisor extends EventEmitter<{
       : null;
   }
 
-  websocketUrl(path: '/ws/transcribe' | '/ws/events' | '/ws/tts'): Promise<string> {
+  websocketUrl(path: '/ws/transcribe' | '/ws/events' | '/ws/tts' | '/ws/vc'): Promise<string> {
     return remoteWebSocketUrl(this.baseUrl, path, this.remoteUrl ? this.activeSession() : null);
   }
 
