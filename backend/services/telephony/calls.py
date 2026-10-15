@@ -484,7 +484,9 @@ def eligible_profile(profile_id: str):
         ).fetchone()
     if row is None:
         raise CallError(404, "profile_not_found", "That voice profile does not exist")
-    if not (row["verified_own_voice"] or (row["kind"] or "clone") == "design"):
+    from core.voice_consent import may_speak_as
+
+    if not may_speak_as(row):
         raise CallError(
             403,
             "voice_not_allowed",
@@ -498,6 +500,7 @@ def eligible_profile(profile_id: str):
 def count_eligible_profiles() -> int:
     from core.db import db_conn
 
+    # Same rule as core.voice_consent.may_speak_as (tests hold them together).
     with db_conn() as conn:
         row = conn.execute(
             "SELECT COUNT(*) FROM voice_profiles WHERE verified_own_voice=1 OR kind='design'"
