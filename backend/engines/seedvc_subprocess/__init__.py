@@ -113,10 +113,16 @@ class SeedVCSidecar(SubprocessBackend):
     def sidecar_script(cls) -> Path:
         return Path(__file__).resolve().parent / "main.py"
 
-    def request(self, msg: dict, *, timeout_s: float) -> dict:
+    def request(self, msg: dict, *, timeout_s: float, respawn: bool = True) -> dict:
         """Send one request and return its terminal reply (progress frames
-        are skipped; each re-arms the deadline). Raises ``VCError``."""
+        are skipped; each re-arms the deadline). Raises ``VCError``.
+
+        ``respawn=False`` refuses to start a new process: the prepared target
+        voice lives in the one that answered ``vc_prepare``, and a fresh one
+        would convert against nothing."""
         with self._lock:
+            if not respawn and (self._proc is None or self._proc.poll() is not None):
+                raise VCError("engine_failed", "The voice changer engine stopped. Start Live Voice again.")
             try:
                 self._spawn()
             except Exception as exc:  # noqa: BLE001
@@ -227,6 +233,7 @@ class SeedVCBackend(StreamingVCBackend):
                 "cfg_rate": float(self.params.cfg_rate),
             },
             timeout_s=_env_seconds("OMNIVOICE_SEEDVC_INFER_TIMEOUT_S", INFER_TIMEOUT_S, 2.0),
+            respawn=False,
         )
         if reply.get("op") != "vc_audio":
             raise VCError("engine_failed", "Seed-VC returned an unexpected reply.")

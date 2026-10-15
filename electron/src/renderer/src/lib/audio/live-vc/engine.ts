@@ -79,6 +79,21 @@ export const defaultDeps: LiveVoiceDeps = {
   createAudioElement: () => new Audio(),
 };
 
+export interface PlaybackBuffer {
+  chunkMs: number;
+  jitterMs: number;
+}
+
+/**
+ * Jitter-buffer sizing for one session. Audio arrives a whole model block at a
+ * time, so the slack scales with the block: blocks that take longer to
+ * convert also vary more in when they land.
+ */
+export function playbackBufferFor(blockSamples: number, sampleRate: number): PlaybackBuffer {
+  const chunkMs = sampleRate > 0 ? Math.round((1000 * blockSamples) / sampleRate) : 20;
+  return { chunkMs, jitterMs: Math.min(320, Math.max(60, Math.round(0.4 * chunkMs))) };
+}
+
 /** One output device fed by the jitter-buffer worklet. */
 class OutputSink {
   private constructor(
@@ -91,6 +106,7 @@ class OutputSink {
     deps: LiveVoiceDeps,
     sampleRate: number,
     deviceId: string,
+    buffer: PlaybackBuffer,
     onStats?: (data: { fillMs: number; underruns: number; droppedMs: number }) => void,
   ): Promise<OutputSink> {
     const ctx = deps.createContext({ sampleRate, latencyHint: 'interactive' });
@@ -98,7 +114,7 @@ class OutputSink {
       await ctx.audioWorklet.addModule(PLAYBACK_WORKLET);
       const node = new AudioWorkletNode(ctx, 'live-voice-playback', {
         outputChannelCount: [1],
-        processorOptions: { targetMs: 60, maxMs: 240 },
+        processorOptions: buffer,
       });
       if (onStats) {
         node.port.onmessage = (event) => {
@@ -166,6 +182,7 @@ export class LiveVoiceEngine {
   private monitorSink: OutputSink | null = null;
   private options: LiveVoiceStartOptions | null = null;
   private sampleRate = 0;
+  private playbackBuffer: PlaybackBuffer = playbackBufferFor(0, 0);
   private bypass = false;
   private droppedSendFrames = 0;
   private stopping = false;
@@ -224,7 +241,7 @@ export class LiveVoiceEngine {
       this.monitorSink = null;
       await sink?.close();
     } else if (!this.monitorSink && this.sampleRate && this.options.outputDeviceId) {
-      this.monitorSink = await OutputSink.open(this.deps, this.sampleRate, '');
+      this.monitorSink = await OutputSink.open(this.deps, this.sampleRate, '', this.playbackBuffer);
     }
   }
 
@@ -271,13 +288,14 @@ export class LiveVoiceEngine {
     const options = this.options;
     if (!options || this.finished) return;
     this.sampleRate = ready.sample_rate;
+    this.playbackBuffer = playbackBufferFor(ready.block_samples, ready.sample_rate);
     // Every await below can race a stop() or an error that already tore the
     // session down; whatever a step created after that is released at once,
     // so no audio context leaks and the microphone never stays open.
     let output: OutputSink | null = null;
     let monitor: OutputSink | null = null;
     try {
-      output = await OutputSink.open(this.deps, ready.sample_rate, options.outputDeviceId, (s) =>
+      output = await OutputSink.open(this.deps, ready.sample_rate, options.outputDeviceId, this.playbackBuffer, (s) =>
         this.callbacks.onPlayback?.({
           ...s,
           outputLatencyMs: output?.latencyMs ?? 0,
@@ -285,7 +303,7 @@ export class LiveVoiceEngine {
         }),
       );
       if (options.monitor && options.outputDeviceId && !this.finished) {
-        monitor = await OutputSink.open(this.deps, ready.sample_rate, '');
+        monitor = await OutputSink.open(this.deps, ready.sample_rate, '', this.playbackBuffer);
       }
     } catch (error) {
       await output?.close();

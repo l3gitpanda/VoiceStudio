@@ -50,7 +50,9 @@ them before any distribution.
   one window per request; context, look-ahead and SOLA crossfading are in
   `backend/services/vc/streamer.py`.
 - **Silence gating is an RMS gate, not upstream's FSMN VAD.** It skips the
-  model for blocks quieter than `gate_db`.
+  model only when every 20 ms frame of a block (and its look-ahead) is
+  quieter than `gate_db`, so a word starting or ending inside a quiet block
+  is still converted.
 
 ## Verified and not yet verified
 

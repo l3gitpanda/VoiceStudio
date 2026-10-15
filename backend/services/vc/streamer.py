@@ -54,7 +54,7 @@ class BlockStreamer:
         self.tail_samples = _frames(params.lookahead_ms) * zc
         self.out_samples = self.crossfade + self.search + self.block
         self.window_samples = self.head_samples + self.out_samples + self.tail_samples
-        # 10 ** (dB / 20) on the RMS of the region a block will emit.
+        # 10 ** (dB / 20) on the RMS of each 20 ms frame (see window_is_silent).
         self._gate_rms = float(10.0 ** (float(params.gate_db) / 20.0))
         t = np.linspace(0.0, 1.0, self.crossfade, dtype=np.float32)
         self._fade_in = (np.sin(0.5 * np.pi * t) ** 2).astype(np.float32)
@@ -97,12 +97,20 @@ class BlockStreamer:
         return self._ring.copy()
 
     def window_is_silent(self, window: np.ndarray) -> bool:
-        """True when the region this window emits is below the gate."""
+        """True when every 20 ms frame this window emits, plus its look-ahead,
+        is below the gate.
+
+        Per frame, not over the whole region: a word that starts or trails off
+        inside a mostly quiet block averages below the gate, and muting that
+        block clips the word.
+        """
         start = self.head_samples
-        region = window[start:start + self.out_samples]
-        if region.size == 0:
+        region = window[start:start + self.out_samples + self.tail_samples]
+        frames = region.size // self.frame
+        if frames == 0:
             return True
-        return float(np.sqrt(np.mean(np.square(region, dtype=np.float64)))) < self._gate_rms
+        framed = region[: frames * self.frame].reshape(frames, self.frame).astype(np.float64)
+        return float(np.sqrt(np.mean(np.square(framed), axis=1)).max()) < self._gate_rms
 
     # ── output side ────────────────────────────────────────────────────────
 

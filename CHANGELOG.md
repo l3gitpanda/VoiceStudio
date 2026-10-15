@@ -41,6 +41,9 @@ metadata and the backend fallback mirror it.
 
 ### Fixed
 
+- Live Voice no longer cuts out: playback is sized from the block length instead of dropping most of each block on CPU settings or after a late one — thanks @l3gitpanda!
+- Live Voice keeps quiet word starts and endings instead of muting a whole block, and stops cleanly if its engine crashes — thanks @l3gitpanda!
+- Type to talk no longer clips the first or last syllable on a virtual cable — thanks @l3gitpanda!
 - With Network sharing on, other devices need the share PIN or API key to stream speech or live app updates
 - Tools → Convert includes saved Voice Design profiles and clones with locked reference audio in the target voice picker (#2899)
 

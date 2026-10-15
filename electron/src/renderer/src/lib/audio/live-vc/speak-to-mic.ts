@@ -30,6 +30,13 @@ export interface SpeakRequest {
   monitor: boolean;
 }
 
+/** Silence before the first chunk: a freshly routed output (a virtual cable
+ * especially) is still starting up, and audio scheduled at once loses its
+ * first syllable. */
+const LEAD_S = 0.15;
+/** Kept open after the last chunk is due, on top of the device's own buffer. */
+const TAIL_S = 0.25;
+
 /** Schedules PCM chunks gaplessly on one output. */
 class ChunkPlayer {
   private nextStart = 0;
@@ -44,14 +51,18 @@ class ChunkPlayer {
     const source = ctx.createBufferSource();
     source.buffer = buffer;
     source.connect(ctx.destination);
-    const start = Math.max(this.nextStart, ctx.currentTime + 0.03);
+    const lead = this.sources.length === 0 ? LEAD_S : 0.03;
+    const start = Math.max(this.nextStart, ctx.currentTime + lead);
     source.start(start);
     this.sources.push(source);
     this.nextStart = start + buffer.duration;
   }
 
+  /** Until the last scheduled sample has left the device, not just the graph. */
   get remainingSeconds(): number {
-    return Math.max(0, this.nextStart - this.ctx.currentTime);
+    const ctx = this.ctx as AudioContext & { outputLatency?: number };
+    const deviceDelay = (ctx.baseLatency || 0) + (ctx.outputLatency || 0);
+    return Math.max(0, this.nextStart - ctx.currentTime) + deviceDelay;
   }
 
   async close(): Promise<void> {
@@ -105,7 +116,7 @@ export class SpeakToMic {
         setTimeout(() => {
           void this.release();
           resolve();
-        }, wait * 1000 + 100);
+        }, (wait + TAIL_S) * 1000);
       };
       this.finish = () => done();
       socket.onopen = () => socket.send(JSON.stringify({ text: request.text, voice: request.profileId }));

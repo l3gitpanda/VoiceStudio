@@ -2,27 +2,38 @@
  * Live Voice playback: a jitter buffer between the network and the output
  * device.
  *
- * Converted blocks arrive in bursts (one per model step) while the output
- * device pulls 128 frames at a steady clock. The buffer keeps a small target
- * fill so bursts never run dry, and it controls drift: the microphone and the
- * output device (a virtual cable especially) run on different clocks, so the
- * fill slowly creeps. When it grows past `maxMs` the oldest audio is dropped
- * back to the target — latency never grows unbounded. An underrun plays
- * silence and is counted. Stats are posted every ~0.5 s.
+ * Converted audio arrives one model block at a time (about 180 ms on a GPU,
+ * 800 ms with the CPU settings), each block a little early or late, while the
+ * output device pulls 128 frames at a steady clock. So the buffer is sized
+ * from the block, not fixed:
+ *
+ *  - On (re)start it plays `jitterMs` of silence first. That is the slack a
+ *    late block can use up; without it the first block plays out just as the
+ *    next one is due and any delay is an audible gap.
+ *  - Only a backlog past two blocks plus slack is trimmed (a stall that
+ *    released a burst, or clock drift between the microphone and the output,
+ *    a virtual cable especially), back to one block plus slack. A fixed
+ *    ceiling below one block would throw most of every block away.
+ *  - An underrun plays silence, is counted, and re-arms the lead-in.
+ *
+ * Stats are posted every ~0.5 s.
  *
  * Messages in: Float32Array (samples), or {type: 'reset'}.
  * Messages out: {type: 'stats', fillMs, underruns, droppedMs}.
  */
 class LiveVoiceJitterBuffer {
-  constructor(sampleRate, { targetMs = 60, maxMs = 240, capacityMs = 2000 } = {}) {
+  constructor(sampleRate, { chunkMs = 20, jitterMs = 60, capacityMs = 4000 } = {}) {
+    const samples = (ms) => Math.max(1, Math.round((ms / 1000) * sampleRate));
     this.sampleRate = sampleRate;
-    this.target = Math.round((targetMs / 1000) * sampleRate);
-    this.max = Math.max(this.target + 1, Math.round((maxMs / 1000) * sampleRate));
-    this.capacity = Math.max(this.max * 2, Math.round((capacityMs / 1000) * sampleRate));
+    this.lead = samples(jitterMs);
+    this.trimTo = samples(chunkMs) + this.lead;
+    this.max = 2 * this.trimTo;
+    this.capacity = Math.max(2 * this.max, samples(capacityMs));
     this.ring = new Float32Array(this.capacity);
     this.read = 0;
     this.size = 0;
     this.primed = false;
+    this.leadLeft = 0;
     this.underruns = 0;
     this.dropped = 0;
   }
@@ -31,6 +42,7 @@ class LiveVoiceJitterBuffer {
     this.read = 0;
     this.size = 0;
     this.primed = false;
+    this.leadLeft = 0;
   }
 
   push(samples) {
@@ -44,12 +56,15 @@ class LiveVoiceJitterBuffer {
       this.size += 1;
     }
     if (this.size > this.max) {
-      const excess = this.size - this.target;
+      const excess = this.size - this.trimTo;
       this.read = (this.read + excess) % this.capacity;
       this.size -= excess;
       this.dropped += excess;
     }
-    if (!this.primed && this.size >= this.target) this.primed = true;
+    if (!this.primed && this.size > 0) {
+      this.primed = true;
+      this.leadLeft = this.lead;
+    }
   }
 
   pull(out) {
@@ -57,23 +72,27 @@ class LiveVoiceJitterBuffer {
       out.fill(0);
       return;
     }
-    const n = Math.min(out.length, this.size);
-    for (let i = 0; i < n; i += 1) {
-      out[i] = this.ring[(this.read + i) % this.capacity];
+    let i = Math.min(out.length, this.leadLeft);
+    out.fill(0, 0, i);
+    this.leadLeft -= i;
+    const n = Math.min(out.length - i, this.size);
+    for (let k = 0; k < n; k += 1) {
+      out[i + k] = this.ring[(this.read + k) % this.capacity];
     }
     this.read = (this.read + n) % this.capacity;
     this.size -= n;
-    if (n < out.length) {
-      out.fill(0, n);
+    i += n;
+    if (i < out.length) {
+      out.fill(0, i);
       this.underruns += 1;
-      this.primed = false; // refill to the target before playing again
+      this.primed = false; // the next audio starts with the lead-in again
     }
   }
 
   stats() {
     return {
       type: 'stats',
-      fillMs: (1000 * this.size) / this.sampleRate,
+      fillMs: (1000 * (this.size + this.leadLeft)) / this.sampleRate,
       underruns: this.underruns,
       droppedMs: (1000 * this.dropped) / this.sampleRate,
     };

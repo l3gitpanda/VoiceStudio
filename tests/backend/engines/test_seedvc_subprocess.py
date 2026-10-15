@@ -79,10 +79,16 @@ def test_unavailable_until_installed(monkeypatch):
     assert not ok and "not installed" in reason
 
 
-def test_sidecar_crash_is_a_typed_engine_failure(backend, reference, monkeypatch):
+@pytest.mark.parametrize("exited", [False, True], ids=["dying", "dead"])
+def test_sidecar_crash_is_a_typed_engine_failure(backend, reference, monkeypatch, exited):
+    """Whether the crash is still in progress or already over, conversion
+    fails; it never respawns a sidecar that has no target voice (that raced:
+    a dead one was silently replaced and the next window "converted")."""
     monkeypatch.setenv("OMNIVOICE_ECHO_CRASH", "1")  # exits after one reply
     backend.configure(VCStreamParams(gate_db=-90.0))
     backend.prepare(reference)
+    if exited:
+        backend._transport._proc.wait(timeout=10)
     with pytest.raises(VCError) as err:
         backend.convert(np.ones(backend.block_samples, dtype=np.float32) * 0.1)
     assert err.value.code == "engine_failed"
@@ -90,7 +96,7 @@ def test_sidecar_crash_is_a_typed_engine_failure(backend, reference, monkeypatch
 
 def test_malformed_audio_from_the_sidecar_is_refused(backend):
     class _Short:
-        def request(self, msg, *, timeout_s):
+        def request(self, msg, *, timeout_s, respawn=True):
             return {"op": "vc_audio", "pcm_b64": base64.b64encode(b"\x00" * 8).decode()}
 
         def shutdown(self):

@@ -26,6 +26,8 @@ function fakeContext(sampleRate: number) {
   return {
     sampleRate,
     currentTime: 0,
+    baseLatency: 0.01,
+    outputLatency: 0.09,
     state: 'running',
     destination: {},
     started,
@@ -85,8 +87,13 @@ describe('SpeakToMic', () => {
     socket.onmessage?.({ data: pcm(2400) });
     expect(contexts[0].started).toHaveLength(2);
     expect(contexts[1].started).toHaveLength(2);
+    // The first syllable waits for the freshly routed device; the rest is gapless.
+    expect(contexts[0].started[0]).toBeCloseTo(0.15);
+    expect(contexts[0].started[1]).toBeCloseTo(0.15 + 10 / 24000);
     socket.onmessage?.({ data: JSON.stringify({ type: 'done' }) });
     await flush();
+    // Due at 0.25 s, plus 0.1 s still in the device and the 0.25 s tail.
+    await vi.advanceTimersByTimeAsync(550);
     expect(contexts.every((c) => c.close.mock.calls.length === 0)).toBe(true); // still playing out
     await vi.runAllTimersAsync();
     await done;

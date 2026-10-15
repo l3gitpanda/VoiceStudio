@@ -90,6 +90,24 @@ def test_quiet_blocks_are_not_converted():
     assert out.size and not out.any()
 
 
+def test_a_word_inside_a_quiet_block_is_still_converted():
+    """Regression: the gate averaged the whole emitted region, so 40 ms of
+    speech in an otherwise silent 180 ms block read as silence and the onset
+    of the word was muted."""
+    backend = _Identity()
+    backend.configure(VCStreamParams(gate_db=-40.0))
+    s = backend.streamer
+    window = np.zeros(s.window_samples, dtype=np.float32)
+    onset = s.head_samples + s.out_samples - 2 * s.frame
+    window[onset:onset + 2 * s.frame] = 0.03  # -30 dBFS for 40 ms
+    assert not s.window_is_silent(window)
+    window[:] = 0.0
+    window[s.head_samples + s.out_samples:] = 0.03  # only in the look-ahead
+    assert not s.window_is_silent(window)
+    window[:] = 1e-4
+    assert s.window_is_silent(window)
+
+
 def test_reset_forgets_context_and_tail():
     backend = _Identity()
     backend.configure(VCStreamParams(gate_db=-90.0))

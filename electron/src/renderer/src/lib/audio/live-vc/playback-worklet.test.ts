@@ -21,47 +21,62 @@ beforeAll(async () => {
 const SR = 1000; // 1 sample per ms keeps the arithmetic readable
 
 describe('live voice jitter buffer', () => {
-  it('stays silent until the target fill is reached, then plays in order', () => {
-    const b = new JitterBuffer(SR, { targetMs: 60, maxMs: 240 });
-    const out = new Float32Array(10);
+  const play = (b: Buffer, ms: number) => {
+    const out = new Float32Array(ms);
+    b.pull(out);
+    return out;
+  };
+
+  it('opens with the lead-in silence, then plays in order', () => {
+    const b = new JitterBuffer(SR, { chunkMs: 50, jitterMs: 10 });
+    expect(play(b, 5).every((v) => v === 0)).toBe(true); // nothing yet
     b.push(Float32Array.from({ length: 50 }, (_, i) => i + 1));
-    b.pull(out);
-    expect(Array.from(out)).toEqual(new Array(10).fill(0));
-    b.push(Float32Array.from({ length: 20 }, (_, i) => i + 51));
-    b.pull(out);
-    expect(Array.from(out)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     expect(b.stats().fillMs).toBe(60);
+    expect(Array.from(play(b, 15))).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5]);
   });
 
-  it('counts an underrun and refills before playing again', () => {
-    const b = new JitterBuffer(SR, { targetMs: 20, maxMs: 100 });
-    b.push(new Float32Array(25).fill(1));
-    const out = new Float32Array(30);
-    b.pull(out);
+  it('plays a whole CPU-sized block instead of trimming it to the slack', () => {
+    // Regression: a fixed 240 ms ceiling dropped all but 60 ms of every
+    // 800 ms block, so CPU sessions played in short bursts.
+    const b = new JitterBuffer(SR, { chunkMs: 800, jitterMs: 300 });
+    b.push(new Float32Array(800).fill(1));
+    expect(b.stats().droppedMs).toBe(0);
+    play(b, 300); // the lead-in
+    expect(play(b, 800).every((v) => v === 1)).toBe(true);
+  });
+
+  it('rides out a block that lands late by up to the slack', () => {
+    const b = new JitterBuffer(SR, { chunkMs: 180, jitterMs: 72 });
+    b.push(new Float32Array(180).fill(1));
+    play(b, 180 + 50); // the next block is 50 ms late
+    b.push(new Float32Array(180).fill(2));
+    play(b, 180);
+    expect(b.stats().underruns).toBe(0);
+  });
+
+  it('counts an underrun and starts the next audio with the lead-in again', () => {
+    const b = new JitterBuffer(SR, { chunkMs: 20, jitterMs: 5 });
+    b.push(new Float32Array(20).fill(1));
+    const out = play(b, 30);
     expect(Array.from(out.slice(25))).toEqual([0, 0, 0, 0, 0]);
     expect(b.stats().underruns).toBe(1);
     b.push(new Float32Array(10).fill(2));
-    b.pull(out);
-    expect(out.every((v) => v === 0)).toBe(true); // below target again: wait
+    expect(Array.from(play(b, 6))).toEqual([0, 0, 0, 0, 0, 2]);
   });
 
-  it('drops the oldest audio back to the target when clocks drift and it grows', () => {
-    const b = new JitterBuffer(SR, { targetMs: 50, maxMs: 100 });
+  it('trims a backlog past two blocks back to one block plus slack, oldest first', () => {
+    const b = new JitterBuffer(SR, { chunkMs: 40, jitterMs: 10 });
     b.push(Float32Array.from({ length: 130 }, (_, i) => i));
-    expect(b.stats().fillMs).toBe(50);
     expect(b.stats().droppedMs).toBe(80);
-    const out = new Float32Array(1);
-    b.pull(out);
-    expect(out[0]).toBe(80); // the newest 50 samples were kept
+    expect(b.stats().fillMs).toBe(60); // 50 kept + the 10 ms lead-in
+    expect(play(b, 11)[10]).toBe(80); // the newest 50 samples were kept
   });
 
   it('reset empties the buffer and re-primes', () => {
-    const b = new JitterBuffer(SR, { targetMs: 10, maxMs: 50 });
+    const b = new JitterBuffer(SR, { chunkMs: 10, jitterMs: 5 });
     b.push(new Float32Array(20).fill(1));
     b.reset();
-    const out = new Float32Array(5);
-    b.pull(out);
-    expect(out.every((v) => v === 0)).toBe(true);
+    expect(play(b, 5).every((v) => v === 0)).toBe(true);
     expect(b.stats().fillMs).toBe(0);
   });
 });

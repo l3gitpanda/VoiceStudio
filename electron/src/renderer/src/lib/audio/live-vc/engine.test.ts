@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { LiveVoiceEngine, MAX_BUFFERED_BYTES, type LiveVoiceDeps } from './engine';
+import { LiveVoiceEngine, MAX_BUFFERED_BYTES, playbackBufferFor, type LiveVoiceDeps } from './engine';
 
 vi.mock('@/lib/api/websocket', () => ({ backendWebSocketUrl: vi.fn() }));
 vi.mock('@shared/utils/aec/micCapture', () => ({ startMicCapture: vi.fn() }));
@@ -273,5 +273,13 @@ describe('LiveVoiceEngine', () => {
     await flush();
     expect(env.callbacks.onError).toHaveBeenCalledWith('mic_failed', 'recording.mic_denied');
     expect(env.contexts[0].setSinkId).not.toHaveBeenCalled(); // default output: no routing
+  });
+});
+
+describe('playbackBufferFor', () => {
+  it('sizes the slack from the block, within bounds', () => {
+    expect(playbackBufferFor(3969, 22050)).toEqual({ chunkMs: 180, jitterMs: 72 });
+    expect(playbackBufferFor(17640, 22050)).toEqual({ chunkMs: 800, jitterMs: 320 });
+    expect(playbackBufferFor(441, 22050).jitterMs).toBe(60);
   });
 });

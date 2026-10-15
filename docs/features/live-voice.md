@@ -93,12 +93,14 @@ in this fork yet.
 
 | Host | Settings | Model time per block | Real-time factor | Estimated mic → output |
 |---|---|---|---|---|
-| RTX 3060 Laptop (upstream figure) | 180 ms blocks, 10 steps | ~150 ms | ~0.83 | ~430 ms + device |
+| RTX 3060 Laptop (upstream figure) | 180 ms blocks, 10 steps | ~150 ms | ~0.83 | ~500 ms + device |
 | 4 vCPU cloud VM, model only | 180 ms, 10 steps | 1219 ms (p95 1305) | 6.8 — cannot keep up | — |
-| 4 vCPU cloud VM, model only | **CPU preset**: 800 ms, 4 steps, no guidance, 2 s prompt | 591 ms (p95 697) | 0.74 | ~1.5 s |
-| 4 vCPU cloud VM, whole app over `/ws/vc` | CPU preset | 686 ms (p95 860) | 0.86 | ~1.6 s |
+| 4 vCPU cloud VM, model only | **CPU preset**: 800 ms, 4 steps, no guidance, 2 s prompt | 591 ms (p95 697) | 0.74 | ~1.8 s |
+| 4 vCPU cloud VM, whole app over `/ws/vc` | CPU preset | 686 ms (p95 860) | 0.86 | ~1.9 s |
 
-The CPU rows used random weights (same network and compute, no download).
+Estimates include the playback slack (72 ms for 180 ms blocks, 320 ms for
+800 ms blocks). The CPU rows used random weights (same network and compute, no
+download).
 Memory on CPU: about 2 GB for the engine process plus the app. Parent ↔
 engine transport adds about 6 ms per block.
 
@@ -117,8 +119,10 @@ out ◀─ setSinkId ◀─ jitter buffer ◀─ /ws/vc ◀───────
 - **Renderer** (`electron/src/renderer/src/lib/audio/live-vc/`): captures 20 ms
   frames at the model's 22.05 kHz through the shared `aec-frame-emitter`
   worklet and plays converted audio through `public/vc-playback-worklet.js`, a
-  jitter buffer that keeps ~60 ms queued, drops back to that target when the
-  microphone and output clocks drift apart, and counts underruns.
+  jitter buffer sized from the block: it starts each run with a lead-in of
+  silence (40% of a block, 60–320 ms) that late blocks can use up, trims only a
+  backlog past two blocks plus that slack (a stall's burst, or the microphone
+  and output clocks drifting apart), and counts underruns.
 - **Backend** (`backend/services/vc/`): `BlockStreamer` keeps the left context
   and look-ahead, hands the model one window per block and joins the results
   with SOLA (offset search + sin² crossfade). `VCSession` runs one worker
@@ -191,4 +195,5 @@ and its converted copy.
 | “Needs verification” on your voice | Verify it in Voices → profile → Verify it's you. |
 | Choppy audio, “cannot keep up” | Pick **Fastest** or **CPU**; close other GPU work. |
 | Echo or howling | Monitor plays on speakers — use headphones or turn Monitor off. |
-| Delay grows over a long session | It should not: the playback buffer drops back to its target. If it does, report it with the latency panel's numbers. |
+| Delay grows over a long session | It should not: the playback buffer trims any backlog past two blocks. If it does, report it with the latency panel's numbers. |
+| Speech cuts in and out | Check the latency panel: a real-time factor near or above 1, or a rising dropped-blocks count, means the model cannot keep up — pick **Fastest** or **CPU**. Playback gaps alone mean blocks arrive unevenly; close other GPU work. |
