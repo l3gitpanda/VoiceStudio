@@ -1417,7 +1417,11 @@
     "realtime_vc": "Suara Langsung (eksperimental)",
     "realtime_vc_note": "Menambahkan ruang kerja pengubah suara waktu nyata. Nonaktif secara default. Perlu memasang mesinnya sendiri, dan GPU sangat disarankan.",
     "virtual_mic": "Mikrofon virtual",
-    "virtual_mic_note": "Perangkat keluaran, biasanya kabel audio virtual, tempat Suara Langsung dan “Putar ke mikrofon” mengirim audio. Di Discord atau game, pilih ujung kabel yang lain sebagai mikrofon."
+    "virtual_mic_note": "Perangkat keluaran, biasanya kabel audio virtual, tempat Suara Langsung dan “Putar ke mikrofon” mengirim audio. Di Discord atau game, pilih ujung kabel yang lain sebagai mikrofon.",
+    "system_audio_input": "Audio sistem sebagai input",
+    "system_audio_input_note": "Menambahkan “Audio sistem” ke daftar input Suara Langsung dan perekaman, sehingga Anda dapat mengonversi atau merekam apa yang diputar komputer ini. Hanya Windows.",
+    "system_audio_linux": "Di Linux, pilih input “Monitor of …”: setiap perangkat output memilikinya.",
+    "system_audio_mac": "Tidak tersedia di macOS. Putar audio ke BlackHole dan pilih BlackHole sebagai input."
   },
   "gallery": {
     "title": "VoiceStudio Galeri",
@@ -3491,7 +3495,9 @@
     "type_speak": "Ucapkan",
     "type_speaking": "Sedang berbicara…",
     "type_no_device": "Belum ada mikrofon virtual yang dipilih, jadi audio diputar di speaker Anda.",
-    "type_failed": "Tidak dapat mengucapkan pesan."
+    "type_failed": "Tidak dapat mengucapkan pesan.",
+    "system_audio": "Audio sistem (semua yang diputar komputer ini)",
+    "system_audio_loop": "Dengan audio sistem sebagai input, kirim output ke kabel virtual. Pantau tetap mati agar suara hasil konversi tidak terekam lagi."
   },
   "micOutput": {
     "play": "Putar ke mikrofon",

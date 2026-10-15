@@ -1417,7 +1417,11 @@
     "realtime_vc": "라이브 보이스 (실험적)",
     "realtime_vc_note": "실시간 음성 변조기 작업 공간을 추가합니다. 기본값은 꺼짐입니다. 별도 엔진 설치가 필요하며 GPU 사용을 강력히 권장합니다.",
     "virtual_mic": "가상 마이크",
-    "virtual_mic_note": "라이브 보이스와 ‘마이크로 재생’이 소리를 보내는 출력 장치이며 보통 가상 오디오 케이블입니다. Discord나 게임에서는 케이블의 반대쪽 끝을 마이크로 선택하세요."
+    "virtual_mic_note": "라이브 보이스와 ‘마이크로 재생’이 소리를 보내는 출력 장치이며 보통 가상 오디오 케이블입니다. Discord나 게임에서는 케이블의 반대쪽 끝을 마이크로 선택하세요.",
+    "system_audio_input": "시스템 오디오를 입력으로 사용",
+    "system_audio_input_note": "라이브 보이스와 녹음의 입력 목록에 ‘시스템 오디오’를 추가해, 이 컴퓨터에서 재생 중인 소리를 변환하거나 녹음할 수 있게 합니다. Windows 전용.",
+    "system_audio_linux": "Linux에서는 대신 ‘Monitor of …’ 입력을 선택하세요. 출력 장치마다 하나씩 있습니다.",
+    "system_audio_mac": "macOS에서는 사용할 수 없습니다. 오디오를 BlackHole로 재생하고 입력으로 BlackHole을 선택하세요."
   },
   "gallery": {
     "title": "VoiceStudio 갤러리",
@@ -3491,7 +3495,9 @@
     "type_speak": "말하기",
     "type_speaking": "말하는 중…",
     "type_no_device": "가상 마이크를 선택하지 않아 스피커로 재생됩니다.",
-    "type_failed": "메시지를 말할 수 없습니다."
+    "type_failed": "메시지를 말할 수 없습니다.",
+    "system_audio": "시스템 오디오(이 컴퓨터에서 재생되는 모든 소리)",
+    "system_audio_loop": "시스템 오디오를 입력으로 쓸 때는 출력을 가상 케이블로 보내세요. 변환된 목소리가 다시 녹음되지 않도록 모니터는 꺼진 상태로 유지됩니다."
   },
   "micOutput": {
     "play": "마이크로 재생",

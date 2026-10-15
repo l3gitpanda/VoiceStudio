@@ -1417,7 +1417,11 @@
     "realtime_vc": "Giọng nói trực tiếp (thử nghiệm)",
     "realtime_vc_note": "Thêm không gian làm việc của bộ đổi giọng theo thời gian thực. Mặc định tắt. Cần cài đặt engine riêng và rất nên có GPU.",
     "virtual_mic": "Micro ảo",
-    "virtual_mic_note": "Thiết bị đầu ra, thường là một cáp âm thanh ảo, nơi Giọng nói trực tiếp và “Phát vào micro” gửi âm thanh tới. Trong Discord hoặc trò chơi, hãy chọn đầu còn lại của cáp làm micro."
+    "virtual_mic_note": "Thiết bị đầu ra, thường là một cáp âm thanh ảo, nơi Giọng nói trực tiếp và “Phát vào micro” gửi âm thanh tới. Trong Discord hoặc trò chơi, hãy chọn đầu còn lại của cáp làm micro.",
+    "system_audio_input": "Âm thanh hệ thống làm đầu vào",
+    "system_audio_input_note": "Thêm “Âm thanh hệ thống” vào danh sách đầu vào của Giọng nói trực tiếp và các bản ghi, để bạn chuyển đổi hoặc ghi lại những gì máy tính này đang phát. Chỉ Windows.",
+    "system_audio_linux": "Trên Linux, hãy chọn đầu vào “Monitor of …”: mỗi thiết bị đầu ra đều có một.",
+    "system_audio_mac": "Không khả dụng trên macOS. Hãy phát âm thanh vào BlackHole và chọn BlackHole làm đầu vào."
   },
   "gallery": {
     "title": "VoiceStudio Thư viện ảnh",
@@ -3491,7 +3495,9 @@
     "type_speak": "Đọc",
     "type_speaking": "Đang đọc…",
     "type_no_device": "Chưa chọn micro ảo nên âm thanh phát ra loa của bạn.",
-    "type_failed": "Không thể đọc tin nhắn."
+    "type_failed": "Không thể đọc tin nhắn.",
+    "system_audio": "Âm thanh hệ thống (mọi thứ máy tính này phát)",
+    "system_audio_loop": "Khi đầu vào là âm thanh hệ thống, hãy gửi đầu ra tới một cáp ảo. Giám sát luôn tắt để giọng đã chuyển đổi không bị thu lại."
   },
   "micOutput": {
     "play": "Phát vào micro",

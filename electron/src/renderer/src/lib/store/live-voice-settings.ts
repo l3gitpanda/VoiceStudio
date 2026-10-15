@@ -8,6 +8,8 @@ export interface LiveVoiceSettings {
   profileId: string;
   preset: QualityPreset;
   monitor: boolean;
+  /** Offer "System audio" in input pickers (opt-in, Windows). */
+  systemAudio: boolean;
 }
 
 const STORAGE_KEY = 'voicestudio.live-voice.v1';
@@ -17,6 +19,7 @@ const DEFAULTS: LiveVoiceSettings = {
   profileId: '',
   preset: 'auto',
   monitor: false,
+  systemAudio: false,
 };
 let current = read();
 const listeners = new Set<() => void>();
@@ -32,6 +35,7 @@ function read(): LiveVoiceSettings {
       profileId: str(raw.profileId),
       preset: raw.preset && raw.preset in QUALITY_PRESETS ? raw.preset : 'auto',
       monitor: raw.monitor === true,
+      systemAudio: raw.systemAudio === true,
     };
   } catch {
     return DEFAULTS;

@@ -1417,7 +1417,11 @@
     "realtime_vc": "实时变声（实验性）",
     "realtime_vc_note": "添加实时变声工作区。默认关闭。需要单独安装引擎，强烈建议使用 GPU。",
     "virtual_mic": "虚拟麦克风",
-    "virtual_mic_note": "实时变声和“播放到麦克风”发送音频的输出设备，通常是虚拟声卡线。在 Discord 或游戏中，把这条线的另一端选为麦克风。"
+    "virtual_mic_note": "实时变声和“播放到麦克风”发送音频的输出设备，通常是虚拟声卡线。在 Discord 或游戏中，把这条线的另一端选为麦克风。",
+    "system_audio_input": "将系统音频用作输入",
+    "system_audio_input_note": "在实时变声和录音的输入列表中添加“系统音频”，以便转换或录制这台电脑正在播放的声音。仅限 Windows。",
+    "system_audio_linux": "在 Linux 上，请改选“Monitor of …”输入：每个输出设备都有一个。",
+    "system_audio_mac": "macOS 上不可用。请把音频播放到 BlackHole，并选择 BlackHole 作为输入。"
   },
   "gallery": {
     "title": "VoiceStudio 音色库",
@@ -3491,7 +3495,9 @@
     "type_speak": "说出",
     "type_speaking": "正在说…",
     "type_no_device": "未选择虚拟麦克风，因此会在扬声器上播放。",
-    "type_failed": "无法说出这条消息。"
+    "type_failed": "无法说出这条消息。",
+    "system_audio": "系统音频（这台电脑播放的所有声音）",
+    "system_audio_loop": "以系统音频作为输入时，请把输出发送到虚拟声卡线。监听保持关闭，以免转换后的声音被再次采集。"
   },
   "micOutput": {
     "play": "播放到麦克风",

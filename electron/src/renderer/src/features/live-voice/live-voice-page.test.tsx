@@ -61,6 +61,7 @@ vi.mock('@/lib/audio/live-vc/engine', () => ({
   },
 }));
 
+import { SYSTEM_AUDIO_DEVICE_ID } from '@/lib/audio/system-audio';
 import { setLiveVoiceSettings } from '@/lib/store/live-voice-settings';
 import { LiveVoicePage } from './live-voice-page';
 
@@ -161,4 +162,23 @@ it('points at the virtual cable for this OS without installing anything', async 
   mount();
   expect(await screen.findByText('liveVoice.cable_body_windows')).toBeInTheDocument();
   expect(screen.getByText('liveVoice.cable_link').closest('a')).toHaveAttribute('href', 'https://vb-audio.com/Cable/');
+});
+
+it('with system audio as the input, needs a cable output and never monitors', async () => {
+  vi.stubGlobal('voicestudio', { app: { platform: 'win32' }, permissions: { armSystemAudio: vi.fn() } });
+  vi.stubGlobal('navigator', { ...navigator, mediaDevices: { getDisplayMedia: vi.fn() } });
+  try {
+    setLiveVoiceSettings({ profileId: 'mine', systemAudio: true, inputDeviceId: SYSTEM_AUDIO_DEVICE_ID, outputDeviceId: '' });
+    mount();
+    const start = await screen.findByRole('button', { name: /liveVoice.start/ });
+    expect(start).toBeDisabled(); // would play the converted voice where it is captured
+    expect(screen.getByText('liveVoice.system_audio_loop')).toBeInTheDocument();
+    act(() => setLiveVoiceSettings({ outputDeviceId: 'cable', monitor: true }));
+    expect(start).toBeEnabled();
+    fireEvent.click(start);
+    expect(mock.engines[0].started).toMatchObject({ inputDeviceId: SYSTEM_AUDIO_DEVICE_ID, monitor: false });
+  } finally {
+    vi.unstubAllGlobals();
+    setLiveVoiceSettings({ systemAudio: false, inputDeviceId: '', monitor: false });
+  }
 });

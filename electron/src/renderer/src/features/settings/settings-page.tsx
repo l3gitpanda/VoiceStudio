@@ -169,7 +169,7 @@ const extraSettings = [
     label: 'nav.live_voice',
     Icon: AudioWaveformIcon,
     Component: LiveVoiceSettings,
-    fields: ['nav.live_voice', 'settings.realtime_vc', 'settings.virtual_mic'],
+    fields: ['nav.live_voice', 'settings.realtime_vc', 'settings.virtual_mic', 'settings.system_audio_input'],
   },
   {
     to: '/settings/usage',

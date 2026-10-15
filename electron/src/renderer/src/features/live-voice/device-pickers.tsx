@@ -16,6 +16,7 @@ import {
   supportsOutputSelection,
   unlockDeviceLabels,
 } from '@/lib/audio/live-vc/devices';
+import { SYSTEM_AUDIO_DEVICE_ID } from '@/lib/audio/system-audio';
 
 const DEFAULT = '__default__';
 
@@ -25,12 +26,15 @@ export function DeviceSelect({
   value,
   disabled,
   onChange,
+  extra = [],
 }: {
   label: string;
   devices: MediaDeviceInfo[];
   value: string;
   disabled: boolean;
   onChange: (deviceId: string) => void;
+  /** Entries after the devices, e.g. system audio. */
+  extra?: { value: string; label: string }[];
 }) {
   const { t } = useTranslation();
   const id = useId();
@@ -40,6 +44,7 @@ export function DeviceSelect({
       value: d.deviceId,
       label: d.label || t('liveVoice.device_number', { number: i + 1 }),
     })),
+    ...extra,
   ];
   const selected = items.some((item) => item.value === value) ? value : DEFAULT;
   return (
@@ -76,12 +81,14 @@ export function DevicePickers({
   disabled,
   onInputChange,
   onOutputChange,
+  offerSystemAudio = false,
 }: {
   inputDeviceId: string;
   outputDeviceId: string;
   disabled: boolean;
   onInputChange: (deviceId: string) => void;
   onOutputChange: (deviceId: string) => void;
+  offerSystemAudio?: boolean;
 }) {
   const { t } = useTranslation();
   const [inputs, setInputs] = useState<MediaDeviceInfo[]>([]);
@@ -130,6 +137,7 @@ export function DevicePickers({
           value={inputDeviceId}
           disabled={disabled}
           onChange={onInputChange}
+          extra={offerSystemAudio ? [{ value: SYSTEM_AUDIO_DEVICE_ID, label: t('liveVoice.system_audio') }] : []}
         />
         <DeviceSelect
           label={t('liveVoice.output_device')}

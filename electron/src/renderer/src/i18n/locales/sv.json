@@ -1417,7 +1417,11 @@
     "realtime_vc": "Live-röst (experimentell)",
     "realtime_vc_note": "Lägger till arbetsytan för röstförvrängaren i realtid. Av som standard. Den kräver en egen motorinstallation och en GPU rekommenderas starkt.",
     "virtual_mic": "Virtuell mikrofon",
-    "virtual_mic_note": "Utgångsenheten, oftast en virtuell ljudkabel, som Live-röst och ”Spela i mikrofonen” skickar ljud till. Välj kabelns andra ände som mikrofon i Discord eller spelet."
+    "virtual_mic_note": "Utgångsenheten, oftast en virtuell ljudkabel, som Live-röst och ”Spela i mikrofonen” skickar ljud till. Välj kabelns andra ände som mikrofon i Discord eller spelet.",
+    "system_audio_input": "Systemljud som indata",
+    "system_audio_input_note": "Lägger till ”Systemljud” i indatalistorna för Live-röst och inspelningarna, så att du kan omvandla eller spela in det som datorn spelar upp. Endast Windows.",
+    "system_audio_linux": "På Linux väljer du i stället en indata ”Monitor of …”: varje utdataenhet har en.",
+    "system_audio_mac": "Inte tillgängligt på macOS. Spela upp ljudet i BlackHole och välj BlackHole som indata."
   },
   "gallery": {
     "title": "VoiceStudio Galleri",
@@ -3491,7 +3495,9 @@
     "type_speak": "Läs upp",
     "type_speaking": "Läser upp…",
     "type_no_device": "Ingen virtuell mikrofon vald, så ljudet spelas i dina högtalare.",
-    "type_failed": "Det gick inte att läsa upp meddelandet."
+    "type_failed": "Det gick inte att läsa upp meddelandet.",
+    "system_audio": "Systemljud (allt som den här datorn spelar upp)",
+    "system_audio_loop": "Med systemljud som indata, skicka utdata till en virtuell kabel. Medhörning förblir avstängd så att den omvandlade rösten inte fångas igen."
   },
   "micOutput": {
     "play": "Spela i mikrofonen",

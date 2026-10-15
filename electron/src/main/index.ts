@@ -5,7 +5,7 @@ import { isTrustedRenderer } from './trusted-renderer';
 import { dirname, join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { app, BrowserWindow, ipcMain, Menu, nativeImage, session, shell, Tray } from 'electron';
+import { app, BrowserWindow, desktopCapturer, ipcMain, Menu, nativeImage, session, shell, Tray } from 'electron';
 import { electronApp, is, optimizer } from '@electron-toolkit/utils';
 import { BackendSupervisor, backendRoot } from './backend';
 import { registerIpc, wireWindowMaximizeEvents } from './ipc';
@@ -14,6 +14,7 @@ import { startDevBackendProxy } from './dev-backend-proxy';
 import { DesktopUpdater, registerUpdateIpc } from './updater';
 import { registerRepairAgents } from './repair-agents';
 import { installRendererPermissions } from './media-permissions';
+import { installSystemAudioCapture } from './system-audio';
 import { installBlankWindowGuard } from './blank-window-guard';
 import { shouldOpenDevTools } from './devtools-policy';
 import {
@@ -238,6 +239,13 @@ if (process.env.VOICESTUDIO_ALLOW_MULTIPLE_INSTANCES !== '1' && !app.requestSing
       electronApp.setAppUserModelId(APP_ID);
       if (process.platform === 'darwin') installMacApplicationMenu(app, Menu, __APP_VERSION__);
       installRendererPermissions(session.defaultSession, process.env.ELECTRON_RENDERER_URL);
+      installSystemAudioCapture(
+        session.defaultSession,
+        ipcMain,
+        async () =>
+          (await desktopCapturer.getSources({ types: ['screen'], thumbnailSize: { width: 0, height: 0 } }))[0],
+        process.env.ELECTRON_RENDERER_URL,
+      );
       app.on('browser-window-created', (_event, window) => optimizer.watchWindowShortcuts(window));
 
       const backend = new BackendSupervisor();

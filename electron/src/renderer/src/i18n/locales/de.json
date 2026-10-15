@@ -1417,7 +1417,11 @@
     "realtime_vc": "Live-Stimme (experimentell)",
     "realtime_vc_note": "Fügt den Arbeitsbereich für den Echtzeit-Stimmenwandler hinzu. Standardmäßig aus. Er braucht eine eigene Engine-Installation, eine GPU wird dringend empfohlen.",
     "virtual_mic": "Virtuelles Mikrofon",
-    "virtual_mic_note": "Das Ausgabegerät, meist ein virtuelles Audiokabel, an das Live-Stimme und „Ins Mikrofon abspielen“ den Ton senden. Wähle in Discord oder im Spiel das andere Ende des Kabels als Mikrofon."
+    "virtual_mic_note": "Das Ausgabegerät, meist ein virtuelles Audiokabel, an das Live-Stimme und „Ins Mikrofon abspielen“ den Ton senden. Wähle in Discord oder im Spiel das andere Ende des Kabels als Mikrofon.",
+    "system_audio_input": "Systemaudio als Eingang",
+    "system_audio_input_note": "Fügt „Systemaudio“ zu den Eingangslisten von Live-Stimme und den Aufnahmen hinzu, damit du umwandeln oder aufnehmen kannst, was dieser Computer abspielt. Nur Windows.",
+    "system_audio_linux": "Wähle unter Linux stattdessen einen Eingang „Monitor of …“: Jedes Ausgabegerät hat einen.",
+    "system_audio_mac": "Unter macOS nicht verfügbar. Spiele den Ton in BlackHole ab und wähle BlackHole als Eingang."
   },
   "gallery": {
     "title": "VoiceStudio Galerie",
@@ -3491,7 +3495,9 @@
     "type_speak": "Sprechen",
     "type_speaking": "Spricht…",
     "type_no_device": "Kein virtuelles Mikrofon gewählt, daher läuft der Ton über deine Lautsprecher.",
-    "type_failed": "Die Nachricht konnte nicht gesprochen werden."
+    "type_failed": "Die Nachricht konnte nicht gesprochen werden.",
+    "system_audio": "Systemaudio (alles, was dieser Computer abspielt)",
+    "system_audio_loop": "Mit Systemaudio als Eingang sende die Ausgabe an ein virtuelles Kabel. Mithören bleibt aus, damit die umgewandelte Stimme nicht erneut aufgenommen wird."
   },
   "micOutput": {
     "play": "Ins Mikrofon abspielen",

@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import type { UseRecording } from '@/hooks/use-recording';
+import { effectiveInputId, SYSTEM_AUDIO_DEVICE_ID, useSystemAudioOffered } from '@/lib/audio/system-audio';
 const DEFAULT_INPUT = '__default__';
 export function RecordingInputs({
   rec,
@@ -21,6 +22,7 @@ export function RecordingInputs({
   const busy = disabled || rec.isStarting || rec.isRecording || rec.isCleaning;
   const deviceId = useId();
   const channelsId = useId();
+  const offerSystemAudio = useSystemAudioOffered();
 
   const inputItems = [
     { value: DEFAULT_INPUT, label: t('recording.default_input') },
@@ -30,6 +32,7 @@ export function RecordingInputs({
         value: d.deviceId,
         label: d.label || t('recording.microphone_number', { number: i + 1 }),
       })),
+    ...(offerSystemAudio ? [{ value: SYSTEM_AUDIO_DEVICE_ID, label: t('liveVoice.system_audio') }] : []),
   ];
   const channelItems = (['auto', 'mono', 'stereo'] as const).map((value) => ({
     value,
@@ -44,7 +47,7 @@ export function RecordingInputs({
         </Label>
         <Select
           items={inputItems}
-          value={rec.selectedInputId || DEFAULT_INPUT}
+          value={effectiveInputId(rec.selectedInputId, offerSystemAudio) || DEFAULT_INPUT}
           onValueChange={(value) => {
             if (!busy && typeof value === 'string') {
               rec.setSelectedInputId(value === DEFAULT_INPUT ? '' : value);

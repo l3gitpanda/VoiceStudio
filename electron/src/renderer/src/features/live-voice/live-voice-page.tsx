@@ -11,6 +11,7 @@ import { LatencyReadout } from './latency-readout';
 import { LiveVoiceSetup } from './live-voice-setup';
 import { QualityControls } from './quality-controls';
 import { TargetVoicePicker } from './target-voice-picker';
+import { effectiveInputId, SYSTEM_AUDIO_DEVICE_ID, useSystemAudioOffered } from '@/lib/audio/system-audio';
 import { TypeToTalk } from './type-to-talk';
 import { useLiveVoiceSession, useLiveVoiceStatus } from './use-live-voice';
 import { VirtualCableHelp } from './virtual-cable-help';
@@ -32,6 +33,11 @@ export function LiveVoicePage() {
   }, [active, refetch]);
   const voice = (profiles.data ?? []).find((p) => p.id === settings.profileId);
   const eligible = !!voice;
+  const offerSystemAudio = useSystemAudioOffered();
+  const inputDeviceId = effectiveInputId(settings.inputDeviceId, offerSystemAudio);
+  // Loopback hears everything the default device plays, so the converted voice
+  // must go to a cable and never be monitored, or it is converted again.
+  const fromSystem = inputDeviceId === SYSTEM_AUDIO_DEVICE_ID;
   const canStart = ready && !active && eligible && !status.data?.busy;
   const stageLabel =
     session.stage === 'connecting'
@@ -57,8 +63,9 @@ export function LiveVoicePage() {
           {enabled && (
             <>
               <DevicePickers
-                inputDeviceId={settings.inputDeviceId}
+                inputDeviceId={inputDeviceId}
                 outputDeviceId={settings.outputDeviceId}
+                offerSystemAudio={offerSystemAudio}
                 disabled={active}
                 onInputChange={(inputDeviceId) => setLiveVoiceSettings({ inputDeviceId })}
                 onOutputChange={(outputDeviceId) =>
@@ -88,8 +95,8 @@ export function LiveVoicePage() {
                 <div className="space-y-1">
                   <label className="flex items-center gap-3 text-sm">
                     <Switch
-                      checked={settings.monitor && !!settings.outputDeviceId}
-                      disabled={!settings.outputDeviceId}
+                      checked={settings.monitor && !!settings.outputDeviceId && !fromSystem}
+                      disabled={!settings.outputDeviceId || fromSystem}
                       onCheckedChange={(monitor) => {
                         setLiveVoiceSettings({ monitor });
                         session.setMonitor(monitor);
@@ -97,7 +104,9 @@ export function LiveVoicePage() {
                     />
                     {t('liveVoice.monitor')}
                   </label>
-                  <p className="text-xs text-muted-foreground">{t('liveVoice.monitor_hint')}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t(fromSystem ? 'liveVoice.system_audio_loop' : 'liveVoice.monitor_hint')}
+                  </p>
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-3">
@@ -107,7 +116,13 @@ export function LiveVoicePage() {
                     {t('liveVoice.stop')}
                   </Button>
                 ) : (
-                  <Button className="min-w-40" disabled={!canStart} onClick={() => void session.start(settings)}>
+                  <Button
+                    className="min-w-40"
+                    disabled={!canStart || (fromSystem && !settings.outputDeviceId)}
+                    onClick={() =>
+                      void session.start({ ...settings, inputDeviceId, monitor: settings.monitor && !fromSystem })
+                    }
+                  >
                     <MicIcon />
                     {t('liveVoice.start')}
                   </Button>

@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LiveVoiceEngine, MAX_BUFFERED_BYTES, playbackBufferFor, type LiveVoiceDeps } from './engine';
+import { SYSTEM_AUDIO_DEVICE_ID } from '@/lib/audio/system-audio';
 
 vi.mock('@/lib/api/websocket', () => ({ backendWebSocketUrl: vi.fn() }));
 vi.mock('@shared/utils/aec/micCapture', () => ({ startMicCapture: vi.fn() }));
@@ -93,6 +94,7 @@ function setup(overrides: Partial<LiveVoiceDeps> = {}) {
       return ctx as unknown as AudioContext;
     },
     createAudioElement: vi.fn(),
+    captureSystemAudio: vi.fn(async () => ({ getTracks: () => [track] }) as unknown as MediaStream),
     ...overrides,
   };
   const callbacks = {
@@ -163,6 +165,14 @@ describe('LiveVoiceEngine', () => {
     });
     expect(callbacks.onStage).toHaveBeenLastCalledWith('running');
     expect(callbacks.onReady).toHaveBeenCalledWith(READY);
+  });
+
+  it('captures system audio instead of a microphone when that input is chosen', async () => {
+    const { deps, callbacks } = await started({ inputDeviceId: SYSTEM_AUDIO_DEVICE_ID });
+    expect(deps.captureSystemAudio).toHaveBeenCalledOnce();
+    expect(deps.getUserMedia).not.toHaveBeenCalled();
+    expect(deps.startCapture).toHaveBeenCalled();
+    expect(callbacks.onStage).toHaveBeenLastCalledWith('running');
   });
 
   it('streams mic frames as PCM16 and drops them while the socket is backed up', async () => {

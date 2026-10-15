@@ -14,6 +14,13 @@ import {
 } from '@/lib/audio/recorder';
 import { tr } from '@/lib/i18n-text';
 import { beginAppActivity } from '@/lib/app-activity';
+import { getLiveVoiceSettings } from '@/lib/store/live-voice-settings';
+import {
+  captureSystemAudio,
+  effectiveInputId,
+  SYSTEM_AUDIO_DEVICE_ID,
+  systemAudioSupported,
+} from '@/lib/audio/system-audio';
 
 export type { ChannelMode } from '@/lib/audio/recorder';
 
@@ -101,7 +108,11 @@ export function useRecording(
       const devices = await listAudioInputs();
       setInputs(devices);
       setSelectedInputId((current) =>
-        current && !devices.some((device) => device.deviceId === current) ? '' : current,
+        current &&
+        current !== SYSTEM_AUDIO_DEVICE_ID &&
+        !devices.some((device) => device.deviceId === current)
+          ? ''
+          : current,
       );
     } catch {
       setInputs([]);
@@ -181,9 +192,14 @@ export function useRecording(
     startingRef.current = true;
     setIsStarting(true);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia(
-        buildAudioInputConstraints(selectedInputId, channelMode),
+      const inputId = effectiveInputId(
+        selectedInputId,
+        getLiveVoiceSettings().systemAudio && systemAudioSupported(),
       );
+      const stream =
+        inputId === SYSTEM_AUDIO_DEVICE_ID
+          ? await captureSystemAudio()
+          : await navigator.mediaDevices.getUserMedia(buildAudioInputConstraints(inputId, channelMode));
       if (generation !== lifecycle.current) {
         stream.getTracks().forEach((track) => track.stop());
         return;

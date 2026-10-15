@@ -73,6 +73,24 @@ you already generated. Both come from
 the normal generation path, so they follow **Settings → Privacy → invisible
 watermark** like any other generated audio.
 
+## Use what this computer plays as the input
+
+Instead of a microphone, Live Voice and the app's recorders (Clone, Tools →
+Convert, Transcribe) can take the audio this computer is playing — a video, a
+game, a call — to convert it or record it.
+
+- **Windows:** turn on **Settings → Live Voice → System audio as an input**.
+  The input lists then offer **System audio (everything this computer plays)**,
+  captured by Windows loopback from the default output device. In Live Voice,
+  send the output to a virtual cable: Start stays disabled until you do, and
+  Monitor stays off, because anything played on the default device would be
+  captured and converted again.
+- **Linux:** no switch needed. Every output device has a **Monitor of …**
+  input; pick it as the microphone.
+- **macOS:** not available without a driver. Play the audio into
+  [BlackHole](https://github.com/ExistentialAudio/BlackHole) and pick BlackHole
+  as the input.
+
 ## Voices
 
 Live Voice can use any saved voice, with no verification step, like the app's

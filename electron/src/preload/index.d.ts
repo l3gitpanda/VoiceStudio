@@ -300,6 +300,8 @@ export interface VoiceStudioBridge {
   permissions: {
     getState(): Promise<NativePermissions>;
     openSettings(kind: 'microphone' | 'accessibility'): Promise<boolean>;
+    /** Windows: lets the next getDisplayMedia carry system-audio loopback. */
+    armSystemAudio(): Promise<boolean>;
   };
   updates: {
     getState(): Promise<UpdateState>;

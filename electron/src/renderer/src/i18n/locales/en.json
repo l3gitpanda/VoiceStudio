@@ -1539,7 +1539,11 @@
     "realtime_vc": "Live Voice (experimental)",
     "realtime_vc_note": "Adds the real-time voice changer workspace. Off by default. It needs its own engine install, and a GPU is strongly recommended.",
     "virtual_mic": "Virtual microphone",
-    "virtual_mic_note": "The output device, usually a virtual audio cable, that Live Voice and Play into mic send audio to. In Discord or a game, pick the cable’s other end as the microphone."
+    "virtual_mic_note": "The output device, usually a virtual audio cable, that Live Voice and Play into mic send audio to. In Discord or a game, pick the cable’s other end as the microphone.",
+    "system_audio_input": "System audio as an input",
+    "system_audio_input_note": "Adds “System audio” to the input lists in Live Voice and the recorders, so you can convert or record what this computer is playing. Windows only.",
+    "system_audio_linux": "On Linux, choose a “Monitor of …” input instead: every output device has one.",
+    "system_audio_mac": "Not available on macOS. Play the audio into BlackHole and choose BlackHole as the input."
   },
   "gallery": {
     "title": "VoiceStudio Gallery",
@@ -3491,7 +3495,9 @@
     "type_speak": "Speak",
     "type_speaking": "Speaking…",
     "type_no_device": "No virtual microphone chosen, so this plays on your speakers.",
-    "type_failed": "Could not speak the message."
+    "type_failed": "Could not speak the message.",
+    "system_audio": "System audio (everything this computer plays)",
+    "system_audio_loop": "With system audio as the input, send the output to a virtual cable. Monitor stays off so the converted voice is not captured again."
   },
   "micOutput": {
     "play": "Play into mic",

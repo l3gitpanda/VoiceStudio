@@ -13,6 +13,7 @@
  */
 import { backendWebSocketUrl } from '@/lib/api/websocket';
 import { describeMicError } from '@/lib/audio/recorder';
+import { captureSystemAudio, SYSTEM_AUDIO_DEVICE_ID } from '@/lib/audio/system-audio';
 import { startMicCapture } from '@shared/utils/aec/micCapture';
 import {
   floatToPcm16,
@@ -68,6 +69,7 @@ export interface LiveVoiceDeps {
   ) => Promise<StopCapture>;
   createContext: (options: AudioContextOptions) => AudioContext;
   createAudioElement: () => HTMLAudioElement;
+  captureSystemAudio: () => Promise<MediaStream>;
 }
 
 export const defaultDeps: LiveVoiceDeps = {
@@ -77,6 +79,7 @@ export const defaultDeps: LiveVoiceDeps = {
   startCapture: (stream, onFrame, opts) => startMicCapture(stream, onFrame, opts) as Promise<StopCapture>,
   createContext: (options) => new AudioContext(options),
   createAudioElement: () => new Audio(),
+  captureSystemAudio,
 };
 
 export interface PlaybackBuffer {
@@ -319,16 +322,19 @@ export class LiveVoiceEngine {
     this.monitorSink = monitor;
     let stream: MediaStream | null = null;
     try {
-      stream = await this.deps.getUserMedia({
-        audio: {
-          ...(options.inputDeviceId ? { deviceId: { exact: options.inputDeviceId } } : {}),
-          channelCount: 1,
-          // Raw voice converts best; browser voice processing changes timbre.
-          echoCancellation: false,
-          noiseSuppression: false,
-          autoGainControl: false,
-        },
-      });
+      stream =
+        options.inputDeviceId === SYSTEM_AUDIO_DEVICE_ID
+          ? await this.deps.captureSystemAudio()
+          : await this.deps.getUserMedia({
+              audio: {
+                ...(options.inputDeviceId ? { deviceId: { exact: options.inputDeviceId } } : {}),
+                channelCount: 1,
+                // Raw voice converts best; browser voice processing changes timbre.
+                echoCancellation: false,
+                noiseSuppression: false,
+                autoGainControl: false,
+              },
+            });
       if (this.finished) {
         for (const track of stream.getTracks()) track.stop();
         return;

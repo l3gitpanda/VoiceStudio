@@ -1419,7 +1419,11 @@
     "realtime_vc": "Voix en direct (expérimental)",
     "realtime_vc_note": "Ajoute l’espace de travail du transformateur de voix en temps réel. Désactivé par défaut. Il nécessite l’installation de son propre moteur, et un GPU est vivement recommandé.",
     "virtual_mic": "Micro virtuel",
-    "virtual_mic_note": "Le périphérique de sortie, généralement un câble audio virtuel, vers lequel la voix en direct et « Lire dans le micro » envoient le son. Dans Discord ou un jeu, choisissez l’autre extrémité du câble comme microphone."
+    "virtual_mic_note": "Le périphérique de sortie, généralement un câble audio virtuel, vers lequel la voix en direct et « Lire dans le micro » envoient le son. Dans Discord ou un jeu, choisissez l’autre extrémité du câble comme microphone.",
+    "system_audio_input": "Audio système comme entrée",
+    "system_audio_input_note": "Ajoute « Audio système » aux listes d’entrées de Voix en direct et des enregistrements, pour convertir ou enregistrer ce que lit cet ordinateur. Windows uniquement.",
+    "system_audio_linux": "Sous Linux, choisissez plutôt une entrée « Monitor of … » : chaque périphérique de sortie en a une.",
+    "system_audio_mac": "Indisponible sur macOS. Lisez l’audio dans BlackHole et choisissez BlackHole comme entrée."
   },
   "gallery": {
     "title": "VoiceStudio Galerie",
@@ -3493,7 +3497,9 @@
     "type_speak": "Prononcer",
     "type_speaking": "Lecture…",
     "type_no_device": "Aucun micro virtuel choisi : le son passe par vos haut-parleurs.",
-    "type_failed": "Impossible de prononcer le message."
+    "type_failed": "Impossible de prononcer le message.",
+    "system_audio": "Audio système (tout ce que lit cet ordinateur)",
+    "system_audio_loop": "Avec l’audio système comme entrée, envoyez la sortie vers un câble virtuel. L’écoute reste désactivée pour que la voix convertie ne soit pas capturée à nouveau."
   },
   "micOutput": {
     "play": "Lire dans le micro",

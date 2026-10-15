@@ -1417,7 +1417,11 @@
     "realtime_vc": "即時變聲（實驗性）",
     "realtime_vc_note": "新增即時變聲工作區。預設關閉。需要另外安裝引擎，強烈建議使用 GPU。",
     "virtual_mic": "虛擬麥克風",
-    "virtual_mic_note": "即時變聲和「播放到麥克風」傳送音訊的輸出裝置，通常是虛擬音訊線。在 Discord 或遊戲中，將這條線的另一端選為麥克風。"
+    "virtual_mic_note": "即時變聲和「播放到麥克風」傳送音訊的輸出裝置，通常是虛擬音訊線。在 Discord 或遊戲中，將這條線的另一端選為麥克風。",
+    "system_audio_input": "將系統音訊用作輸入",
+    "system_audio_input_note": "在即時變聲和錄音的輸入清單中加入「系統音訊」，以便轉換或錄製這台電腦正在播放的聲音。僅限 Windows。",
+    "system_audio_linux": "在 Linux 上，請改選「Monitor of …」輸入：每個輸出裝置都有一個。",
+    "system_audio_mac": "macOS 上無法使用。請將音訊播放到 BlackHole，並選擇 BlackHole 作為輸入。"
   },
   "gallery": {
     "title": "VoiceStudio 畫廊",
@@ -3491,7 +3495,9 @@
     "type_speak": "說出",
     "type_speaking": "正在說…",
     "type_no_device": "未選擇虛擬麥克風，因此會在喇叭上播放。",
-    "type_failed": "無法說出這則訊息。"
+    "type_failed": "無法說出這則訊息。",
+    "system_audio": "系統音訊（這台電腦播放的所有聲音）",
+    "system_audio_loop": "以系統音訊作為輸入時，請將輸出送到虛擬音訊線。監聽會保持關閉，以免轉換後的聲音再次被擷取。"
   },
   "micOutput": {
     "play": "播放到麥克風",

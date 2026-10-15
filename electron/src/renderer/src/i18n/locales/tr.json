@@ -1417,7 +1417,11 @@
     "realtime_vc": "Canlı Ses (deneysel)",
     "realtime_vc_note": "Gerçek zamanlı ses değiştirici çalışma alanını ekler. Varsayılan olarak kapalıdır. Kendi motor kurulumunu gerektirir ve bir GPU şiddetle önerilir.",
     "virtual_mic": "Sanal mikrofon",
-    "virtual_mic_note": "Canlı Ses'in ve “Mikrofona çal”ın sesi gönderdiği çıkış aygıtı; genellikle sanal bir ses kablosudur. Discord'da veya oyunda kablonun diğer ucunu mikrofon olarak seçin."
+    "virtual_mic_note": "Canlı Ses'in ve “Mikrofona çal”ın sesi gönderdiği çıkış aygıtı; genellikle sanal bir ses kablosudur. Discord'da veya oyunda kablonun diğer ucunu mikrofon olarak seçin.",
+    "system_audio_input": "Giriş olarak sistem sesi",
+    "system_audio_input_note": "Canlı Ses ve kayıtların giriş listelerine “Sistem sesi”ni ekler; böylece bu bilgisayarın çaldığını dönüştürebilir veya kaydedebilirsiniz. Yalnızca Windows.",
+    "system_audio_linux": "Linux’ta bunun yerine bir “Monitor of …” girişi seçin: her çıkış aygıtının bir tane vardır.",
+    "system_audio_mac": "macOS’ta kullanılamaz. Sesi BlackHole’a çalın ve giriş olarak BlackHole’u seçin."
   },
   "gallery": {
     "title": "VoiceStudio Galeri",
@@ -3491,7 +3495,9 @@
     "type_speak": "Söyle",
     "type_speaking": "Konuşuyor…",
     "type_no_device": "Sanal mikrofon seçilmedi, bu yüzden ses hoparlörlerinizden çalar.",
-    "type_failed": "Mesaj söylenemedi."
+    "type_failed": "Mesaj söylenemedi.",
+    "system_audio": "Sistem sesi (bu bilgisayarın çaldığı her şey)",
+    "system_audio_loop": "Giriş sistem sesiyken çıkışı sanal bir kabloya gönderin. Dönüştürülen ses yeniden yakalanmasın diye izleme kapalı kalır."
   },
   "micOutput": {
     "play": "Mikrofona çal",

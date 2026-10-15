@@ -1,4 +1,5 @@
 import type { Session } from 'electron';
+import { systemAudioGate } from './system-audio';
 import { isTrustedRenderer } from './trusted-renderer';
 
 const TRUSTED_RENDERER_PERMISSIONS = new Set([
@@ -15,10 +16,14 @@ export function allowsRendererPermission(
   mediaTypes: readonly string[] | undefined,
   devOrigin?: string,
   isMainFrame = true,
+  systemAudioArmed = false,
 ): boolean {
   if (!isMainFrame || !isTrustedRenderer(requestingUrl, devOrigin)) return false;
+  // A display capture is only the carrier for armed system-audio loopback
+  // (system-audio.ts); its video track is dropped by the renderer.
+  if (permission === 'display-capture') return systemAudioArmed;
   if (permission !== 'media') return TRUSTED_RENDERER_PERMISSIONS.has(permission);
-  return !mediaTypes?.includes('video');
+  return !mediaTypes?.includes('video') || systemAudioArmed;
 }
 
 /**
@@ -36,6 +41,7 @@ export function installRendererPermissions(session: Session, devOrigin?: string)
         details.mediaType ? [details.mediaType] : undefined,
         devOrigin,
         details.isMainFrame,
+        systemAudioGate.isArmed(),
       ),
   );
   session.setPermissionRequestHandler((webContents, permission, callback, details) => {
@@ -47,6 +53,7 @@ export function installRendererPermissions(session: Session, devOrigin?: string)
         request.mediaTypes,
         devOrigin,
         details.isMainFrame,
+        systemAudioGate.isArmed(),
       ),
     );
   });

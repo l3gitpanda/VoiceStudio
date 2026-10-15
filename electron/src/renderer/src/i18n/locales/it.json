@@ -1419,7 +1419,11 @@
     "realtime_vc": "Voce dal vivo (sperimentale)",
     "realtime_vc_note": "Aggiunge l’area di lavoro del modificatore di voce in tempo reale. Disattivato per impostazione predefinita. Richiede l’installazione di un motore dedicato ed è fortemente consigliata una GPU.",
     "virtual_mic": "Microfono virtuale",
-    "virtual_mic_note": "Il dispositivo di uscita, di solito un cavo audio virtuale, a cui Voce dal vivo e “Riproduci nel microfono” inviano l’audio. In Discord o nel gioco, scegli l’altra estremità del cavo come microfono."
+    "virtual_mic_note": "Il dispositivo di uscita, di solito un cavo audio virtuale, a cui Voce dal vivo e “Riproduci nel microfono” inviano l’audio. In Discord o nel gioco, scegli l’altra estremità del cavo come microfono.",
+    "system_audio_input": "Audio di sistema come ingresso",
+    "system_audio_input_note": "Aggiunge «Audio di sistema» agli elenchi di ingresso di Voce dal vivo e delle registrazioni, per convertire o registrare ciò che riproduce questo computer. Solo Windows.",
+    "system_audio_linux": "Su Linux scegli invece un ingresso «Monitor of …»: ogni dispositivo di uscita ne ha uno.",
+    "system_audio_mac": "Non disponibile su macOS. Riproduci l’audio in BlackHole e scegli BlackHole come ingresso."
   },
   "gallery": {
     "title": "VoiceStudio Galleria",
@@ -3493,7 +3497,9 @@
     "type_speak": "Pronuncia",
     "type_speaking": "In riproduzione…",
     "type_no_device": "Nessun microfono virtuale scelto, quindi l’audio esce dagli altoparlanti.",
-    "type_failed": "Impossibile pronunciare il messaggio."
+    "type_failed": "Impossibile pronunciare il messaggio.",
+    "system_audio": "Audio di sistema (tutto ciò che riproduce questo computer)",
+    "system_audio_loop": "Con l’audio di sistema come ingresso, invia l’uscita a un cavo virtuale. L’ascolto resta disattivato così la voce convertita non viene catturata di nuovo."
   },
   "micOutput": {
     "play": "Riproduci nel microfono",

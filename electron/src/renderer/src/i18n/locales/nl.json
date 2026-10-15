@@ -1417,7 +1417,11 @@
     "realtime_vc": "Live stem (experimenteel)",
     "realtime_vc_note": "Voegt de werkruimte voor de realtime stemvervormer toe. Standaard uit. Er is een eigen engine-installatie voor nodig en een GPU wordt sterk aangeraden.",
     "virtual_mic": "Virtuele microfoon",
-    "virtual_mic_note": "Het uitvoerapparaat, meestal een virtuele audiokabel, waar Live stem en ‘Afspelen in microfoon’ het geluid naartoe sturen. Kies in Discord of je game het andere uiteinde van de kabel als microfoon."
+    "virtual_mic_note": "Het uitvoerapparaat, meestal een virtuele audiokabel, waar Live stem en ‘Afspelen in microfoon’ het geluid naartoe sturen. Kies in Discord of je game het andere uiteinde van de kabel als microfoon.",
+    "system_audio_input": "Systeemaudio als invoer",
+    "system_audio_input_note": "Voegt ‘Systeemaudio’ toe aan de invoerlijsten van Live stem en de opnames, zodat je kunt omzetten of opnemen wat deze computer afspeelt. Alleen Windows.",
+    "system_audio_linux": "Kies op Linux in plaats daarvan een invoer ‘Monitor of …’: elk uitvoerapparaat heeft er een.",
+    "system_audio_mac": "Niet beschikbaar op macOS. Speel de audio af in BlackHole en kies BlackHole als invoer."
   },
   "gallery": {
     "title": "VoiceStudio Galerij",
@@ -3491,7 +3495,9 @@
     "type_speak": "Uitspreken",
     "type_speaking": "Bezig met spreken…",
     "type_no_device": "Geen virtuele microfoon gekozen, dus dit speelt af via je luidsprekers.",
-    "type_failed": "Het bericht kon niet worden uitgesproken."
+    "type_failed": "Het bericht kon niet worden uitgesproken.",
+    "system_audio": "Systeemaudio (alles wat deze computer afspeelt)",
+    "system_audio_loop": "Stuur met systeemaudio als invoer de uitvoer naar een virtuele kabel. Meeluisteren blijft uit, zodat de omgezette stem niet opnieuw wordt opgenomen."
   },
   "micOutput": {
     "play": "Afspelen in microfoon",

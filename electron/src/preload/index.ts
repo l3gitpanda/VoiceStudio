@@ -44,6 +44,7 @@ const bridge: VoiceStudioBridge = {
   permissions: {
     getState: () => ipcRenderer.invoke('permissions:getState'),
     openSettings: (kind) => ipcRenderer.invoke('permissions:openSettings', kind),
+    armSystemAudio: () => ipcRenderer.invoke('permissions:armSystemAudio') as Promise<boolean>,
   },
   updates: {
     getState: () => ipcRenderer.invoke('updates:getState') as Promise<UpdateState>,

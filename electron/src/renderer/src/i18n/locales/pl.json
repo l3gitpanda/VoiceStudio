@@ -1421,7 +1421,11 @@
     "realtime_vc": "Głos na żywo (eksperymentalne)",
     "realtime_vc_note": "Dodaje obszar roboczy zmieniacza głosu w czasie rzeczywistym. Domyślnie wyłączone. Wymaga instalacji osobnego silnika, a GPU jest zdecydowanie zalecane.",
     "virtual_mic": "Wirtualny mikrofon",
-    "virtual_mic_note": "Urządzenie wyjściowe, zwykle wirtualny kabel audio, do którego Głos na żywo i „Odtwórz do mikrofonu” wysyłają dźwięk. W Discordzie lub grze wybierz drugi koniec kabla jako mikrofon."
+    "virtual_mic_note": "Urządzenie wyjściowe, zwykle wirtualny kabel audio, do którego Głos na żywo i „Odtwórz do mikrofonu” wysyłają dźwięk. W Discordzie lub grze wybierz drugi koniec kabla jako mikrofon.",
+    "system_audio_input": "Dźwięk systemowy jako wejście",
+    "system_audio_input_note": "Dodaje „Dźwięk systemowy” do list wejść w Głosie na żywo i nagraniach, aby przekształcać lub nagrywać to, co odtwarza ten komputer. Tylko Windows.",
+    "system_audio_linux": "W systemie Linux wybierz zamiast tego wejście „Monitor of …”: każde urządzenie wyjściowe ma takie.",
+    "system_audio_mac": "Niedostępne w systemie macOS. Odtwórz dźwięk w BlackHole i wybierz BlackHole jako wejście."
   },
   "gallery": {
     "title": "VoiceStudio Galeria",
@@ -3495,7 +3499,9 @@
     "type_speak": "Wypowiedz",
     "type_speaking": "Mówienie…",
     "type_no_device": "Nie wybrano wirtualnego mikrofonu, więc dźwięk gra na głośnikach.",
-    "type_failed": "Nie udało się wypowiedzieć wiadomości."
+    "type_failed": "Nie udało się wypowiedzieć wiadomości.",
+    "system_audio": "Dźwięk systemowy (wszystko, co odtwarza ten komputer)",
+    "system_audio_loop": "Przy dźwięku systemowym jako wejściu wyślij wyjście do wirtualnego kabla. Odsłuch pozostaje wyłączony, aby przekształcony głos nie został ponownie przechwycony."
   },
   "micOutput": {
     "play": "Odtwórz do mikrofonu",

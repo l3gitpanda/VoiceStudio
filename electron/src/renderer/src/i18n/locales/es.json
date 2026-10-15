@@ -1419,7 +1419,11 @@
     "realtime_vc": "Voz en vivo (experimental)",
     "realtime_vc_note": "Añade el espacio de trabajo del cambiador de voz en tiempo real. Desactivado por defecto. Necesita instalar su propio motor y se recomienda mucho una GPU.",
     "virtual_mic": "Micrófono virtual",
-    "virtual_mic_note": "El dispositivo de salida, normalmente un cable de audio virtual, al que la voz en vivo y «Reproducir en el micrófono» envían el audio. En Discord o en un juego, elige el otro extremo del cable como micrófono."
+    "virtual_mic_note": "El dispositivo de salida, normalmente un cable de audio virtual, al que la voz en vivo y «Reproducir en el micrófono» envían el audio. En Discord o en un juego, elige el otro extremo del cable como micrófono.",
+    "system_audio_input": "Audio del sistema como entrada",
+    "system_audio_input_note": "Añade «Audio del sistema» a las listas de entrada de Voz en vivo y de las grabaciones, para convertir o grabar lo que reproduce este equipo. Solo Windows.",
+    "system_audio_linux": "En Linux, elige en su lugar una entrada «Monitor of …»: cada dispositivo de salida tiene una.",
+    "system_audio_mac": "No disponible en macOS. Reproduce el audio en BlackHole y elige BlackHole como entrada."
   },
   "gallery": {
     "title": "VoiceStudio Galería",
@@ -3493,7 +3497,9 @@
     "type_speak": "Decir",
     "type_speaking": "Hablando…",
     "type_no_device": "No hay micrófono virtual elegido, así que suena por tus altavoces.",
-    "type_failed": "No se pudo decir el mensaje."
+    "type_failed": "No se pudo decir el mensaje.",
+    "system_audio": "Audio del sistema (todo lo que reproduce este equipo)",
+    "system_audio_loop": "Con el audio del sistema como entrada, envía la salida a un cable virtual. La escucha queda desactivada para que la voz convertida no se vuelva a capturar."
   },
   "micOutput": {
     "play": "Reproducir en el micrófono",
