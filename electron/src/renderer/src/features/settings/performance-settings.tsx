@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { GpuAcceleration } from './gpu-acceleration';
 import { SystemPreflight } from './system-preflight';
+import { LiveVoiceSetting } from './live-voice-setting';
 import { PerformanceProfile } from '@/components/performance-profile';
 import { familyIcons, modelFamilies } from './model-family';
 import { useEffect, useRef, useState } from 'react';
@@ -396,6 +397,7 @@ function MemoryManagement() {
         </Button>
       </SettingsRow>
       <OffloadAfterGeneration />
+      <LiveVoiceSetting />
     </SettingsSection>
   );
 }

@@ -16,10 +16,12 @@ import {
   ChevronRightIcon,
   BlocksIcon,
   WorkflowIcon,
+  AudioWaveformIcon,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { setWorkspace } from '@/lib/store/workspace';
+import { useLiveVoiceEnabledFlag } from '@/lib/store/live-voice-enabled';
 import { cn } from '@/lib/utils';
 import './workspace-menu.css';
 
@@ -37,6 +39,7 @@ type Destination = readonly [
     | '/transcriptions'
     | '/personas'
     | '/calls'
+    | '/live-voice'
     | '/integrations',
   label: string,
   icon: typeof AudioLinesIcon,
@@ -59,6 +62,8 @@ const dubDestinations: Destination[] = [
   ['/dub', 'dubWorkspace.title', FilmIcon],
   ['/batch', 'nav.batch_dub', LayersIcon],
 ];
+/** Opt-in (Settings → Performance); listed only while it is turned on. */
+const liveVoiceDestination: Destination = ['/live-voice', 'nav.live_voice', AudioWaveformIcon];
 const laterDestinations: Destination[] = [
   ['/transcriptions', 'nav.transcribe', MicIcon],
   ['/calls', 'workflows.title', WorkflowIcon],
@@ -83,6 +88,7 @@ const iconMotion: Record<Destination[0], string> = {
   '/batch': 'lift',
   '/transcriptions': 'nudge',
   '/calls': 'pulse',
+  '/live-voice': 'wave',
   '/projects': 'lift',
   '/tools': 'tilt',
   '/integrations': 'turn',
@@ -336,6 +342,10 @@ export function WorkspaceNavigation({ compact = false }: { compact?: boolean }) 
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   });
+  const liveVoice = useLiveVoiceEnabledFlag();
+  const later = liveVoice
+    ? [laterDestinations[0], liveVoiceDestination, ...laterDestinations.slice(1)]
+    : laterDestinations;
   return (
     <nav
       data-slot="workspace-navigation"
@@ -366,7 +376,7 @@ export function WorkspaceNavigation({ compact = false }: { compact?: boolean }) 
         compact={compact}
         pathname={pathname}
       />
-      {laterDestinations.map((destination) => (
+      {later.map((destination) => (
         <NavigationLink key={destination[0]} destination={destination} compact={compact} />
       ))}
     </nav>

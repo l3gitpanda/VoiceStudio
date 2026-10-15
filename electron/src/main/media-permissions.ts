@@ -5,6 +5,8 @@ const TRUSTED_RENDERER_PERMISSIONS = new Set([
   'clipboard-read',
   'clipboard-sanitized-write',
   'fullscreen',
+  // Live Voice routes converted audio to a chosen output (setSinkId).
+  'speaker-selection',
 ]);
 
 export function allowsRendererPermission(

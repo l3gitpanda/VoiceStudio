@@ -28,6 +28,12 @@ describe('renderer permissions', () => {
     expect(allowsRendererPermission('notifications', 'app://voicestudio/index.html', undefined)).toBe(
       false,
     );
+    expect(
+      allowsRendererPermission('speaker-selection', 'app://voicestudio/index.html', undefined),
+    ).toBe(true);
+    expect(allowsRendererPermission('speaker-selection', 'https://example.com', undefined)).toBe(
+      false,
+    );
   });
 
   it('installs matching check and request handlers', () => {
