@@ -12,9 +12,11 @@ Currently exposed:
 - `require_admin_action`: strict admin gate for side-effectful GET actions.
 - `require_native_access`: true-loopback-only access to the host filesystem;
   unlike `require_loopback`, it is never bypassed by server mode.
+- `consumer_authorized`: the consumption policy shared by `require_consumer`
+  and the consumer WebSocket guard.
 - `ws_remote_authorized`: whether a WebSocket handshake from a non-loopback
-  client carries the remote API key (Wave 2.3) — used by WS endpoints that
-  keep their own inline loopback guards.
+  client carries the remote API key or an admin session (Wave 2.3) — used by
+  the dictation guard in `api.ws_guards`.
 """
 
 import os
@@ -116,16 +118,31 @@ def _request_presents_admin_credential(
     return True
 
 
+def consumer_authorized(connection) -> bool:
+    """Whether a request or WebSocket may use consumption routes.
+
+    Local clients and authenticated remote consumers (share PIN, API key,
+    admin session or ticket) qualify. Explicit bare-server deployments (no key,
+    no PIN) delegate consumption to their port mapping, so an anonymous caller
+    that presented no credential qualifies there too. Shared by the HTTP
+    ``require_consumer`` gate and the ``api.ws_guards`` handshake guard so the
+    two can never disagree.
+    """
+    principal = principal_for(connection)
+    if principal.allows("consume"):
+        return True
+    return (
+        _server_mode()
+        and not _admin_credential_configured(connection)
+        and principal.transport == CredentialTransport.NONE
+    )
+
+
 def require_consumer(request: Request) -> None:
     """Allow metadata access to local clients and authenticated remote consumers."""
-    principal = principal_for(request)
-    if not principal.allows("consume"):
-        # Explicit bare-server deployments delegate consumption to their port
-        # mapping. Preserve browser export history without granting admin/native.
-        if (_server_mode() and not _admin_credential_configured(request)
-                and principal.transport == CredentialTransport.NONE):
-            return
+    if not consumer_authorized(request):
         raise HTTPException(status_code=403, detail="authenticated consumer required")
+    principal = principal_for(request)
     if principal.transport in {CredentialTransport.COOKIE, CredentialTransport.LEGACY_COOKIE}:
         if request.method.upper() not in SAFE_HTTP_METHODS and not cookie_csrf_allowed(request):
             raise HTTPException(status_code=403, detail="CSRF validation failed")

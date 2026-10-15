@@ -14,7 +14,7 @@ env var that exempts trusted callers:
 
 | Gate | Turn on with | Guards | Applies to |
 |---|---|---|---|
-| **Share PIN** | the in-app Network share toggle | casual LAN-share guests, one session | non-loopback **HTTP** |
+| **Share PIN** | the in-app Network share toggle | casual LAN-share guests, one session | non-loopback **HTTP**, plus the `/ws/events` and `/ws/tts` streams |
 | **API key** | `OMNIVOICE_API_KEY` env var on the backend | direct clients and first-party session bootstrap | non-loopback **HTTP + WebSocket** |
 | **Trusted networks** | `OMNIVOICE_TRUSTED_NETWORKS` env var | *exempts* the two gates above | non-loopback **consumption** routes only |
 
@@ -66,9 +66,10 @@ HTTP/1.1 401 Unauthorized
 
 Notes on the PIN gate (`NetworkAccessMiddleware`, `backend/main.py`):
 
-- It covers **HTTP only** — it does **not** gate WebSockets. The dictation
-  WebSocket has its own guard (see below), and the PIN does **not** authorize
-  it; use the API key or a trusted network for remote dictation.
+- The middleware covers HTTP. Each WebSocket route checks its own handshake
+  ([WebSockets](#websockets)): a PIN guest can open the `/ws/events` and
+  `/ws/tts` streams, but the PIN does **not** authorize live dictation. Use the
+  API key or a trusted network for remote dictation.
 - The SPA shell (`/`, `/index.html`, `/favicon*`, `/assets/*`, `/health`) is
   always served un-PIN'd so the PIN-prompt UI can load.
 - It is a **consumption** credential: a valid PIN never unlocks the admin surface
@@ -205,15 +206,29 @@ to the ambient-cookie CSRF check.
 
 ---
 
-## Dictation WebSocket
+## WebSockets
 
-The live-dictation stream at **`ws://<host>:3900/ws/transcribe`** carries its
-own inline guard (`backend/api/routers/capture_ws.py`) *in addition to* the
-API-key middleware. A non-loopback client reaches it only if it is **either**:
+Every WebSocket route checks its own handshake before accepting it
+(`backend/api/ws_guards.py`). This check runs in addition to the API-key
+middleware. A browser handshake from an origin other than this backend or
+`OMNIVOICE_ALLOWED_ORIGINS` is refused first. Then each route applies one of two
+rules to clients on other devices:
 
-- on a [trusted network](#trusted-networks) (`is_local_host` passes), **or**
-- presenting a direct-client **API key** in `Authorization`, or through a
-  legacy `ov_key`/`?api_key=` transport.
+| Route | Who may connect from another device |
+|---|---|
+| `/ws/events`, `/ws/tts` | A [trusted network](#trusted-networks), a share-PIN guest, the API key, or an administrator session ticket. These are the callers the HTTP consumption routes accept. A server-mode backend with neither a key nor a PIN also accepts anonymous callers, as its HTTP API does. |
+| `/ws/transcribe`, `/v1/audio/transcriptions/stream` | A trusted network, the API key, or an administrator session ticket. The share PIN is **not** enough. |
+
+A refused handshake is closed with code **1008**. The close reason is
+`authentication required` on `/ws/events` and `/ws/tts`, and
+`loopback origin required` on the dictation streams.
+
+A PIN guest's browser presents the `ov_pin` cookie that the PIN gate sets on the
+guest's first HTTP request, so the bundled UI needs no extra step. Scripts can
+send `X-OmniVoice-Pin` or `?pin=`.
+
+Direct clients can present the **API key** in `Authorization`, or through a
+legacy `ov_key`/`?api_key=` transport:
 
 ```
 ws://gpu-box:3900/ws/transcribe?api_key=<key>
@@ -222,18 +237,16 @@ ws://gpu-box:3900/ws/transcribe?api_key=<key>
 That URL form is retained for non-browser compatibility only. The first-party
 UI never constructs it. A bearer administrator session first calls
 `POST /api/auth/ws-ticket` and puts only the returned `ws_ticket` in the URL.
-Tickets are scoped to one of `/ws/transcribe`, `/ws/events` or `/ws/tts` (the
-live dub preview stream), expire after 30 seconds,
-return the same bounded `expires_in`/`expires_at` pair, and are consumed
-atomically at most once. Same-origin UI WebSockets use the
+Tickets are scoped to one of `/ws/transcribe`, `/ws/events`, `/ws/tts` (the
+live dub preview stream) or `/v1/audio/transcriptions/stream`, expire after
+30 seconds, return the same bounded `expires_in`/`expires_at` pair, and are
+consumed atomically at most once. Same-origin UI WebSockets use the
 HttpOnly session cookie and must pass exact `Origin` validation; `null`, missing,
 and lookalike origins are rejected.
 
-The **share PIN does not authorize dictation** — the PIN gate is HTTP-only, and
-the dictation guard checks only the API key (or trusted-network membership). A
-LAN guest who has only entered a PIN can use the HTTP API but **not** live
-dictation. When neither the API key nor a trusted network applies, the handshake
-is closed with code **1008** and reason `loopback origin required`.
+The **share PIN does not authorize dictation**. A LAN guest who has only entered
+a PIN can use the HTTP API and the event and TTS streams, but **not** live
+dictation.
 
 ---
 
@@ -255,8 +268,8 @@ export OMNIVOICE_TRUSTED_NETWORKS="192.168.1.0/24,10.0.0.0/8"
 What it exempts vs. what it does not:
 
 - **Exempts** (via `is_local_host`, `backend/api/dependencies.py`): the share
-  PIN gate, the API-key gate, and the dictation WebSocket guard. Clients in a
-  listed range need no PIN or key for these **consumption** routes.
+  PIN gate, the API-key gate, and the [WebSocket guards](#websockets). Clients
+  in a listed range need no PIN or key for these **consumption** routes.
 - **Never exempts admin.** `/system/*` and `/api/settings/*` are the RCE-class
   admin surface; trusted-network membership is a *consumption* exemption and
   does not reach them — even under `OMNIVOICE_SERVER_MODE=1`. See

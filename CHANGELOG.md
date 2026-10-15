@@ -22,6 +22,7 @@ metadata and the backend fallback mirror it.
 
 ### Fixed
 
+- With Network sharing on, other devices need the share PIN or API key to stream speech or live app updates
 - Tools → Convert includes saved Voice Design profiles and clones with locked reference audio in the target voice picker (#2899)
 
 - Snap packages follow Canonical’s strict-confinement approach to launch without manual Chromium sandbox setup (#2893) — thanks @velixio!

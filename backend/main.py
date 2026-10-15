@@ -1704,7 +1704,8 @@ class NetworkAccessMiddleware:
     """When a share PIN is set, require it for non-loopback clients on API
     routes. Inert when no PIN (default + docker deploys). Loopback (incl.
     Tailscale-proxied) always bypasses; the SPA shell is always served so the
-    PIN gate UI can load.
+    PIN gate UI can load. HTTP only: every WebSocket route enforces the same
+    policy on its handshake through ``api.ws_guards``.
 
     Pure ASGI (not BaseHTTPMiddleware) so it never buffers the response body.
     BaseHTTPMiddleware collects StreamingResponse/SSE bodies before forwarding,
@@ -1895,9 +1896,10 @@ app.add_middleware(NetworkAccessMiddleware)
 # OMNIVOICE_API_KEY is set. Distinct from the PIN gate above: the PIN guards
 # casual LAN-share guests for one session; the API key is the durable
 # credential for running this backend remotely (Tailscale / Docker GPU box).
-# Covers WebSockets too — the PIN gate never did, because every WS endpoint
-# carried its own loopback guard; remote mode is exactly the case where a
-# keyed non-loopback client must reach them.
+# Covers WebSockets too; remote mode is exactly the case where a keyed
+# non-loopback client must reach them. The PIN gate above does not, so each
+# WebSocket route also declares a handshake guard from api.ws_guards
+# (tests/test_ws_route_guards.py fails on a route without one).
 app.add_middleware(BearerKeyMiddleware)
 
 # Applies whatever the auth configuration: refuses state-changing requests and
