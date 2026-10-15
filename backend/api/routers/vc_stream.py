@@ -212,7 +212,13 @@ async def _pump(ws: WebSocket, session: vc_session.VCSession, sample_rate: int) 
     finally:
         for task in tasks:
             task.cancel()
-        await asyncio.gather(*tasks, return_exceptions=True)
+        # wait, not gather: if this handler is cancelled meanwhile, gather
+        # re-raises a child's CancelledError in place of the handler's own, and
+        # the server's cancel scope then treats it as a foreign cancellation.
+        await asyncio.wait(tasks)
+        for task in tasks:
+            if not task.cancelled():
+                task.exception()  # mark retrieved; the deciding result was read above
 
 
 def _prepare(backend, params: VCStreamParams, reference, quality_chosen: bool):

@@ -11,6 +11,7 @@ import sys
 import time
 import uuid
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -18,8 +19,6 @@ import soundfile as sf
 from fastapi.testclient import TestClient
 from starlette.websockets import WebSocketDisconnect
 
-from services.vc import registry
-from services.vc import session as vc_session
 from services.vc.base import StreamingVCBackend, VCTarget
 
 SR = 22_050
@@ -49,13 +48,26 @@ class _Identity(StreamingVCBackend):
 
 
 @pytest.fixture()
-def fake_engine(monkeypatch):
+def vc():
+    """The VC modules the running app actually reads. Other suites purge and
+    re-import backend packages, so a module bound at collection time can be a
+    stale twin: patching it would leave the router on the real engine."""
+    from main import app
+
+    route = next(r for r in app.router.routes if getattr(r, "path", "") == "/ws/vc")
+    live = route.endpoint.__globals__
+    return SimpleNamespace(registry=live["registry"], session=live["vc_session"],
+                           CPU_PARAMS=live["CPU_PARAMS"])
+
+
+@pytest.fixture()
+def fake_engine(monkeypatch, vc):
     backend = _Identity()
-    monkeypatch.setattr(registry, "backend_class", lambda engine_id: _Identity)
-    monkeypatch.setattr(registry, "get_backend", lambda engine_id=None: backend)
+    monkeypatch.setattr(vc.registry, "backend_class", lambda engine_id: _Identity)
+    monkeypatch.setattr(vc.registry, "get_backend", lambda engine_id=None: backend)
     monkeypatch.setenv("OMNIVOICE_REALTIME_VC", "1")
     yield backend
-    assert not vc_session.busy(), "a session leaked the one-per-process slot"
+    assert not vc.session.busy(), "a session leaked the one-per-process slot"
 
 
 @pytest.fixture(autouse=True)
@@ -171,13 +183,13 @@ def test_profile_without_reference_audio(client, fake_engine):
         assert _error(ws) == ("voice_reference_missing", 1008)
 
 
-def test_engine_not_installed(client, fake_engine, monkeypatch):
+def test_engine_not_installed(client, fake_engine, monkeypatch, vc):
     class _Missing(_Identity):
         @classmethod
         def is_available(cls):
             return False, "not installed"
 
-    monkeypatch.setattr(registry, "backend_class", lambda engine_id: _Missing)
+    monkeypatch.setattr(vc.registry, "backend_class", lambda engine_id: _Missing)
     with client.websocket_connect("/ws/vc") as ws:
         ws.send_text(json.dumps({"type": "start", "profile_id": _profile()}))
         assert _error(ws) == ("vc_not_installed", 1008)
@@ -214,26 +226,68 @@ def test_round_trip_converts_and_stop_closes_cleanly(client, fake_engine, kind, 
         assert closed.value.code == 1000
 
 
-def test_cancel_by_closing_releases_the_slot(client, fake_engine):
+def test_cancel_by_closing_releases_the_slot(client, fake_engine, vc):
     pid = _profile()
     with client.websocket_connect("/ws/vc") as ws:
         ready = _start(ws, pid)
         ws.send_bytes(_pcm(np.zeros(ready["block_samples"], np.float32)))
     deadline = time.monotonic() + 5
-    while vc_session.busy() and time.monotonic() < deadline:
+    while vc.session.busy() and time.monotonic() < deadline:
         time.sleep(0.05)
-    assert not vc_session.busy()
+    assert not vc.session.busy()
 
 
-def test_second_session_is_busy(client, fake_engine):
+def test_a_cancelled_handler_keeps_its_own_cancellation():
+    """Exiting mid-stream cancels the handler (server shutdown, the test
+    client's teardown) while it is still unwinding its pump. The handler must
+    surface the canceller's CancelledError, not a child's: anyio recognises
+    its own cancel by the message and treats anything else as foreign."""
+    import asyncio
+
+    from api.routers import vc_stream
+
+    class _Ws:
+        async def receive(self):
+            return {"type": "websocket.disconnect"}
+
+    class _SlowToCancel:
+        async def get(self):
+            try:
+                await asyncio.Event().wait()
+            except asyncio.CancelledError:
+                await asyncio.sleep(0.2)  # still unwinding when the handler is cancelled
+                raise
+
+    session = SimpleNamespace(outbox=_SlowToCancel(), error=None, stats=dict)
+    seen = []
+
+    async def handler():
+        try:
+            await vc_stream._pump(_Ws(), session, SR)
+        except asyncio.CancelledError as exc:
+            seen.append(exc.args)
+            raise
+
+    async def main():
+        task = asyncio.ensure_future(handler())
+        await asyncio.sleep(0.05)
+        task.cancel("Cancelled via cancel scope test")
+        with pytest.raises(asyncio.CancelledError):
+            await task
+
+    asyncio.run(main())
+    assert seen == [("Cancelled via cancel scope test",)]
+
+
+def test_second_session_is_busy(client, fake_engine, vc):
     holder = object()
-    assert vc_session.claim(holder)
+    assert vc.session.claim(holder)
     try:
         with client.websocket_connect("/ws/vc") as ws:
             ws.send_text(json.dumps({"type": "start", "profile_id": _profile()}))
             assert _error(ws) == ("vc_busy", 1013)
     finally:
-        vc_session.release(holder)
+        vc.session.release(holder)
 
 
 @pytest.mark.parametrize("frame,code,close", [
@@ -264,16 +318,14 @@ def test_unknown_control_messages_are_refused(client, fake_engine):
         assert msg["code"] == "bad_request"
 
 
-def test_cpu_host_falls_back_to_cpu_settings_with_a_warning(client, fake_engine):
-    from services.vc.base import CPU_PARAMS
-
+def test_cpu_host_falls_back_to_cpu_settings_with_a_warning(client, fake_engine, vc):
     fake_engine.device_name = "cpu"
     with client.websocket_connect("/ws/vc") as ws:
         ready = _start(ws, _profile())
         ws.send_text(json.dumps({"type": "stop"}))
     assert ready["warning"] == "cpu_slow"
-    assert ready["params"]["block_ms"] == CPU_PARAMS.block_ms
-    assert ready["params"]["steps"] == CPU_PARAMS.steps
+    assert ready["params"]["block_ms"] == vc.CPU_PARAMS.block_ms
+    assert ready["params"]["steps"] == vc.CPU_PARAMS.steps
 
 
 def test_explicit_quality_is_honoured_on_cpu(client, fake_engine):
@@ -284,7 +336,7 @@ def test_explicit_quality_is_honoured_on_cpu(client, fake_engine):
     assert ready["params"]["block_ms"] == 240 and ready["params"]["steps"] == 6
 
 
-def test_end_to_end_with_the_echo_sidecar(client, monkeypatch, tmp_path):
+def test_end_to_end_with_the_echo_sidecar(client, monkeypatch, tmp_path, vc):
     """The real Seed-VC adapter, its sidecar transport and the WebSocket,
     with the stdlib echo sidecar as an identity model."""
     from engines import seedvc_subprocess as adapter
@@ -307,8 +359,8 @@ def test_end_to_end_with_the_echo_sidecar(client, monkeypatch, tmp_path):
 
     backend = _EchoBackend()
     monkeypatch.setattr(adapter, "cache_dir", lambda: tmp_path)
-    monkeypatch.setattr(registry, "backend_class", lambda engine_id: _EchoBackend)
-    monkeypatch.setattr(registry, "get_backend", lambda engine_id=None: backend)
+    monkeypatch.setattr(vc.registry, "backend_class", lambda engine_id: _EchoBackend)
+    monkeypatch.setattr(vc.registry, "get_backend", lambda engine_id=None: backend)
     monkeypatch.setenv("OMNIVOICE_REALTIME_VC", "1")
     try:
         with client.websocket_connect("/ws/vc") as ws:

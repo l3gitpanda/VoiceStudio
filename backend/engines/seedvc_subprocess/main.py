@@ -491,9 +491,9 @@ def main() -> int:
     stdin = sys.stdin.buffer
     # Frames go down a private fd; fd 1 is pointed at stderr (#1428) so
     # library prints (tqdm, torch) cannot corrupt the frame stream.
-    frame_fd = os.dup(1)
+    _frame_fd = os.dup(1)
     os.dup2(2, 1)
-    stdout = os.fdopen(frame_fd, "wb")
+    stdout = os.fdopen(_frame_fd, "wb")
     _send(stdout, {"op": "ready", "engine": "seed-vc", "sample_rate": SAMPLE_RATE})
     while True:
         try:
