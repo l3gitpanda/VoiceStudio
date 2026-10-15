@@ -128,14 +128,6 @@ bun run dev
 
 エージェントスキル：`npx skills add debpalash/VoiceStudio` — 音声ワークフローには **voicestudio**、リポジトリのメンテナンスには **voicestudio-maintainer** を選択してください。
 
-## スポンサー
-
-<a href="https://forms.gle/2PYCvd39hbwijzX37"><img src="docs/media/sponsor-slot.svg" alt="あなたのブランドを — VoiceStudio の注目スポンサー枠に応募" width="640" /></a>
-
-**注目パートナーになりませんか。** [有料掲載に応募](https://forms.gle/2PYCvd39hbwijzX37) · [メールで問い合わせ](mailto:partner@voicestudio.sh)
-
-開発を支援する：[Ko-fi](https://ko-fi.com/debpalash) · [PayPal](https://paypal.me/palashCoder) · [スポンサーシップの詳細](SPONSORS.md)
-
 ## ライセンスと責任ある利用
 
 [AGPL-3.0](LICENSE)。モデルにはそれぞれ独自のライセンスがあります。商用利用の前に確認してください。声のクローンは必ず許可を得たうえで行ってください。詳しくは[ライセンスの詳細](LICENSE-NOTICE.md)を参照してください。

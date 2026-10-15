@@ -6,4 +6,8 @@ describe('renderer content security policy', () => {
     const connect = /connect-src ([^;"]+)/.exec(html)?.[1].trim().split(/\s+/);
     expect(connect).toEqual(["'self'", 'blob:', 'ws:', 'http://localhost:*', 'http://127.0.0.1:*']);
   });
+
+  it('embeds no remote frames', () => {
+    expect(html).not.toMatch(/frame-src|forms\.gle|google\.com/);
+  });
 });

@@ -107,8 +107,8 @@ The old preflight and optional Zenity dialog are removed.
 
 Security tradeoff: strict Snap confinement still restricts the application via
 AppArmor, seccomp and namespaces, but Chromium's per-process sandbox is disabled
-for every process in this Snap, including the embedded website preview and
-sponsor form. These are different security boundaries, not equivalent layers.
+for every process in this Snap, including the embedded website preview. These
+are different security boundaries, not equivalent layers.
 Keep context isolation, disabled Node integration for remote content, isolated
 browser sessions and denied browser permissions. Electron's general
 [guidance](https://www.electronjs.org/docs/latest/tutorial/sandbox) advises against
@@ -122,7 +122,7 @@ Complete every item on a clean supported host:
 - first-run managed Python installation and offline relaunch;
 - model installation followed by offline synthesis;
 - microphone capture, audio playback and dictation;
-- website preview, address-bar navigation and sponsor-form display;
+- website preview and address-bar navigation;
 - GPU discovery and one GPU-backed generation where hardware is available;
 - file import/export in the home directory and on removable media through the portal;
 - project open/save and watch-folder access;

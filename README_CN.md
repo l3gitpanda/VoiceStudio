@@ -124,14 +124,6 @@ bun run dev
 
 智能体技能：`npx skills add debpalash/VoiceStudio` — 音频工作流选 **voicestudio**，仓库维护选 **voicestudio-maintainer**。
 
-## 赞助商
-
-<a href="https://forms.gle/2PYCvd39hbwijzX37"><img src="docs/media/sponsor-slot.svg" alt="你的品牌 —— 申请 VoiceStudio 推荐赞助展示位" width="640" /></a>
-
-**成为推荐合作伙伴。**[申请付费展示位](https://forms.gle/2PYCvd39hbwijzX37) · [发送邮件](mailto:partner@voicestudio.sh)
-
-支持开发：[Ko-fi](https://ko-fi.com/debpalash) · [PayPal](https://paypal.me/palashCoder) · [赞助详情](SPONSORS.md)
-
 ## 许可与负责任使用
 
 应用采用 [AGPL-3.0](LICENSE) 许可。模型遵循各自的许可，商用前请确认其条款。克隆声音前须取得本人许可。详见[许可说明](LICENSE-NOTICE.md)。

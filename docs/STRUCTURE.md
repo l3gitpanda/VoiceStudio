@@ -10,7 +10,7 @@ VoiceStudio/
 ├── README.md / README_CN.md / README_JA.md ⟵ user-facing overview (English / Chinese / Japanese)
 ├── CHANGELOG.md                 ⟵ release history; Electron releases use the tagged section
 ├── CLAUDE.md / AGENTS.md        ⟵ the working contract for AI agents — keep the two in sync
-├── LICENSE, LICENSE-NOTICE.md, SPONSORS.md
+├── LICENSE, LICENSE-NOTICE.md
 │
 ├── pyproject.toml               ⟵ Python project manifest (+ pytest / lint config)
 ├── uv.lock                      ⟵ Python lockfile
@@ -118,7 +118,7 @@ VoiceStudio/
 │   ├── features.yaml            canonical feature inventory (drives docs-drift.yml)
 │   ├── adr/                     architecture decision records
 │   ├── agents/                  agent-facing docs (issue tracker, triage labels, domain)
-│   ├── engines/, dubbing/, install/, setup/, migration/, features/, playbooks/, specs/
+│   ├── engines/, dubbing/, install/, setup/, migration/, features/, specs/
 │   ├── media/, screenshot-*.png, preview.png, logo.*
 │   └── languages.md, training.md, data_preparation.md, evaluation.md, voice-design.md
 │
