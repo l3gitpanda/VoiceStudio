@@ -388,6 +388,18 @@ _COSYVOICE_REQUIREMENTS = str(
 )
 
 
+# The trimmed Seed-VC requirements ship with the app (see that file for what
+# was dropped from upstream's list and why).
+_SEEDVC_REQUIREMENTS = str(
+    Path(__file__).resolve().parents[1] / "engines" / "seedvc_subprocess" / "requirements.txt"
+)
+
+
+def _seedvc_invalidate() -> None:
+    from services.vc import registry
+    registry.reset()
+
+
 SPECS: dict[str, SidecarSpec] = {
     "indextts2": SidecarSpec(
         engine_id="indextts2",
@@ -692,6 +704,46 @@ SPECS: dict[str, SidecarSpec] = {
         installed_probe=_in_app_env("cosyvoice"),
         host_supported=_no_intel_mac(
             "CosyVoice 3 needs a PyTorch version that has no Intel Mac build."
+        ),
+    ),
+    # Live Voice (real-time voice changer), not a TTS engine. A reviewed commit
+    # (2025-04-20); like upstream's real-time GUI the sidecar puts the checkout
+    # on sys.path. GPL-3.0 code and weights: installed only when the user opts
+    # in, never vendored. Weights download on the first session (the CAM++
+    # encoder ships inside the checkout).
+    "seed-vc": SidecarSpec(
+        engine_id="seed-vc",
+        display_name="Seed-VC",
+        repo_url="https://github.com/Plachtaa/seed-vc.git",
+        tarball_url=(
+            "https://github.com/Plachtaa/seed-vc/archive/"
+            "51383efd921027683c89e5348211d93ff12ac2a8.tar.gz"
+        ),
+        checkout_dirname="seed-vc",
+        env_var="OMNIVOICE_SEEDVC_DIR",
+        probe_module="modules",
+        probe_code=(
+            "import sys; sys.path.insert(0, {checkout_repr}); "
+            "from modules.commons import build_model, recursive_munch; "
+            "from modules.flow_matching import CFM; "
+            "from modules.campplus.DTDNN import CAMPPlus; "
+            "from modules.hifigan.generator import HiFTGenerator; "
+            "from transformers import Wav2Vec2Model; import torchaudio, librosa"
+        ),
+        source_revision="51383efd921027683c89e5348211d93ff12ac2a8",
+        source_manifest="requirements.txt",
+        source_required_path="modules/commons.py",
+        venv_args=("--python", "3.10"),
+        install_args=("-r", _SEEDVC_REQUIREMENTS),
+        torch_pins=("torch==2.7.0", "torchaudio==2.7.0"),
+        docs_path="docs/engines/seed-vc.md",
+        # ~0.1 GB source + ~7 GB venv (CUDA torch) + ~1.5 GB weights.
+        required_bytes=10 * _GIB,
+        weights_bytes=2 * _GIB,
+        dependency_bytes=7 * _GIB,
+        invalidate=_seedvc_invalidate,
+        host_supported=_no_intel_mac(
+            "Seed-VC needs a PyTorch version that has no Intel Mac build."
         ),
     ),
 }

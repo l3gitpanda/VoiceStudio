@@ -2578,10 +2578,11 @@
       "evidence_url": "https://huggingface.co/funasr/campplus/blob/e4b6ede7ce16997aff4ae69fbca1f0175e2afede/README.md",
       "revision": "e4b6ede7ce16997aff4ae69fbca1f0175e2afede",
       "engines": [
-        "confucius4-tts"
+        "confucius4-tts",
+        "seed-vc"
       ],
       "configured_at": "docs/engines/confucius4-tts.md:60",
-      "notes": "Licence identifier is upstream model-card metadata, not verified permission for this distribution. Component terms and attribution text require review.",
+      "notes": "Licence identifier is upstream model-card metadata, not verified permission for this distribution. Component terms and attribution text require review. Seed-VC uses the same campplus_cn_common.bin, shipped inside its reviewed checkout.",
       "runtime_revision": null,
       "runtime_pin_scope": "external",
       "runtime_pin_source": null,
@@ -2879,6 +2880,132 @@
       "runtime_revision": "528e871c2a26c4f0f7773b9754e2e1acae20899d",
       "runtime_pin_scope": "central",
       "runtime_pin_source": "backend/services/hf_revisions.py",
+      "component_closure": "incomplete",
+      "commercial_inference": "unknown",
+      "commercial_outputs": "unknown",
+      "documents": [],
+      "artifacts": [],
+      "required_components": [],
+      "upstream_access": "unknown",
+      "audit_observations": {
+        "commercial_inference": {
+          "status": "unreviewed",
+          "scope": "Selected weight/component only; not complete workflow clearance."
+        },
+        "output_terms": {
+          "status": "not_assessed",
+          "ownership_or_all_rights_cleared": false
+        },
+        "sources": [],
+        "open_questions": [
+          "Governing terms at installed revision and relevant required components",
+          "Attribution/NOTICE/redistribution duties",
+          "Reference voice and input rights, consent, training-provenance scope"
+        ],
+        "identified_components": []
+      }
+    },
+    {
+      "id": "Plachta/Seed-VC",
+      "license": "gpl-3.0",
+      "commercial_use": false,
+      "review_status": "unreviewed",
+      "credit": "Seed-VC — Songting Liu (Plachtaa)",
+      "source_url": "https://huggingface.co/Plachta/Seed-VC",
+      "evidence_url": "https://github.com/Plachtaa/seed-vc/blob/51383efd921027683c89e5348211d93ff12ac2a8/LICENSE",
+      "revision": null,
+      "engines": [
+        "seed-vc"
+      ],
+      "configured_at": "backend/engines/seedvc_subprocess/main.py",
+      "notes": "Seed-VC code (Plachtaa/seed-vc@51383efd) is GPL-3.0; the DiT checkpoint (DiT_uvit_tat_xlsr_ema.pth, seed-uvit-tat-xlsr-tiny) is GPL-3.0 per its model card, not re-checked from this environment. Copyleft: usable in this AGPL fork, not licence-clean for a permissive or commercial distribution. Downloaded unpinned (latest) on the first Live Voice session; the revision could not be resolved when this record was written because Hugging Face was unreachable from the build environment. Pin it before any distribution.",
+      "runtime_revision": null,
+      "runtime_pin_scope": "external",
+      "runtime_pin_source": null,
+      "component_closure": "incomplete",
+      "commercial_inference": "unknown",
+      "commercial_outputs": "unknown",
+      "documents": [],
+      "artifacts": [],
+      "required_components": [],
+      "upstream_access": "unknown",
+      "audit_observations": {
+        "commercial_inference": {
+          "status": "unreviewed",
+          "scope": "Selected weight/component only; not complete workflow clearance."
+        },
+        "output_terms": {
+          "status": "not_assessed",
+          "ownership_or_all_rights_cleared": false
+        },
+        "sources": [],
+        "open_questions": [
+          "Governing terms at installed revision and relevant required components",
+          "Attribution/NOTICE/redistribution duties",
+          "Reference voice and input rights, consent, training-provenance scope"
+        ],
+        "identified_components": []
+      }
+    },
+    {
+      "id": "facebook/wav2vec2-xls-r-300m",
+      "license": "apache-2.0",
+      "commercial_use": false,
+      "review_status": "unreviewed",
+      "credit": "XLS-R 300M — Meta AI (Babu et al., 2021)",
+      "source_url": "https://huggingface.co/facebook/wav2vec2-xls-r-300m",
+      "evidence_url": "https://huggingface.co/facebook/wav2vec2-xls-r-300m",
+      "revision": null,
+      "engines": [
+        "seed-vc"
+      ],
+      "configured_at": "backend/engines/seedvc_subprocess/main.py",
+      "notes": "Seed-VC's content encoder (first 12 layers). Licence identifier is upstream model-card metadata, not verified permission for this distribution. Downloaded unpinned (latest) on the first Live Voice session; the revision could not be resolved when this record was written because Hugging Face was unreachable from the build environment. Pin it before any distribution.",
+      "runtime_revision": null,
+      "runtime_pin_scope": "external",
+      "runtime_pin_source": null,
+      "component_closure": "incomplete",
+      "commercial_inference": "unknown",
+      "commercial_outputs": "unknown",
+      "documents": [],
+      "artifacts": [],
+      "required_components": [],
+      "upstream_access": "unknown",
+      "audit_observations": {
+        "commercial_inference": {
+          "status": "unreviewed",
+          "scope": "Selected weight/component only; not complete workflow clearance."
+        },
+        "output_terms": {
+          "status": "not_assessed",
+          "ownership_or_all_rights_cleared": false
+        },
+        "sources": [],
+        "open_questions": [
+          "Governing terms at installed revision and relevant required components",
+          "Attribution/NOTICE/redistribution duties",
+          "Reference voice and input rights, consent, training-provenance scope"
+        ],
+        "identified_components": []
+      }
+    },
+    {
+      "id": "FunAudioLLM/CosyVoice-300M",
+      "license": "apache-2.0",
+      "commercial_use": false,
+      "review_status": "unreviewed",
+      "credit": "CosyVoice HiFT vocoder — Alibaba Tongyi SpeechTeam",
+      "source_url": "https://huggingface.co/FunAudioLLM/CosyVoice-300M",
+      "evidence_url": "https://huggingface.co/FunAudioLLM/CosyVoice-300M",
+      "revision": null,
+      "engines": [
+        "seed-vc"
+      ],
+      "configured_at": "backend/engines/seedvc_subprocess/main.py",
+      "notes": "Only hift.pt (the HiFT vocoder) is downloaded, as Seed-VC's vocoder. Licence identifier is upstream model-card metadata, not verified permission for this distribution. Downloaded unpinned (latest) on the first Live Voice session; the revision could not be resolved when this record was written because Hugging Face was unreachable from the build environment. Pin it before any distribution.",
+      "runtime_revision": null,
+      "runtime_pin_scope": "external",
+      "runtime_pin_source": null,
       "component_closure": "incomplete",
       "commercial_inference": "unknown",
       "commercial_outputs": "unknown",

@@ -19,6 +19,13 @@ Op flow:
     4. parent → {"op":"shutdown"} → sidecar returns 0
     5. unknown op → sidecar emits {"op":"error","stage":"dispatch",
        "message":"unknown op: ..."} and continues
+    6. live voice changer ops (services.vc): {"op":"vc_prepare",...} →
+       {"op":"vc_prepared","device":"cpu"}; {"op":"vc_infer","pcm_b64",
+       "head_samples","out_samples","tail_samples"} → {"op":"vc_audio"} whose
+       samples are the window's own ``[head, head + out)`` slice — an
+       identity converter, so the whole streaming pipeline is exact in CI.
+       With OMNIVOICE_ECHO_TEST_MODE=1, OMNIVOICE_ECHO_VC_DELAY_MS slows
+       every vc_infer (a model that cannot keep up).
 
 Test-only ops (only registered when OMNIVOICE_ECHO_TEST_MODE=1):
     - {"op":"probe_env"} → echo back the four canonical HF env vars
@@ -80,6 +87,20 @@ def _silence_pcm_b64(sample_rate: int) -> tuple[str, int]:
     # int16 silence = two zero bytes per sample. No numpy dependency.
     pcm = b"\x00\x00" * n_samples
     return base64.b64encode(pcm).decode("ascii"), n_samples
+
+
+def _vc_identity(msg: dict, test_mode: bool) -> dict:
+    """vc_infer as an identity converter: float32 samples [head, head+out)."""
+    raw = base64.b64decode(msg.get("pcm_b64", ""))
+    head, out = int(msg["head_samples"]), int(msg["out_samples"])
+    delay_ms = os.environ.get("OMNIVOICE_ECHO_VC_DELAY_MS") if test_mode else None
+    if delay_ms:
+        import time
+
+        time.sleep(float(delay_ms) / 1000.0)
+    piece = raw[head * 4:(head + out) * 4]
+    return {"op": "vc_audio", "pcm_b64": base64.b64encode(piece).decode("ascii"),
+            "n_samples": len(piece) // 4, "infer_ms": 0.0}
 
 
 def main() -> int:
@@ -175,6 +196,10 @@ def main() -> int:
                         "language": "en",
                     },
                 })
+            elif op == "vc_prepare":
+                _send(stdout, {"op": "vc_prepared", "device": "cpu", "cached": False, "vram_mb": 0})
+            elif op == "vc_infer":
+                _send(stdout, _vc_identity(msg, test_mode))
             elif op == "shutdown":
                 return 0
             elif op == "probe_env" and test_mode:

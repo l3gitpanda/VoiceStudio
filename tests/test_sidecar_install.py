@@ -1200,8 +1200,11 @@ def test_installable_engine_ids_follow_the_host(monkeypatch, family, platform, m
     monkeypatch.setattr(si, "_host_family", lambda: family)
     monkeypatch.setattr(si.sys, "platform", platform)
     monkeypatch.setattr(platform_mod, "machine", lambda: machine)
-    # Offered on every host: IndexTTS 2.5, Confucius4, Supertonic-3.
+    # Offered on every host: IndexTTS 2.5, Confucius4, Supertonic-3. Seed-VC
+    # (Live Voice) pins torch 2.7, which has no Intel Mac build.
     expected = set(expected) | {"indextts2", "confucius4-tts", "supertonic3"}
+    if (platform, machine) != ("darwin", "x86_64"):
+        expected.add("seed-vc")
     assert si.installable_engine_ids() == frozenset(expected)
 
 

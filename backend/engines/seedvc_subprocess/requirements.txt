@@ -1,0 +1,32 @@
+# Seed-VC real-time inference requirements for VoiceStudio's one-click install.
+#
+# Derived from upstream's requirements.txt at Plachtaa/seed-vc@51383efd
+# (2025-04-20) and trimmed to what the real-time model needs. What differs,
+# and why:
+#
+# - No --index-url lines. Upstream points torch at PyTorch's nightly cu126
+#   index. The installer pins the torch 2.7.0 pair per host instead: +cu128
+#   on NVIDIA GPUs, +cpu on other Windows and Linux machines, the regular
+#   build on macOS.
+# - transformers raised to the advisory floor CosyVoice's sidecar already
+#   uses (upstream pins 4.46.3). Only Wav2Vec2Model / Wav2Vec2FeatureExtractor
+#   are used.
+# - Dropped: gradio, FreeSimpleGUI, sounddevice (upstream's own UIs and audio
+#   I/O — VoiceStudio's renderer owns the devices), modelscope and funasr
+#   (offline ASR / VAD; the parent gates silence itself), resemblyzer and
+#   jiwer (evaluation), accelerate, hydra-core, python-dotenv, pydub.
+# - Dropped descript-audio-codec: its audiotools dependency pins
+#   protobuf<3.20 and a training stack. Seed-VC imports it only for an
+#   optional quantizer the real-time model disables; the sidecar stubs the
+#   import (engines/seedvc_subprocess/main.py::_stub_dac).
+#
+# tests/backend/engines/test_seedvc_subprocess.py checks this file.
+numpy==1.26.4
+scipy==1.13.1
+librosa==0.10.2
+soundfile==0.12.1
+munch==4.0.0
+einops==0.8.0
+PyYAML==6.0.2
+tqdm==4.67.1
+transformers==5.10.1

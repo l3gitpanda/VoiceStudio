@@ -413,6 +413,11 @@ class SubprocessBackend(TTSBackend):
     # own budget.
     recv_timeout_s: float = GENERATE_RECV_TIMEOUT_S
 
+    # Ops this sidecar may send. A sidecar with its own request types (the
+    # live voice changer's ``vc_*`` replies) extends the shared allowlist;
+    # everything else stays T-02-04's closed set.
+    parent_inbound_ops: frozenset = PARENT_INBOUND_OPS
+
     # ── instance state (initialised in __init__) ───────────────────────────
 
     def __init__(self) -> None:
@@ -973,7 +978,7 @@ class SubprocessBackend(TTSBackend):
         except Exception as exc:
             raise IOError(f"malformed sidecar frame: {exc}") from exc
         op = msg.get("op") if isinstance(msg, dict) else None
-        if op not in PARENT_INBOUND_OPS:
+        if op not in getattr(self, "parent_inbound_ops", PARENT_INBOUND_OPS):
             # T-02-04 — refuse to act on unknown ops. Log and read the
             # next frame so we don't desync.
             logger.warning(

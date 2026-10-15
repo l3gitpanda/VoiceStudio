@@ -3530,10 +3530,12 @@ def _sidecar_installable_ids() -> frozenset[str]:
     installer module is tiny, but keeping the import inside the function
     means a broken/absent installer can never take the engine picker down.
 
-    All current sidecar SPECS are TTS engines, so only this registry carries
-    ``one_click_install``; the first non-TTS sidecar engine will need the same
-    field plumbed into asr_backend/llm_backend.list_backends and the Install
-    button into their matrix rows.
+    Every sidecar SPEC but ``seed-vc`` is a TTS engine, so only this registry
+    carries ``one_click_install``. Seed-VC (Live Voice) is not a TTS engine and
+    never appears in this registry; its Install button lives in the Live Voice
+    workspace (``GET /vc/status`` reports ``install_supported``). A future
+    ASR/LLM sidecar engine will need the same field plumbed into
+    asr_backend/llm_backend.list_backends and their matrix rows.
     """
     try:
         # Host-aware: an engine whose installer cannot work on THIS machine
