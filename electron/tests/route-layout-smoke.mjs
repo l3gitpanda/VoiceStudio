@@ -26,6 +26,7 @@ const routes = [
     (family) => `/settings/models/${family}`,
   ),
   '/settings/performance',
+  '/settings/live-voice',
   '/settings/pronunciation',
   '/settings/media',
   '/settings/network',

@@ -34,7 +34,7 @@ export function LiveVoiceSetup({
       <section className="space-y-2 rounded-lg border p-4" aria-label={t('liveVoice.setup_off_title')}>
         <h3 className="text-sm font-medium">{t('liveVoice.setup_off_title')}</h3>
         <p className="text-sm text-muted-foreground">{t('liveVoice.setup_off_body')}</p>
-        <Link to="/settings/performance" className="text-sm font-medium text-primary hover:underline">
+        <Link to="/settings/live-voice" className="text-sm font-medium text-primary hover:underline">
           {t('liveVoice.open_settings')}
         </Link>
       </section>

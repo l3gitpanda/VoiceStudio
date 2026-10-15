@@ -11,7 +11,7 @@ experimental workspace of this fork, built on [Seed-VC](../engines/seed-vc.md).
 
 ## Turn it on
 
-1. **Settings → Performance → Live Voice (experimental)**, or start the backend
+1. **Settings → Live Voice → Live Voice (experimental)**, or start the backend
    with `OMNIVOICE_REALTIME_VC=1` (the environment variable wins and pins the
    switch).
 2. Open **Live Voice** in the sidebar and click **Install** — the engine goes
@@ -54,7 +54,7 @@ choose it as Live Voice's **output device**, then choose its other end as the
 ## Use your voices as a microphone
 
 The virtual cable is not only for the live voice changer. Choose it once in
-**Settings → Performance → Virtual microphone** (the same device as Live
+**Settings → Live Voice → Virtual microphone** (the same device as Live
 Voice's output) and two more ways to talk through it appear:
 
 - **Play into mic** — a button next to Save on generated audio in Clone and
@@ -185,8 +185,8 @@ and its converted copy.
 
 | Symptom | Fix |
 |---|---|
-| No Live Voice in the sidebar | Turn it on in Settings → Performance. |
-| No **Play into mic** button | Choose a virtual microphone in Settings → Performance → Virtual microphone. |
+| No Live Voice in the sidebar | Turn it on in Settings → Live Voice. |
+| No **Play into mic** button | Choose a virtual microphone in Settings → Live Voice → Virtual microphone. |
 | Device names are blank | Click **Show device names** once (grants microphone access). |
 | “Needs verification” on your voice | Verify it in Voices → profile → Verify it's you. |
 | Choppy audio, “cannot keep up” | Pick **Fastest** or **CPU**; close other GPU work. |

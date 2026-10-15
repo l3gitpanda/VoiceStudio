@@ -96,7 +96,7 @@ it('explains the opt-in and links to Settings while it is off', async () => {
   mock.status = { ...STATUS, enabled: false };
   mount();
   expect(await screen.findByText('liveVoice.setup_off_body')).toBeInTheDocument();
-  expect(screen.getByText('liveVoice.open_settings').closest('a')).toHaveAttribute('href', '/settings/performance');
+  expect(screen.getByText('liveVoice.open_settings').closest('a')).toHaveAttribute('href', '/settings/live-voice');
   expect(screen.queryByText('liveVoice.start')).not.toBeInTheDocument();
 });
 

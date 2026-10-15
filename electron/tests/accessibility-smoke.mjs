@@ -25,6 +25,7 @@ const routes = [
   '/settings/models/translation',
   '/settings/models/llm',
   '/settings/performance',
+  '/settings/live-voice',
   '/settings/pronunciation',
   '/settings/media',
   '/settings/network',

@@ -36,6 +36,7 @@ const routes = [
   '/settings/sharing',
   '/settings/credentials',
   '/settings/performance',
+  '/settings/live-voice',
   '/settings/usage',
   '/settings/privacy',
   '/settings/permissions',

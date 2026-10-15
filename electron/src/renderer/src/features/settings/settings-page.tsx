@@ -4,6 +4,7 @@ import { MirrorSettings } from './mirror-settings';
 import { StorageSettings } from './storage-settings';
 import { PrivacySettings } from './privacy-settings';
 import { PerformanceSettings } from './performance-settings';
+import { LiveVoiceSettings } from './live-voice-settings';
 import { CredentialSettings } from './credential-settings';
 import { NetworkSettings } from './network-settings';
 import { SharingSettings } from './sharing-settings';
@@ -20,6 +21,7 @@ import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { runRendererTask } from '@/lib/global-error-recovery';
 import {
   ArrowLeftIcon,
+  AudioWaveformIcon,
   ExternalLinkIcon,
   SettingsIcon,
   WifiIcon,
@@ -160,9 +162,14 @@ const extraSettings = [
       'settings.compute_device_title',
       'settings.perf_torch_compile',
       'settings.generate_budget_title',
-      'settings.realtime_vc',
-      'settings.virtual_mic',
     ],
+  },
+  {
+    to: '/settings/live-voice',
+    label: 'nav.live_voice',
+    Icon: AudioWaveformIcon,
+    Component: LiveVoiceSettings,
+    fields: ['nav.live_voice', 'settings.realtime_vc', 'settings.virtual_mic'],
   },
   {
     to: '/settings/usage',

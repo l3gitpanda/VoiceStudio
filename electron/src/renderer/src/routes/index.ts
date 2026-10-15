@@ -217,6 +217,11 @@ export const performanceRoute = createRoute({
   path: '/settings/performance',
   component: SettingsPage,
 });
+export const liveVoiceSettingsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/settings/live-voice',
+  component: SettingsPage,
+});
 export const usageRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/settings/usage',
@@ -278,6 +283,7 @@ export const routeTree = rootRoute.addChildren([
   privacyRoute,
   permissionsRoute,
   performanceRoute,
+  liveVoiceSettingsRoute,
   usageRoute,
   networkRoute,
   sharingRoute,
