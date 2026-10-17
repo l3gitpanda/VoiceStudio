@@ -58,6 +58,10 @@ export interface ClipEditorProps {
   name: string;
   /** The edit must be at most this long (seconds) before it can be used. */
   maxSeconds?: number;
+  /** The applied edit is being saved: the editor stays open and locked. */
+  busy?: boolean;
+  /** Why saving the applied edit failed; the edit stays so it can be retried. */
+  error?: string;
   onApply(file: File, durationSeconds: number): void;
   onClose(): void;
 }
@@ -66,7 +70,7 @@ export interface ClipEditorProps {
 export function ClipEditorDialog(props: ClipEditorProps) {
   const { t } = useTranslation();
   return (
-    <Dialog open onOpenChange={(open) => !open && props.onClose()}>
+    <Dialog open onOpenChange={(open) => !open && !props.busy && props.onClose()}>
       <DialogContent className="gap-4 sm:max-w-3xl">
         <DialogHeader>
           <DialogTitle>{t('clipEditor.edit')}</DialogTitle>
@@ -78,7 +82,7 @@ export function ClipEditorDialog(props: ClipEditorProps) {
   );
 }
 
-function ClipEditor({ source, name, maxSeconds, onApply, onClose }: ClipEditorProps) {
+function ClipEditor({ source, name, maxSeconds, busy, error, onApply, onClose }: ClipEditorProps) {
   const { t } = useTranslation();
   const prefix = useId();
   const container = useRef<HTMLDivElement>(null);
@@ -224,6 +228,7 @@ function ClipEditor({ source, name, maxSeconds, onApply, onClose }: ClipEditorPr
   // The button just pressed is often disabled by its own edit, which would drop
   // focus out of the dialog and its shortcuts; the waveform takes it instead.
   const change = (update: (previous: Clip[]) => Clip[]) => {
+    if (busy) return;
     setStates(update);
     container.current?.focus();
   };
@@ -235,8 +240,9 @@ function ClipEditor({ source, name, maxSeconds, onApply, onClose }: ClipEditorPr
     zoom.current = Math.min(2000, Math.max(fit, (zoom.current || fit) * factor));
     waveform.current?.zoom(zoom.current);
   };
+  const canApply = Boolean(clip && states.length > 1 && !tooLong && !busy);
   const apply = () => {
-    if (!clip || states.length < 2 || tooLong) return;
+    if (!clip || !canApply) return;
     onApply(new File([clipToWav(clip)], editedClipName(name), { type: 'audio/wav' }), duration);
   };
   const onKeyDown = (event: KeyboardEvent) => {
@@ -354,7 +360,7 @@ function ClipEditor({ source, name, maxSeconds, onApply, onClose }: ClipEditorPr
                 type="button"
                 variant="secondary"
                 size="sm"
-                disabled={wholeClip}
+                disabled={busy || wholeClip}
                 onClick={keep}
               >
                 <CropIcon data-icon="inline-start" />
@@ -364,7 +370,7 @@ function ClipEditor({ source, name, maxSeconds, onApply, onClose }: ClipEditorPr
                 type="button"
                 variant="secondary"
                 size="sm"
-                disabled={!canCut}
+                disabled={busy || !canCut}
                 aria-keyshortcuts="Delete"
                 onClick={cut}
               >
@@ -375,7 +381,7 @@ function ClipEditor({ source, name, maxSeconds, onApply, onClose }: ClipEditorPr
                 type="button"
                 variant="ghost"
                 size="sm"
-                disabled={states.length < 2}
+                disabled={busy || states.length < 2}
                 aria-keyshortcuts="Control+Z Meta+Z"
                 onClick={undo}
               >
@@ -386,7 +392,7 @@ function ClipEditor({ source, name, maxSeconds, onApply, onClose }: ClipEditorPr
                 type="button"
                 variant="ghost"
                 size="sm"
-                disabled={states.length < 2}
+                disabled={busy || states.length < 2}
                 onClick={() => change((previous) => previous.slice(0, 1))}
               >
                 <RotateCcwIcon data-icon="inline-start" />
@@ -407,12 +413,17 @@ function ClipEditor({ source, name, maxSeconds, onApply, onClose }: ClipEditorPr
           </p>
         </>
       )}
+      {error ? (
+        <p role="alert" className="text-sm text-destructive">
+          {error}
+        </p>
+      ) : null}
       <DialogFooter>
-        <Button type="button" variant="ghost" onClick={onClose}>
+        <Button type="button" variant="ghost" disabled={busy} onClick={onClose}>
           {t('common.cancel')}
         </Button>
-        <Button type="button" disabled={!clip || states.length < 2 || tooLong} onClick={apply}>
-          {t('clipEditor.apply')}
+        <Button type="button" disabled={!canApply} onClick={apply}>
+          {t(busy ? 'common.saving' : 'clipEditor.apply')}
         </Button>
       </DialogFooter>
     </div>

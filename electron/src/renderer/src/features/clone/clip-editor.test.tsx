@@ -186,3 +186,34 @@ it('loads a saved reference through the API and reports a clip it cannot open', 
   fireEvent.click(screen.getByRole('button', { name: 'common.cancel' }));
   expect(onClose).toHaveBeenCalledOnce();
 });
+
+it('stays open and locked while the applied edit saves, and shows why a save failed', async () => {
+  mock.decode.mockResolvedValue(twoSeconds());
+  const props = { onApply: vi.fn(), onClose: vi.fn() };
+  const editor = (extra: { busy?: boolean; error?: string }) => (
+    <ClipEditorDialog
+      source={new File(['audio'], 'voice.webm')}
+      name="voice.webm"
+      {...props}
+      {...extra}
+    />
+  );
+  const { rerender } = render(editor({}));
+  await select(0.5, 1.5);
+  fireEvent.click(button('clipEditor.keep_selection'));
+  await waitFor(() => expect(button('clipEditor.apply')).toBeEnabled());
+
+  rerender(editor({ busy: true }));
+  expect(button('common.saving')).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'common.cancel' })).toBeDisabled();
+  expect(button('scriptEdit.undo')).toBeDisabled();
+  fireEvent.keyDown(field('clipEditor.waveform'), { key: 'z', ctrlKey: true });
+  fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
+  expect(props.onClose).not.toHaveBeenCalled();
+  expect(mock.waves.at(-1)?.options.duration).toBe(1);
+
+  rerender(editor({ error: 'Disk full' }));
+  expect(screen.getByRole('alert')).toHaveTextContent('Disk full');
+  fireEvent.click(button('clipEditor.apply'));
+  expect(props.onApply).toHaveBeenCalledOnce();
+});
