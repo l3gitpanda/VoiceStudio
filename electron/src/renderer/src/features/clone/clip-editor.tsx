@@ -156,13 +156,19 @@ function ClipEditor({ source, name, maxSeconds, busy, error, onApply, onClose }:
       for (const other of regions.getRegions()) if (other !== created) other.remove();
       // The plugin swallows a drag that starts on a region, so a selection
       // covering the clip could never be redrawn. Only its edges take the
-      // pointer; a drag anywhere inside draws a new selection.
+      // pointer; a drag anywhere inside draws a new selection. Each edge is a
+      // theme-coloured inset line instead of the plugin's dark border, which
+      // disappears on a dark theme.
       if (created.element) {
         created.element.style.pointerEvents = 'none';
         for (const handle of created.element.querySelectorAll<HTMLElement>(
           '[part*="region-handle"]',
         ))
-          Object.assign(handle.style, { pointerEvents: 'auto', borderColor: 'var(--primary)' });
+          Object.assign(handle.style, {
+            pointerEvents: 'auto',
+            border: 'none',
+            boxShadow: `inset ${handle.matches('[part~="region-handle-left"]') ? 2 : -2}px 0 var(--primary)`,
+          });
       }
       region.current = created;
       setSelection({ start: created.start, end: created.end });
