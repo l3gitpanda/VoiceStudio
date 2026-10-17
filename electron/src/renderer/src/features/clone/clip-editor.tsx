@@ -158,7 +158,7 @@ function ClipEditor({ source, name, maxSeconds, onApply, onClose }: ClipEditorPr
         for (const handle of created.element.querySelectorAll<HTMLElement>(
           '[part*="region-handle"]',
         ))
-          Object.assign(handle.style, { pointerEvents: 'auto', borderColor: 'var(--primary)' });
+          Object.assign(handle.style, { pointerEvents: 'auto', background: 'var(--primary)' });
       }
       region.current = created;
       setSelection({ start: created.start, end: created.end });
