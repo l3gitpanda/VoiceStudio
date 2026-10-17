@@ -1,4 +1,3 @@
-import { TrimAudio } from './trim-audio';
 import { VoiceDestinations } from './voice-destinations';
 import { placeLongformVoice } from './place-voice';
 import type { Mode } from '@/features/longform/longform-session';
@@ -20,11 +19,16 @@ import { Input } from '@/components/ui/input';
 import { AudioPreviewButton } from '@/components/audio-preview-button';
 import { VideoPlayer } from '@/components/video-player';
 import { PipelineFailure } from '@/components/pipeline-failure';
+import { ClipEditorDialog } from '@/features/clone/clip-editor';
 import { apiJson, apiPath, ApiError, describeError } from '@/lib/api/client';
 import { queryKeys } from '@/lib/query';
 import { selectCloneProfile } from '@/lib/store/reference';
 import type { Profile } from '@/lib/api/types';
 import { importsApi, type GalleryVoice, type YoutubeSearchResult } from './imports-api';
+
+// Longest clip a trim can save as a new import (seconds).
+const MAX_TRIM_SECONDS = 60;
+
 export function ImportsView() {
   const { t } = useTranslation();
   const client = useQueryClient();
@@ -121,23 +125,6 @@ export function ImportsView() {
       selectCloneProfile(profile);
       await navigate({ to: '/clone' });
     });
-  if (trimming)
-    return (
-      <TrimAudio
-        src={'/gallery/voices/' + encodeURIComponent(trimming.id) + '/preview'}
-        name={trimming.name + ' - ' + t('gallery.trim')}
-        busy={busy}
-        saveError={error}
-        onCancel={() => setTrimming(null)}
-        onSave={(file) =>
-          void run(async () => {
-            await importsApi.upload(file, trimming);
-            await refresh();
-            setTrimming(null);
-          })
-        }
-      />
-    );
   return (
     <section className="min-h-0 flex-1 overflow-y-auto p-6">
       <div className="mx-auto max-w-5xl space-y-5">
@@ -359,7 +346,10 @@ export function ImportsView() {
                     size="sm"
                     variant="ghost"
                     disabled={busy}
-                    onClick={() => setTrimming(voice)}
+                    onClick={() => {
+                      setError('');
+                      setTrimming(voice);
+                    }}
                   >
                     {t('gallery.trim')}
                   </Button>
@@ -373,6 +363,23 @@ export function ImportsView() {
           ))}
         </div>
       </div>
+      {trimming && (
+        <ClipEditorDialog
+          source={'/gallery/voices/' + encodeURIComponent(trimming.id) + '/preview'}
+          name={trimming.name + '.wav'}
+          maxSeconds={MAX_TRIM_SECONDS}
+          busy={busy}
+          error={error}
+          onClose={() => setTrimming(null)}
+          onApply={(file) =>
+            void run(async () => {
+              await importsApi.upload(file, trimming);
+              await refresh();
+              setTrimming(null);
+            })
+          }
+        />
+      )}
     </section>
   );
 }

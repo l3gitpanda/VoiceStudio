@@ -30,6 +30,7 @@ metadata and the backend fallback mirror it.
 - The GitHub star badge shows a bundled count instead of asking GitHub
 - Status checks find a saved Hugging Face token locally instead of validating it online every few minutes
 - The expanded sidebar shows the installed app version beneath VoiceStudio and clearly marks development builds (#2894)
+- Gallery imports: Trim opens the Edit clip editor, so you can also cut parts out with undo, and saves at the clip's own quality instead of 22 kHz — thanks @l3gitpanda!
 
 ### Removed
 

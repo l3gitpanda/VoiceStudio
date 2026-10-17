@@ -7,6 +7,8 @@ const browser = await chromium.launch({ channel: 'msedge', headless: true });
 const page = await browser.newPage();
 const ids = [];
 const name = 'Trim verification ' + Date.now();
+const fixture = readFileSync(resolve('backend/assets/samples/dictation/en_conversational.wav'));
+const sampleRate = (wav) => Buffer.from(wav).readUInt32LE(24);
 try {
   const upload = await page.request.post('http://127.0.0.1:3900/gallery/upload', {
     multipart: {
@@ -15,7 +17,7 @@ try {
       audio: {
         name: 'fixture.wav',
         mimeType: 'audio/wav',
-        buffer: readFileSync(resolve('backend/assets/samples/dictation/en_conversational.wav')),
+        buffer: fixture,
       },
     },
   });
@@ -28,34 +30,41 @@ try {
     .locator('article')
     .filter({ has: page.getByRole('heading', { name, exact: true }) });
   await card.getByRole('button', { name: 'Trim', exact: true }).click();
-  await page.getByRole('spinbutton', { name: 'Start', exact: true }).waitFor({ timeout: 10000 });
-  const region = page.locator('[part~="region"]');
+  const editor = page.getByRole('dialog');
+  await editor.getByRole('spinbutton', { name: 'Start', exact: true }).waitFor({ timeout: 10000 });
+  const region = editor.locator('[part~="region"]');
   await region.waitFor();
   const bounds = await region.boundingBox();
   assert.ok(bounds && bounds.width > 50);
-  await page.getByRole('spinbutton', { name: 'Start', exact: true }).fill('0.5');
-  await page.getByRole('spinbutton', { name: 'End', exact: true }).fill('1.5');
-  await page.getByRole('button', { name: 'Zoom in (+)', exact: true }).click();
-  await page.getByRole('button', { name: 'Fit all (Home)', exact: true }).click();
-  await page.getByRole('button', { name: 'Play', exact: true }).click();
-  await page.getByRole('button', { name: 'Pause', exact: true }).waitFor();
-  await page.getByRole('button', { name: 'Pause', exact: true }).click();
+  await editor.getByRole('spinbutton', { name: 'Start', exact: true }).fill('0.5');
+  await editor.getByRole('spinbutton', { name: 'End', exact: true }).fill('1.5');
+  await editor.getByRole('button', { name: 'Zoom in (+)', exact: true }).click();
+  await editor.getByRole('button', { name: 'Fit all (Home)', exact: true }).click();
+  await editor.getByRole('button', { name: 'Keep selection', exact: true }).click();
+  await editor.getByRole('button', { name: 'Play', exact: true }).click();
+  await editor.getByRole('button', { name: 'Pause', exact: true }).waitFor();
+  await editor.getByRole('button', { name: 'Pause', exact: true }).click();
   const folder = mkdtempSync(join(tmpdir(), 'voicestudio-trim-check-'));
   await page.screenshot({ path: join(folder, 'trim.png') });
   const saved = page.waitForResponse(
     (response) =>
       response.url().endsWith('/gallery/upload') && response.request().method() === 'POST',
   );
-  await page.getByRole('button', { name: 'Use trimmed', exact: true }).click();
+  await editor.getByRole('button', { name: 'Use edited clip', exact: true }).click();
   const response = await saved;
   assert.equal(response.status(), 200);
   const clip = await response.json();
   ids.push(clip.id);
   assert.ok(Math.abs(clip.duration - 1) < 0.001);
   assert.ok(original.duration > clip.duration);
-  await page.getByRole('heading', { name: name + ' - Trim', exact: true }).waitFor();
+  // The trim keeps the import's own sample rate rather than downsampling it.
+  const stored = await page.request.get(
+    'http://127.0.0.1:3900/gallery/voices/' + encodeURIComponent(clip.id) + '/preview',
+  );
+  assert.equal(sampleRate(await stored.body()), sampleRate(fixture));
+  await page.getByRole('heading', { name: name + '-edited', exact: true }).waitFor();
   console.log(
-    'Real trim selection, zoom, Vidstack preview and exact one-second saved WAV passed. Screenshot: ' +
+    'Real trim selection, zoom, keep, playback and exact one-second saved WAV at the source rate passed. Screenshot: ' +
       join(folder, 'trim.png'),
   );
 } finally {

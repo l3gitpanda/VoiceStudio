@@ -21,8 +21,12 @@ a late response from redirecting the user; the backend may still finish saving.
 
 The catalogue and profile generation remain owned by the existing backend.
 API wire types are shared with Tauri. No new required network service is added.
-Community voices, local/search imports, inline trimming, and portable persona
-bundles use the same backend contracts and keep network actions explicit.
+Community voices, local/search imports, and portable persona bundles use the
+same backend contracts and keep network actions explicit.
+**Trim** on an import opens the same Edit clip editor as Voice cloning: keep or
+cut out parts of the clip, with undo, at the import's own sample rate. The
+result must be 60 s or shorter and is saved as a new import named
+`<name>-edited`; the original stays.
 
 Verification: node electron/tests/gallery-smoke.mjs exercises categories, search,
 pagination, real native playback of synthetic audio, saved-profile handoff, and
