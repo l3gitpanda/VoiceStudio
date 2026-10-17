@@ -2141,6 +2141,16 @@
     "audio_load_failed": "Ljudladdning misslyckades",
     "unit_seconds": "s"
   },
+  "clipEditor": {
+    "edit": "Redigera klipp",
+    "description": "Dra över vågformen för att markera en del av klippet och behåll sedan bara den delen eller klipp bort den.",
+    "waveform": "Klippets vågform",
+    "keep_selection": "Behåll markering",
+    "delete_selection": "Klipp bort markering",
+    "apply": "Använd redigerat klipp",
+    "too_long": "Klippet är {{duration}} s. Korta det till högst {{max}} s för att använda det.",
+    "shortcuts": "Blanksteg spelar · Delete klipper bort markeringen · Ctrl/Cmd+Z ångrar"
+  },
   "voice_profile": {
     "persona_export": "Exportera persona",
     "persona_exporting": "Bygger persona...",

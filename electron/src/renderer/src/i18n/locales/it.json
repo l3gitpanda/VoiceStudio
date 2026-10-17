@@ -2143,6 +2143,16 @@
     "audio_load_failed": "Caricamento dell'audio non riuscito",
     "unit_seconds": "s"
   },
+  "clipEditor": {
+    "edit": "Modifica clip",
+    "description": "Trascina sulla forma d’onda per selezionare una parte della clip, poi conserva solo quella parte o tagliala.",
+    "waveform": "Forma d’onda della clip",
+    "keep_selection": "Mantieni selezione",
+    "delete_selection": "Taglia selezione",
+    "apply": "Usa clip modificata",
+    "too_long": "Questa clip dura {{duration}} s. Accorciala a {{max}} s o meno per usarla.",
+    "shortcuts": "Spazio riproduce · Canc taglia la selezione · Ctrl/Cmd+Z annulla"
+  },
   "voice_profile": {
     "persona_export": "Esporta personaggio",
     "persona_exporting": "Costruire una persona…",

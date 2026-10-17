@@ -1,7 +1,8 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, expect, it, vi } from 'vitest';
-import { patchCloneSettings } from '@/lib/store/clone-settings';
+import { cloneSettingsStore, patchCloneSettings } from '@/lib/store/clone-settings';
+import { clearReference, referenceStore } from '@/lib/store/reference';
 
 const players = vi.hoisted(() => [] as Array<{ src: string }>);
 const setWorkspace = vi.hoisted(() => vi.fn());
@@ -26,6 +27,17 @@ vi.mock('@tanstack/react-router', () => ({
 }));
 vi.mock('./portrait-search', () => ({ PortraitSearch: () => null }));
 vi.mock('./profile-image-editor', () => ({ ProfileImageEditor: () => null }));
+vi.mock('./reference-input', () => ({
+  ReferenceSourcePicker: () => null,
+  ReferenceUsageNote: () => null,
+}));
+vi.mock('./clip-editor', () => ({
+  ClipEditorDialog: ({ onApply }: { onApply: (file: File, seconds: number) => void }) => (
+    <button type="button" onClick={() => onApply(new File(['cut'], 'take-edited.wav'), 4)}>
+      apply-edit
+    </button>
+  ),
+}));
 vi.mock('@/components/waveform-player', () => ({
   WaveformPlayer: (props: { src: string }) => {
     players.push(props);
@@ -37,6 +49,7 @@ import { ReferencePanel } from './reference-panel';
 afterEach(() => {
   cleanup();
   patchCloneSettings({ selectedProfileId: null });
+  clearReference();
   setWorkspace.mockClear();
 });
 
@@ -48,4 +61,26 @@ it('opens the selected saved voice for editing without changing the selection', 
   fireEvent.click(screen.getByRole('button', { name: /clone.edit_voice/ }));
 
   expect(setWorkspace).toHaveBeenCalledWith({ editingProfileId: 'v1', panel: null });
+});
+
+it('swaps an edited cut in for the raw clip without making it a new voice', () => {
+  const take = new File(['audio'], 'take.webm', { type: 'audio/webm' });
+  referenceStore.setState(() => ({
+    file: take,
+    durationSeconds: 9,
+    objectUrl: null,
+    origin: take,
+  }));
+  patchCloneSettings({ instruct: 'Calm', refText: 'the whole take' });
+  render(<ReferencePanel />);
+
+  fireEvent.click(screen.getByRole('button', { name: /clipEditor.edit/ }));
+  fireEvent.click(screen.getByText('apply-edit'));
+
+  expect(referenceStore.state.file?.name).toBe('take-edited.wav');
+  expect(referenceStore.state.durationSeconds).toBe(4);
+  expect(referenceStore.state.origin).toBe(take);
+  expect(cloneSettingsStore.state.instruct).toBe('Calm');
+  expect(cloneSettingsStore.state.refText).toBe('');
+  expect(screen.queryByText('apply-edit')).toBeNull();
 });

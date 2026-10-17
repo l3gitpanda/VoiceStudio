@@ -2141,6 +2141,16 @@
     "audio_load_failed": "Ses yüklemesi başarısız oldu",
     "unit_seconds": "s"
   },
+  "clipEditor": {
+    "edit": "Klibi düzenle",
+    "description": "Klibin bir bölümünü seçmek için dalga formu üzerinde sürükleyin, ardından yalnızca o bölümü tutun veya kesip çıkarın.",
+    "waveform": "Klip dalga formu",
+    "keep_selection": "Seçimi tut",
+    "delete_selection": "Seçimi kes",
+    "apply": "Düzenlenen klibi kullan",
+    "too_long": "Bu klip {{duration}} sn. Kullanmak için {{max}} sn veya daha kısa olacak şekilde kesin.",
+    "shortcuts": "Boşluk oynatır · Delete seçimi keser · Ctrl/Cmd+Z geri alır"
+  },
   "voice_profile": {
     "persona_export": "Kişiyi dışa aktar",
     "persona_exporting": "Kişilik oluşturmak…",

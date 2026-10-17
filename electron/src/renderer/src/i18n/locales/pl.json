@@ -2145,6 +2145,16 @@
     "audio_load_failed": "Wczytanie dźwięku nie powiodło się",
     "unit_seconds": "s"
   },
+  "clipEditor": {
+    "edit": "Edytuj klip",
+    "description": "Przeciągnij po przebiegu fali, aby zaznaczyć część klipu, a potem zachowaj tylko tę część lub ją wytnij.",
+    "waveform": "Przebieg fali klipu",
+    "keep_selection": "Zachowaj zaznaczenie",
+    "delete_selection": "Wytnij zaznaczenie",
+    "apply": "Użyj edytowanego klipu",
+    "too_long": "Ten klip trwa {{duration}} s. Skróć go do {{max}} s lub mniej, aby go użyć.",
+    "shortcuts": "Spacja odtwarza · Delete wycina zaznaczenie · Ctrl/Cmd+Z cofa"
+  },
   "voice_profile": {
     "persona_export": "Eksportuj osobę",
     "persona_exporting": "Budowanie osobowości…",

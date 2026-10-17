@@ -91,7 +91,7 @@ Or download from [Releases](https://github.com/debpalash/VoiceStudio/releases/la
 | Windows on ARM (Snapdragon X etc.) | **Experimental**, validation pending: native ARM64 app, x64 Python backend under emulation, CPU only |
 | Intel Mac | App UI only; connect to a remote backend ([why](docs/install/macos.md)) |
 
-Open **Voice cloning**, choose a voice or add a clean reference recording, enter your text, and generate. Install the required model when prompted. Hardware needs vary by engine; see [performance](docs/performance.md).
+Open **Voice cloning**, choose a voice or add a clean reference recording, enter your text, and generate. **Edit clip** trims a recording or cuts parts out of it, and a clip longer than 75 seconds opens there to be cut down. Install the required model when prompted. Hardware needs vary by engine; see [performance](docs/performance.md).
 
 ### Install with prompt
 

@@ -5,7 +5,13 @@ const { probeAudioDuration } = vi.hoisted(() => ({
 }));
 vi.mock('@/lib/audio/probe', () => ({ probeAudioDuration }));
 
-import { clearReference, referenceStore, selectCloneProfile, setReferenceFile } from './reference';
+import {
+  clearReference,
+  referenceStore,
+  replaceReferenceClip,
+  selectCloneProfile,
+  setReferenceFile,
+} from './reference';
 import { cloneSettingsStore, setCloneSetting } from './clone-settings';
 
 const createObjectURL = vi.fn(() => `blob:mock-${createObjectURL.mock.calls.length}`);
@@ -132,4 +138,31 @@ describe('selectCloneProfile', () => {
       expect(cloneSettingsStore.state.text).toBe('The current script');
     },
   );
+});
+
+describe('replaceReferenceClip', () => {
+  it('keeps the voice identity and direction but drops the old transcript', async () => {
+    probeAudioDuration.mockResolvedValue(30);
+    const picked = file('long.wav');
+    await setReferenceFile(picked);
+    setCloneSetting('instruct', 'Warm and slow');
+    setCloneSetting('refText', 'Words from the whole clip');
+    const firstUrl = referenceStore.state.objectUrl;
+
+    const edited = file('long-edited.wav');
+    replaceReferenceClip(edited, 12.5);
+    const again = file('long-edited.wav');
+    replaceReferenceClip(again, 8);
+
+    expect(referenceStore.state).toMatchObject({ file: again, durationSeconds: 8, origin: picked });
+    expect(revokeObjectURL).toHaveBeenCalledWith(firstUrl);
+    expect(cloneSettingsStore.state.instruct).toBe('Warm and slow');
+    expect(cloneSettingsStore.state.refText).toBe('');
+    expect(probeAudioDuration).toHaveBeenCalledOnce();
+  });
+
+  it('does nothing without a clip to replace', () => {
+    replaceReferenceClip(file(), 3);
+    expect(referenceStore.state.file).toBeNull();
+  });
 });

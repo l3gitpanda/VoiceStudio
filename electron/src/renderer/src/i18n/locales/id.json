@@ -2141,6 +2141,16 @@
     "audio_load_failed": "Gagal memuat audio",
     "unit_seconds": "s"
   },
+  "clipEditor": {
+    "edit": "Edit klip",
+    "description": "Seret di atas bentuk gelombang untuk memilih bagian klip, lalu simpan hanya bagian itu atau potong bagian itu.",
+    "waveform": "Bentuk gelombang klip",
+    "keep_selection": "Simpan pilihan",
+    "delete_selection": "Potong pilihan",
+    "apply": "Gunakan klip yang diedit",
+    "too_long": "Klip ini berdurasi {{duration}} dtk. Potong menjadi {{max}} dtk atau kurang untuk menggunakannya.",
+    "shortcuts": "Spasi memutar · Delete memotong pilihan · Ctrl/Cmd+Z membatalkan"
+  },
   "voice_profile": {
     "persona_export": "Ekspor kepribadian",
     "persona_exporting": "Membangun kepribadian…",

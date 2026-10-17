@@ -2218,6 +2218,16 @@
     "audio_load_failed": "Audio load failed",
     "unit_seconds": "s"
   },
+  "clipEditor": {
+    "edit": "Edit clip",
+    "description": "Drag across the waveform to select part of the clip, then keep only that part or cut it out.",
+    "waveform": "Clip waveform",
+    "keep_selection": "Keep selection",
+    "delete_selection": "Cut out selection",
+    "apply": "Use edited clip",
+    "too_long": "This clip is {{duration}} s. Cut it to {{max}} s or less to use it.",
+    "shortcuts": "Space plays · Delete cuts out the selection · Ctrl/Cmd+Z undoes"
+  },
   "voice_profile": {
     "persona_export": "Export persona",
     "persona_exporting": "Building persona…",

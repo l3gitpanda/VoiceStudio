@@ -2141,6 +2141,16 @@
     "audio_load_failed": "オーディオのロードに失敗しました",
     "unit_seconds": "s"
   },
+  "clipEditor": {
+    "edit": "クリップを編集",
+    "description": "波形をドラッグしてクリップの一部を選択し、その部分だけを残すか切り取ります。",
+    "waveform": "クリップの波形",
+    "keep_selection": "選択範囲を残す",
+    "delete_selection": "選択範囲を切り取る",
+    "apply": "編集したクリップを使う",
+    "too_long": "このクリップは {{duration}} 秒です。使用するには {{max}} 秒以下にカットしてください。",
+    "shortcuts": "Space で再生 · Delete で選択範囲を切り取り · Ctrl/Cmd+Z で元に戻す"
+  },
   "voice_profile": {
     "persona_export": "ペルソナのエクスポート",
     "persona_exporting": "ペルソナの構築…",
