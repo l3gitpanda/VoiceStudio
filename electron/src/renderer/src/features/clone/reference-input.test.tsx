@@ -16,6 +16,24 @@ vi.mock('@/lib/audio/probe', () => ({
 vi.mock('@/lib/store/reference', () => ({ setReferenceFile: vi.fn() }));
 vi.mock('@/hooks/use-recording', () => ({ useRecording: vi.fn() }));
 vi.mock('@/components/recording-inputs', () => ({ RecordingInputs: () => null }));
+vi.mock('./clip-editor', () => ({
+  ClipEditorDialog: ({
+    source,
+    maxSeconds,
+    onApply,
+  }: {
+    source: File;
+    maxSeconds: number;
+    onApply: (file: File, seconds: number) => void;
+  }) => (
+    <button
+      type="button"
+      onClick={() => onApply(new File(['cut'], 'long-edited.wav', { type: 'audio/wav' }), 12)}
+    >
+      {`edit ${source.name} to ${maxSeconds}`}
+    </button>
+  ),
+}));
 import { ReferenceSourcePicker, UploadZone } from './reference-input';
 import { useRecording } from '@/hooks/use-recording';
 
@@ -119,5 +137,38 @@ it('drops a probe that finishes after the picker closes', async () => {
   mock.probes.get('late.wav')!(5);
   await new Promise((resolve) => setTimeout(resolve, 0));
 
+  expect(onAccept).not.toHaveBeenCalled();
+});
+
+it('opens a clip too long to use in the editor, then uses the cut', async () => {
+  mockRecorder();
+  const onAccept = vi.fn();
+  const { container, findByRole } = render(<ReferenceSourcePicker onAccept={onAccept} />);
+  fireEvent.change(container.querySelector('input[type="file"]')!, {
+    target: { files: [clip('interview.wav')] },
+  });
+  mock.probes.get('interview.wav')!(240);
+
+  fireEvent.click(await findByRole('button', { name: 'edit interview.wav to 75' }));
+  mock.probes.get('long-edited.wav')!(12);
+  await vi.waitFor(() => expect(onAccept).toHaveBeenCalledOnce());
+  expect(onAccept.mock.calls[0]).toEqual([
+    expect.objectContaining({ name: 'long-edited.wav' }),
+    12,
+  ]);
+  expect(mock.toastError).not.toHaveBeenCalled();
+});
+
+it('still refuses a clip too long to open in the editor', async () => {
+  mockRecorder();
+  const onAccept = vi.fn();
+  const { container, queryByRole } = render(<ReferenceSourcePicker onAccept={onAccept} />);
+  fireEvent.change(container.querySelector('input[type="file"]')!, {
+    target: { files: [clip('podcast.wav')] },
+  });
+  mock.probes.get('podcast.wav')!(3600);
+
+  await vi.waitFor(() => expect(mock.toastError).toHaveBeenCalledOnce());
+  expect(queryByRole('button', { name: /^edit / })).toBeNull();
   expect(onAccept).not.toHaveBeenCalled();
 });

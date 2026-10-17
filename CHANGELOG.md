@@ -14,6 +14,7 @@ metadata and the backend fallback mirror it.
 - VoiceStudio sends no analytics or telemetry and makes no background calls to remote hosts
 - No sponsor placements in the app or the README
 - Live Voice: an opt-in real-time voice changer that speaks in your saved voices
+- Edit clip: trim a voice sample or cut parts out of it before cloning
 
 ### Added
 
@@ -21,6 +22,7 @@ metadata and the backend fallback mirror it.
 - Virtual microphone: Play into mic sends generated clips to a virtual cable, and Type to talk speaks typed messages in your voice, so Discord or a game hears them as your mic — thanks @l3gitpanda!
 - Live Voice and the virtual microphone have their own Settings → Live Voice tab — thanks @l3gitpanda!
 - System audio as an input (Windows, opt-in): convert or record what this computer plays in Live Voice and the recorders — thanks @l3gitpanda!
+- Edit clip: trim a voice sample or cut parts out of it on the Clone page and in a saved voice's editor, with undo; a clip over 75 s opens there to be cut down instead of being refused — thanks @l3gitpanda!
 
 ### Changed
 

@@ -6,10 +6,12 @@ import { RecordingInputs } from '@/components/recording-inputs';
 import { useRecording } from '@/hooks/use-recording';
 import { useEngines } from '@/hooks/use-engines';
 import { CLONE_MAX_SECONDS, REF_HARD_MAX_SECONDS } from '@/lib/api/generate';
+import { EDITOR_MAX_SOURCE_SECONDS } from '@/lib/audio/clip-edit';
 import { probeAudioDuration } from '@/lib/audio/probe';
 import { referenceUsageNote } from '@/lib/reference-usage';
 import { setReferenceFile, type SetReferenceResult } from '@/lib/store/reference';
 import { cn } from '@/lib/utils';
+import { ClipEditorDialog } from './clip-editor';
 
 const ACCEPT = 'audio/*,.mp3,.wav,.m4a,.flac,.ogg,.aac,.webm';
 const AUDIO_EXT = /\.(mp3|wav|m4a|flac|ogg|aac|webm)$/i;
@@ -23,6 +25,8 @@ type IngestFn = (file: File | null) => Promise<void>;
 
 /** Receives an accepted clip instead of the composer's shared reference. */
 export type AcceptReference = (file: File, durationSeconds: number | null) => void;
+/** Receives a clip too long to use, so it can be cut down instead of refused. */
+type TooLong = (file: File) => void;
 
 async function checkClip(file: File): Promise<SetReferenceResult> {
   const durationSeconds = await probeAudioDuration(file);
@@ -40,7 +44,11 @@ async function checkClip(file: File): Promise<SetReferenceResult> {
  */
 type PickToken = { current: number };
 
-function useIngest(onAccept?: AcceptReference, sharedPick?: PickToken): IngestFn {
+function useIngest(
+  onAccept?: AcceptReference,
+  sharedPick?: PickToken,
+  onTooLong?: TooLong,
+): IngestFn {
   const { t } = useTranslation();
   // Monotonic pick token: a slow probe for an earlier clip must never replace
   // (or toast over) a later one. Zones shown together share one token, so an
@@ -62,8 +70,12 @@ function useIngest(onAccept?: AcceptReference, sharedPick?: PickToken): IngestFn
     // An accepted long clip gets ReferenceUsageNote beside it instead: how
     // much of it the active engine really uses (#2281).
     if (!result.ok) {
-      const duration = Math.round(result.durationSeconds ?? 0);
-      toast.error(t('tts_errors.too_long', { duration, max: REF_HARD_MAX_SECONDS }));
+      const duration = result.durationSeconds ?? 0;
+      if (onTooLong && duration <= EDITOR_MAX_SOURCE_SECONDS) onTooLong(file);
+      else
+        toast.error(
+          t('tts_errors.too_long', { duration: Math.round(duration), max: REF_HARD_MAX_SECONDS }),
+        );
     }
   };
 }
@@ -88,9 +100,10 @@ export function ReferenceUsageNote({ durationSeconds }: { durationSeconds: numbe
 export function UploadZone({
   onAccept,
   pickToken,
-}: { onAccept?: AcceptReference; pickToken?: PickToken } = {}) {
+  onTooLong,
+}: { onAccept?: AcceptReference; pickToken?: PickToken; onTooLong?: TooLong } = {}) {
   const { t } = useTranslation();
-  const ingestFile = useIngest(onAccept, pickToken);
+  const ingestFile = useIngest(onAccept, pickToken, onTooLong);
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
   const id = useId();
@@ -139,9 +152,10 @@ export function UploadZone({
 export function RecordZone({
   onAccept,
   pickToken,
-}: { onAccept?: AcceptReference; pickToken?: PickToken } = {}) {
+  onTooLong,
+}: { onAccept?: AcceptReference; pickToken?: PickToken; onTooLong?: TooLong } = {}) {
   const { t } = useTranslation();
-  const ingestFile = useIngest(onAccept, pickToken);
+  const ingestFile = useIngest(onAccept, pickToken, onTooLong);
   const rec = useRecording((file) => void ingestFile(file));
   const hasSignal = rec.level >= LEVEL_THRESHOLD;
   let micButton;
@@ -236,6 +250,10 @@ export function RecordZone({
  */
 export function ReferenceSourcePicker({ onAccept }: { onAccept?: AcceptReference } = {}) {
   const pickToken = useRef(0);
+  const ingest = useIngest(onAccept, pickToken);
+  // A clip over REF_HARD_MAX_SECONDS opens the editor, to cut it down to a
+  // usable reference, instead of being refused outright.
+  const [oversized, setOversized] = useState<File | null>(null);
   // Leaving the picker (a clip was accepted, or the user cancelled) retires
   // every probe still running, so none can replace the choice afterwards.
   useEffect(() => {
@@ -247,9 +265,21 @@ export function ReferenceSourcePicker({ onAccept }: { onAccept?: AcceptReference
   return (
     <div className="@container">
       <div className="grid gap-3 @md:grid-cols-2 [&>*]:min-w-0">
-        <UploadZone onAccept={onAccept} pickToken={pickToken} />
-        <RecordZone onAccept={onAccept} pickToken={pickToken} />
+        <UploadZone onAccept={onAccept} pickToken={pickToken} onTooLong={setOversized} />
+        <RecordZone onAccept={onAccept} pickToken={pickToken} onTooLong={setOversized} />
       </div>
+      {oversized ? (
+        <ClipEditorDialog
+          source={oversized}
+          name={oversized.name}
+          maxSeconds={REF_HARD_MAX_SECONDS}
+          onClose={() => setOversized(null)}
+          onApply={(file) => {
+            setOversized(null);
+            void ingest(file);
+          }}
+        />
+      ) : null}
     </div>
   );
 }

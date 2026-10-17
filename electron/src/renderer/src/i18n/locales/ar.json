@@ -2149,6 +2149,16 @@
     "audio_load_failed": "فشل تحميل الصوت",
     "unit_seconds": "ق"
   },
+  "clipEditor": {
+    "edit": "تحرير المقطع",
+    "description": "اسحب على الموجة الصوتية لتحديد جزء من المقطع، ثم احتفظ بهذا الجزء فقط أو اقتطعه.",
+    "waveform": "الموجة الصوتية للمقطع",
+    "keep_selection": "الاحتفاظ بالتحديد",
+    "delete_selection": "اقتطاع التحديد",
+    "apply": "استخدام المقطع المحرَّر",
+    "too_long": "مدة هذا المقطع {{duration}} ث. اقتطعه إلى {{max}} ث أو أقل لاستخدامه.",
+    "shortcuts": "المسافة للتشغيل · Delete لاقتطاع التحديد · Ctrl/Cmd+Z للتراجع"
+  },
   "voice_profile": {
     "persona_export": "تصدير الشخصية",
     "persona_exporting": "بناء الشخصية…",

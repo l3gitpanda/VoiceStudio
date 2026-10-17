@@ -2141,6 +2141,16 @@
     "audio_load_failed": "音訊加載失敗",
     "unit_seconds": "s"
   },
+  "clipEditor": {
+    "edit": "編輯片段",
+    "description": "在波形上拖曳以選取片段的一部分，然後只保留該部分或將其剪掉。",
+    "waveform": "片段波形",
+    "keep_selection": "保留所選",
+    "delete_selection": "剪掉所選",
+    "apply": "使用編輯後的片段",
+    "too_long": "此片段長 {{duration}} 秒。請剪到 {{max}} 秒以內再使用。",
+    "shortcuts": "空白鍵播放 · Delete 剪掉所選 · Ctrl/Cmd+Z 復原"
+  },
   "voice_profile": {
     "persona_export": "匯出角色",
     "persona_exporting": "塑造人物形象…",

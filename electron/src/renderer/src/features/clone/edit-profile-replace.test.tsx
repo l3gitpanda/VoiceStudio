@@ -3,7 +3,12 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { afterEach, expect, it, vi } from 'vitest';
 import type { Profile } from '@/lib/api/types';
 
-const mock = vi.hoisted(() => ({ json: vi.fn(), replace: vi.fn(), players: [] as string[] }));
+const mock = vi.hoisted(() => ({
+  json: vi.fn(),
+  replace: vi.fn(),
+  players: [] as string[],
+  editorSources: [] as Array<Blob | string>,
+}));
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key, i18n: { language: 'en' } }),
 }));
@@ -44,6 +49,25 @@ vi.mock('./reference-input', () => ({
     <p data-testid="usage-note">{durationSeconds}</p>
   ),
 }));
+vi.mock('./clip-editor', () => ({
+  ClipEditorDialog: ({
+    source,
+    onApply,
+  }: {
+    source: Blob | string;
+    onApply: (file: File, seconds: number) => void;
+  }) => {
+    mock.editorSources.push(source);
+    return (
+      <button
+        type="button"
+        onClick={() => onApply(new File(['cut'], 'Scarlet-edited.wav', { type: 'audio/wav' }), 3.5)}
+      >
+        apply-edit
+      </button>
+    );
+  },
+}));
 vi.mock('./profile-consent', () => ({ ProfileConsent: () => null }));
 vi.mock('./profile-preview', () => ({ ProfilePreview: () => null }));
 vi.mock('./profile-usage', () => ({ ProfileUsagePanel: () => null }));
@@ -79,6 +103,7 @@ afterEach(() => {
   cleanup();
   vi.clearAllMocks();
   mock.players.length = 0;
+  mock.editorSources.length = 0;
 });
 
 it('plays the stored reference through its versioned URL', () => {
@@ -160,7 +185,41 @@ it('keeps the chosen clip and saves no edits when the upload fails', async () =>
   expect(screen.getByTestId('player')).toHaveTextContent('blob:new-clip');
 });
 
+it('saves an edited cut of the stored reference like a replacement', async () => {
+  mock.replace.mockResolvedValue({ ...base });
+  const onDone = renderEditor();
+
+  fireEvent.click(screen.getByRole('button', { name: /clipEditor.edit/ }));
+  // The editor opens the clip Save would keep: the stored, versioned reference.
+  expect(mock.editorSources.at(-1)).toBe('/profiles/v1/audio?v=1');
+  fireEvent.click(screen.getByText('apply-edit'));
+
+  expect(screen.getByTestId('player')).toHaveTextContent('blob:new-clip');
+  expect(screen.getByTestId('usage-note')).toHaveTextContent('3.5');
+  expect(screen.getByLabelText('clone.transcript')).toHaveValue('');
+  fireEvent.submit(screen.getByRole('button', { name: 'clone.save' }).closest('form')!);
+
+  await waitFor(() => expect(onDone).toHaveBeenCalledOnce());
+  expect(mock.replace).toHaveBeenCalledWith(
+    expect.objectContaining({ id: 'v1', refAudioName: 'Scarlet-edited.wav', refText: '' }),
+  );
+});
+
+it('edits a pending replacement, and discarding the edit restores the transcript', () => {
+  renderEditor();
+  fireEvent.click(screen.getByRole('button', { name: /clone.replace_reference/ }));
+  fireEvent.click(screen.getByText('pick-clip'));
+  fireEvent.click(screen.getByRole('button', { name: /clipEditor.edit/ }));
+  expect(mock.editorSources.at(-1)).toBeInstanceOf(File);
+  expect((mock.editorSources.at(-1) as File).name).toBe('better.wav');
+
+  fireEvent.click(screen.getByText('apply-edit'));
+  fireEvent.click(screen.getByRole('button', { name: /clone.keep_reference/ }));
+  expect(screen.getByLabelText('clone.transcript')).toHaveValue('old words');
+});
+
 it('does not offer replacement for designed voices', () => {
   renderEditor({ ...base, kind: 'design' } as Profile);
   expect(screen.queryByRole('button', { name: /clone.replace_reference/ })).toBeNull();
+  expect(screen.queryByRole('button', { name: /clipEditor.edit/ })).toBeNull();
 });

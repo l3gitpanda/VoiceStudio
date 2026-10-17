@@ -2141,6 +2141,16 @@
     "audio_load_failed": "Tải âm thanh không thành công",
     "unit_seconds": "s"
   },
+  "clipEditor": {
+    "edit": "Sửa đoạn âm thanh",
+    "description": "Kéo trên dạng sóng để chọn một phần của đoạn âm thanh, rồi chỉ giữ phần đó hoặc cắt bỏ nó.",
+    "waveform": "Dạng sóng của đoạn âm thanh",
+    "keep_selection": "Giữ vùng chọn",
+    "delete_selection": "Cắt bỏ vùng chọn",
+    "apply": "Dùng đoạn đã sửa",
+    "too_long": "Đoạn này dài {{duration}} giây. Hãy cắt còn {{max}} giây hoặc ngắn hơn để dùng.",
+    "shortcuts": "Phím cách để phát · Delete để cắt bỏ vùng chọn · Ctrl/Cmd+Z để hoàn tác"
+  },
   "voice_profile": {
     "persona_export": "Xuất khẩu nhân vật",
     "persona_exporting": "Xây dựng nhân cách…",

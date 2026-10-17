@@ -5,6 +5,7 @@ import { profileAudioUrl } from '@/lib/api/client';
 import { PortraitSearch } from './portrait-search';
 import { ProfileImageEditor } from './profile-image-editor';
 import { ProfilePhoto } from './profile-photo';
+import { ClipEditorDialog } from './clip-editor';
 import { useForm } from '@tanstack/react-form';
 import {
   ChevronDownIcon,
@@ -13,6 +14,7 @@ import {
   MicIcon,
   PencilIcon,
   SaveIcon,
+  ScissorsIcon,
   XIcon,
 } from 'lucide-react';
 import { useEffect, useId, useState } from 'react';
@@ -26,7 +28,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useProfiles, useCreateCloneProfile } from '@/hooks/use-profiles';
 import { setCloneSetting, useCloneSetting } from '@/lib/store/clone-settings';
-import { selectCloneProfile, setReferenceFile, useReference } from '@/lib/store/reference';
+import {
+  replaceReferenceClip,
+  selectCloneProfile,
+  setReferenceFile,
+  useReference,
+} from '@/lib/store/reference';
 import { setWorkspace } from '@/lib/store/workspace';
 import { cn } from '@/lib/utils';
 import { ReferenceSourcePicker, ReferenceUsageNote } from './reference-input';
@@ -302,6 +309,7 @@ export function ReferencePanel({
   const profiles = useProfiles();
   const selectedProfileId = useCloneSetting('selectedProfileId');
   const [saving, setSaving] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   const profile =
     !setup && selectedProfileId
@@ -335,6 +343,10 @@ export function ReferencePanel({
                   {t('clone.duration_seconds', { seconds: reference.durationSeconds.toFixed(1) })}
                 </span>
               ) : null}
+              <Button variant="ghost" size="xs" onClick={() => setEditing(true)}>
+                <ScissorsIcon data-icon="inline-start" />
+                {t('clipEditor.edit')}
+              </Button>
               <Button
                 variant="ghost"
                 size="xs"
@@ -356,6 +368,17 @@ export function ReferencePanel({
               />
             ) : null}
             <ReferenceUsageNote durationSeconds={reference.durationSeconds} />
+            {editing ? (
+              <ClipEditorDialog
+                source={file}
+                name={file.name}
+                onClose={() => setEditing(false)}
+                onApply={(edited, seconds) => {
+                  setEditing(false);
+                  replaceReferenceClip(edited, seconds);
+                }}
+              />
+            ) : null}
           </div>
         ) : null}
 

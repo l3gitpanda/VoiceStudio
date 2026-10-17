@@ -2143,6 +2143,16 @@
     "audio_load_failed": "Échec du chargement audio",
     "unit_seconds": "s"
   },
+  "clipEditor": {
+    "edit": "Modifier l’extrait",
+    "description": "Faites glisser sur la forme d’onde pour sélectionner une partie de l’extrait, puis gardez seulement cette partie ou supprimez-la.",
+    "waveform": "Forme d’onde de l’extrait",
+    "keep_selection": "Garder la sélection",
+    "delete_selection": "Couper la sélection",
+    "apply": "Utiliser l’extrait modifié",
+    "too_long": "Cet extrait dure {{duration}} s. Réduisez-le à {{max}} s ou moins pour l’utiliser.",
+    "shortcuts": "Espace lit · Suppr coupe la sélection · Ctrl/Cmd+Z annule"
+  },
   "voice_profile": {
     "persona_export": "Exporter le personnage",
     "persona_exporting": "Construire la personnalité…",

@@ -81,7 +81,7 @@ curl -fsSL https://voicestudio.sh/install | sh -s -- --uninstall
 
 **[macOS](docs/install/macos.md) · [Windows](docs/install/windows.md) · [Linux](docs/install/linux.md) · [Docker](docs/install/docker.md)**
 
-打开**声音克隆**，选择已有声音或添加清晰的参考录音，输入文字并生成。按提示安装所需模型。硬件要求因引擎而异，详见[性能指南](docs/performance.md)。
+打开**声音克隆**，选择已有声音或添加清晰的参考录音，输入文字并生成。**编辑片段**可裁剪录音或剪掉其中的部分，超过 75 秒的片段会在这里打开以便剪短。按提示安装所需模型。硬件要求因引擎而异，详见[性能指南](docs/performance.md)。
 
 ### 用提示词安装
 

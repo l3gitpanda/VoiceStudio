@@ -2141,6 +2141,16 @@
     "audio_load_failed": "Das Laden der Audiodaten ist fehlgeschlagen",
     "unit_seconds": "s"
   },
+  "clipEditor": {
+    "edit": "Clip bearbeiten",
+    "description": "Ziehe über die Wellenform, um einen Teil des Clips auszuwählen, und behalte dann nur diesen Teil oder schneide ihn heraus.",
+    "waveform": "Wellenform des Clips",
+    "keep_selection": "Auswahl behalten",
+    "delete_selection": "Auswahl herausschneiden",
+    "apply": "Bearbeiteten Clip verwenden",
+    "too_long": "Dieser Clip ist {{duration}} s lang. Kürze ihn auf höchstens {{max}} s, um ihn zu verwenden.",
+    "shortcuts": "Leertaste spielt ab · Entf schneidet die Auswahl heraus · Strg/Cmd+Z macht rückgängig"
+  },
   "voice_profile": {
     "persona_export": "Persona exportieren",
     "persona_exporting": "Persönlichkeit aufbauen…",

@@ -2141,6 +2141,16 @@
     "audio_load_failed": "오디오 로드 실패",
     "unit_seconds": "초"
   },
+  "clipEditor": {
+    "edit": "클립 편집",
+    "description": "파형 위를 드래그해 클립의 일부를 선택한 다음, 그 부분만 남기거나 잘라내세요.",
+    "waveform": "클립 파형",
+    "keep_selection": "선택 영역 유지",
+    "delete_selection": "선택 영역 잘라내기",
+    "apply": "편집한 클립 사용",
+    "too_long": "이 클립은 {{duration}}초입니다. 사용하려면 {{max}}초 이하로 잘라 주세요.",
+    "shortcuts": "Space 재생 · Delete 선택 영역 잘라내기 · Ctrl/Cmd+Z 실행 취소"
+  },
   "voice_profile": {
     "persona_export": "페르소나 내보내기",
     "persona_exporting": "페르소나 구축…",

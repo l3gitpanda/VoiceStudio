@@ -11,6 +11,11 @@ export interface ReferenceState {
   file: File | null;
   durationSeconds: number | null;
   objectUrl: string | null;
+  /**
+   * The clip as first picked. An edit keeps it, so the composer treats an
+   * edited clip as the same voice rather than a new upload to save.
+   */
+  origin?: File | null;
 }
 
 export interface SetReferenceResult {
@@ -94,7 +99,25 @@ export async function setReferenceFile(file: File | null): Promise<SetReferenceR
       refText: '',
       instruct: '',
     });
-    replaceState({ file, durationSeconds, objectUrl: createObjectUrl(file) });
+    replaceState({ file, durationSeconds, objectUrl: createObjectUrl(file), origin: file });
   }
   return { ok: true, durationSeconds, tooLong };
+}
+
+/**
+ * Swap in an edited cut of the current clip. It is the same speaker, so the
+ * delivery direction stays; the transcript described the old cut, so it is
+ * cleared and transcribed again.
+ */
+export function replaceReferenceClip(file: File, durationSeconds: number): void {
+  const { file: current, origin } = referenceStore.state;
+  if (!current) return;
+  latestPick += 1;
+  patchCloneSettings({ refText: '' });
+  replaceState({
+    file,
+    durationSeconds,
+    objectUrl: createObjectUrl(file),
+    origin: origin ?? current,
+  });
 }

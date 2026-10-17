@@ -62,8 +62,11 @@ export function ClonePage() {
   const [changingVoice, setChangingVoice] = useState(false);
   const [showDemoCoachmark, setShowDemoCoachmark] = useState(false);
   const [skippedFile, setSkippedFile] = useState<File | null>(null);
+  // An edited clip keeps its `origin`, so it is the same voice: neither a new
+  // upload to offer saving again nor a change that closes the open pane.
+  const voiceFile = reference.origin ?? reference.file;
   const savingUpload =
-    !selectedId && Boolean(reference.file) && reference.file !== skippedFile && !changingVoice;
+    !selectedId && Boolean(reference.file) && voiceFile !== skippedFile && !changingVoice;
   const choosingVoice = !hasVoice || changingVoice;
 
   useEffect(() => {
@@ -82,7 +85,7 @@ export function ClonePage() {
   }, [selectedId, t, text]);
   const previousVoice = useRef({
     id: selectedId,
-    file: reference.file,
+    file: voiceFile,
     ready: hasVoice,
   });
   const focusScript = () =>
@@ -98,7 +101,7 @@ export function ClonePage() {
     const previous = previousVoice.current;
     if (
       hasVoice &&
-      (!previous.ready || previous.id !== selectedId || previous.file !== reference.file)
+      (!previous.ready || previous.id !== selectedId || previous.file !== voiceFile)
     ) {
       setChangingVoice(false);
       setWorkspace({ panel: null });
@@ -106,10 +109,10 @@ export function ClonePage() {
     }
     previousVoice.current = {
       id: selectedId,
-      file: reference.file,
+      file: voiceFile,
       ready: hasVoice,
     };
-  }, [hasVoice, selectedId, reference.file]);
+  }, [hasVoice, selectedId, voiceFile]);
   const wasGenerating = useRef(false);
   if (isGenerating) wasGenerating.current = true;
 
@@ -191,11 +194,11 @@ export function ClonePage() {
             ) : savingUpload && reference.file ? (
               <div className="w-full space-y-5">
                 <SaveProfileForm
-                  key={reference.file.name + reference.file.lastModified}
+                  key={`${voiceFile?.name}:${voiceFile?.lastModified}`}
                   file={reference.file}
                   transcribing={transcription.state === 'busy'}
                   onDone={() => {
-                    setSkippedFile(reference.file);
+                    setSkippedFile(voiceFile);
                     finishChoice();
                   }}
                 />

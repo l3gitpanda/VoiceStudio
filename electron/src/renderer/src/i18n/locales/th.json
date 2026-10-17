@@ -2141,6 +2141,16 @@
     "audio_load_failed": "โหลดเสียงล้มเหลว",
     "unit_seconds": "ส"
   },
+  "clipEditor": {
+    "edit": "แก้ไขคลิป",
+    "description": "ลากบนรูปคลื่นเพื่อเลือกบางส่วนของคลิป แล้วเก็บไว้เฉพาะส่วนนั้นหรือตัดส่วนนั้นออก",
+    "waveform": "รูปคลื่นของคลิป",
+    "keep_selection": "เก็บส่วนที่เลือก",
+    "delete_selection": "ตัดส่วนที่เลือกออก",
+    "apply": "ใช้คลิปที่แก้ไขแล้ว",
+    "too_long": "คลิปนี้ยาว {{duration}} วินาที ตัดให้เหลือไม่เกิน {{max}} วินาทีเพื่อใช้งาน",
+    "shortcuts": "Space เล่น · Delete ตัดส่วนที่เลือก · Ctrl/Cmd+Z เลิกทำ"
+  },
   "voice_profile": {
     "persona_export": "ส่งออกบุคคล",
     "persona_exporting": "กำลังสร้างบุคลิก…",

@@ -10,6 +10,7 @@ import {
   Clock3Icon,
   FileAudioIcon,
   ReplaceIcon,
+  ScissorsIcon,
   ShieldCheckIcon,
   Trash2Icon,
   Volume2Icon,
@@ -30,6 +31,7 @@ import { createObjectUrl, revokeObjectUrl } from '@/lib/audio/object-url';
 import { cn } from '@/lib/utils';
 import { ReferenceSourcePicker, ReferenceUsageNote } from './reference-input';
 import { ProfileImageEditor } from './profile-image-editor';
+import { ClipEditorDialog } from './clip-editor';
 import { formatRelative } from './format';
 import { useTtsReadiness } from '@/hooks/use-tts-readiness';
 
@@ -66,6 +68,10 @@ export function EditProfile({ profile, onDone }: { profile: Profile; onDone: () 
     return () => revokeObjectUrl(url);
   }, [replacement]);
   const canReplace = profile.kind !== 'design';
+  const hasAudio = Boolean(replacement || profile.ref_audio_path || profile.locked_audio_path);
+  // Cutting the clip edits whichever reference Save would keep: the pending
+  // replacement, else the stored one. The result is saved like a replacement.
+  const [editingClip, setEditingClip] = useState(false);
   // Transcript as it stood when Replace was pressed, so Keep reference
   // restores the user's unsaved edits rather than the stored text.
   const refTextBeforeReplace = useRef(draft.ref_text);
@@ -79,6 +85,11 @@ export function EditProfile({ profile, onDone }: { profile: Profile; onDone: () 
     // The saved transcript describes the old clip. Leave it blank so the
     // backend transcribes the new one locally unless the user types it.
     setDraft((previous) => ({ ...previous, ref_text: '' }));
+  };
+  const applyClipEdit = (file: File, durationSeconds: number) => {
+    setEditingClip(false);
+    if (!replacement) refTextBeforeReplace.current = draft.ref_text;
+    acceptReplacement(file, durationSeconds);
   };
   const keepCurrentReference = () => {
     setReplacement(null);
@@ -156,6 +167,19 @@ export function EditProfile({ profile, onDone }: { profile: Profile; onDone: () 
               <Volume2Icon className="size-4 text-muted-foreground" />
               {t('clone.reference_audio')}
             </h3>
+            {canReplace && hasAudio && !choosing && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="ml-auto"
+                disabled={unavailable}
+                onClick={() => setEditingClip(true)}
+              >
+                <ScissorsIcon data-icon="inline-start" />
+                {t('clipEditor.edit')}
+              </Button>
+            )}
             {canReplace && !replacement && !choosing && (
               <Button
                 type="button"
@@ -237,6 +261,19 @@ export function EditProfile({ profile, onDone }: { profile: Profile; onDone: () 
             <p role="note" className="text-xs text-muted-foreground">
               {t('clone.replace_reference_hint')}
             </p>
+          )}
+          {editingClip && (
+            <ClipEditorDialog
+              source={
+                replacement?.file ??
+                (profile.audio_url?.startsWith('/profiles/')
+                  ? profile.audio_url
+                  : `/profiles/${encodeURIComponent(profile.id)}/audio`)
+              }
+              name={replacement?.file.name ?? `${profile.name}.wav`}
+              onClose={() => setEditingClip(false)}
+              onApply={applyClipEdit}
+            />
           )}
         </section>
       )}

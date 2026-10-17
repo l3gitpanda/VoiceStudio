@@ -2141,6 +2141,16 @@
     "audio_load_failed": "Audio laden mislukt",
     "unit_seconds": "s"
   },
+  "clipEditor": {
+    "edit": "Clip bewerken",
+    "description": "Sleep over de golfvorm om een deel van de clip te selecteren en houd dan alleen dat deel over of knip het eruit.",
+    "waveform": "Golfvorm van de clip",
+    "keep_selection": "Selectie behouden",
+    "delete_selection": "Selectie wegknippen",
+    "apply": "Bewerkte clip gebruiken",
+    "too_long": "Deze clip duurt {{duration}} s. Kort hem in tot {{max}} s of minder om hem te gebruiken.",
+    "shortcuts": "Spatie speelt af · Delete knipt de selectie weg · Ctrl/Cmd+Z maakt ongedaan"
+  },
   "voice_profile": {
     "persona_export": "Persona exporteren",
     "persona_exporting": "Persona opbouwen…",
